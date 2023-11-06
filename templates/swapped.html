@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,8 +7,9 @@
         integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <script src="https://unpkg.com/htmx.org@1.5.0"></script>
 </head>
-<h1>This is the swapped page</h1>
 
-<a hx-get="/" hx-swap="outerHTML swap:.5s" class="fade-me-out"><i class="fas fa-plus-circle"></i> Swap 
-    back</a>
+<div id = "swap" hx-get="/" hx-target="#swap"><i>Swap Back</i>
+    <h1>This is the swapped page</h1>
+</div>
+
 </html>

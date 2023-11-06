@@ -5,12 +5,12 @@
     <title>Main</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-    <!-- HTMX -->
     <script src="https://unpkg.com/htmx.org@1.5.0"></script>
 </head>
-<h1>This is the main page</h1>
 
-<a hx-get="/swapped" hx-swap="outerHTML swap:.5s" class="fade-me-out"><i class="fas fa-plus-circle"></i> Swap Page</a>
+<div id="swap" hx-get="/swapped" hx-target="#swap"><i>Swap Page</i>
+    <h1>This is the main page</h1>
+</div>
 
 <br>
 
