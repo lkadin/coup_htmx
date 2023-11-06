@@ -16,3 +16,14 @@ async def swapped(request: Request):
     return templates.TemplateResponse(
         "swapped.html", {"request": request, "books": "Swapped Book"}
     )
+
+@app.get("/blog")
+async def blog(request: Request):
+    return templates.TemplateResponse(
+        "blog.html", {"request": request, "books": "Swapped Book"}
+    )
+
+@app.get("/blog_switch")
+async def blog_switch(request: Request):
+    return  'Hello World'
+
