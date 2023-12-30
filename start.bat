@@ -1,0 +1,1 @@
+uvicorn connection_manager:app --reload
