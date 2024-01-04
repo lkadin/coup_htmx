@@ -19,7 +19,6 @@ class ConnectionManager:
         if not self.active_connections.get(room_id):
             self.active_connections[room_id] = []
         self.active_connections[room_id].append(websocket)
-        print("New Active connections are ", self.active_connections)
 
     async def disconnect(self, room_id: str, websocket: WebSocket):
         self.active_connections[room_id].remove(websocket)
@@ -32,7 +31,6 @@ class ConnectionManager:
     async def broadcast(self, message: str, room_id: str, websocket: WebSocket):
         for connection in self.active_connections[room_id]:
             print(connection.client)
-            print(connection.url)
             await connection.send_text(message)
             print(f"In broadcast: sent {message} to ", room_id, connection.client)
 
@@ -42,7 +40,6 @@ manager = ConnectionManager()
 
 @app.websocket("/ws/{room_id}")
 async def websocket_chat(websocket: WebSocket, room_id: str):
-    print('you are here')
     await manager.connect(room_id, websocket)
     try:
         while True:
@@ -50,7 +47,7 @@ async def websocket_chat(websocket: WebSocket, room_id: str):
             message = json.loads(data)
             print(message)
             await manager.broadcast(
-                f" {message['user_name']} says: {message['message_txt']}",
+                f" {message['user_name']} in room {room_id} says: {message['message_txt']}",
                 room_id,
                 websocket,
             )
