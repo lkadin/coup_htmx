@@ -29,10 +29,13 @@ class ConnectionManager:
         print("Sent a personal msg to , ", websocket)
 
     async def broadcast(self, message: str, room_id: str, websocket: WebSocket):
-        for connection in self.active_connections[room_id]:
-            print(connection.client)
-            await connection.send_text(message)
-            print(f"In broadcast: sent {message} to ", room_id, connection.client)
+            for room,websocket in self.active_connections.items():
+                print(room,websocket[0])
+                await websocket[0].send_text(message)
+            # for connection in self.active_connections[user_name]:
+                # print(connection)
+                # await connection.send_text(message)
+                # print(f"In broadcast: sent {message} to ", room_id, connection.client)
 
 
 manager = ConnectionManager()
