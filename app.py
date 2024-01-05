@@ -1,6 +1,7 @@
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
+from fastapi.templating import Jinja2Templates
 
+templates = Jinja2Templates(directory="templates")
 app = FastAPI()
 
 
@@ -27,8 +28,10 @@ manager = ConnectionManager()
 
 
 @app.get("/")
-async def get():
-    return HTMLResponse('hello')
+async def read_item(request: Request):
+    return templates.TemplateResponse(
+        "htmx_version2.html", {"request": request, "books": "First Book"}
+    )
 
 
 @app.websocket("/ws/{client_id}")
@@ -37,11 +40,12 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
     try:
         while True:
             data = await websocket.receive_text()
-            name,message=data.split("|")
+            name, message = data.split("|")
             number_of_people = manager.active_connections.__len__()
             # await manager.send_personal_message(f"{name} wrote: {message}", websocket)
             await manager.broadcast(f"{name} says: {message}")
             await manager.broadcast(f"Number of players : {number_of_people}")
+
     except WebSocketDisconnect:
         manager.disconnect(websocket)
-        await manager.broadcast(f"Client #{client_id} left the chat")
+        await manager.broadcast(f"Client #{client_id} - {name} left the chat")

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Htmx version Chat</title>
+    <script src="/static/js/htmx.min.js"></script>
+</head>
+<body>
+
+<div>
+    <div id="messages" style="height: 200px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;"></div>
+    <input id="messageInput" type="text" placeholder="Type your message">
+    <button onclick="connectWebSocket()">Connect WebSocket</button>
+</div>
+
+<script>
+    const messagesDiv = document.getElementById('messages');
+    const messageInput = document.getElementById('messageInput');
+    let ws;
+
+    function connectWebSocket() {
+        ws = new WebSocket("ws://localhost:8000/ws/3");
+
+        ws.onopen = (event) => {
+            console.log("WebSocket Connection Opened:", event);
+            // Now that the WebSocket is open, you can send messages
+            sendMessage();
+        };
+
+        ws.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            messagesDiv.innerHTML += `<p>${message}</p>`;
+        };
+
+        ws.onclose = (event) => {
+            console.log("WebSocket Connection Closed:", event);
+        };
+    }
+
+    function sendMessage() {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(messageInput.value);
+            messageInput.value = '';
+        } else {
+            console.log("WebSocket not open yet. Wait for onopen event.");
+        }
+    }
+
+    messageInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+</script>
+
+</body>
+</html>

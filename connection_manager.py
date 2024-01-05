@@ -30,14 +30,9 @@ class ConnectionManager:
 
     async def broadcast(self, message: str, room_id: str, websocket: WebSocket):
             for room,websocket in self.active_connections.items():
-                print(room,websocket[0])
+                print(room,websocket)
                 await websocket[0].send_text(message)
-            # for connection in self.active_connections[user_name]:
-                # print(connection)
-                # await connection.send_text(message)
-                # print(f"In broadcast: sent {message} to ", room_id, connection.client)
-
-
+            await self.send_personal_message( "This goes to 2 only",self.active_connections['2'][0])
 manager = ConnectionManager()
 
 
