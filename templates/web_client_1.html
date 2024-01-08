@@ -48,7 +48,6 @@
         var user_name_text=user_name.value
         var message_txt=message.value
         var json_message='{"user_name":"'+user_name_text+'","message_txt":"'+message_txt+'"}'
-        // var json_message='{"user_name":"Lee","message_txt":"This is my message"}'
         console.log(json_message)
         ws.send(json_message);
         json_message = '';
