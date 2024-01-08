@@ -2,7 +2,7 @@ from fastapi import FastAPI, WebSocket, Request
 import json
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse
 import uvicorn
 
 app = FastAPI()
@@ -82,6 +82,42 @@ async def read_item4(request: Request):
             "request": request,
         },
     )
+
+
+@app.get("/htmx/", response_class=PlainTextResponse)
+async def read_htmx(request: Request):
+    return "<h1>This is the response</h1>" 
+
+@app.get("/joke/", response_class=HTMLResponse)
+async def joke(request: Request):
+    return templates.TemplateResponse(
+        "joke.html",
+        {
+            "request": request,
+        },
+    )
+
+
+@app.websocket("/ws/{room_id}")
+async def websocket_chat(websocket: WebSocket, room_id: str):
+    await manager.connect(room_id, websocket)
+    try:
+        while True:
+            data = await websocket.receive_text()
+            message = json.loads(data)
+            print(message)
+            await manager.broadcast(
+                f" {message['user_name']} in room {room_id} says: {message['message_txt']}",
+                room_id,
+                websocket,
+            )
+    except Exception as e:
+        print("Got an exception ", e)
+        await manager.disconnect(room_id, websocket)
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
 
 
 @app.websocket("/ws/{room_id}")

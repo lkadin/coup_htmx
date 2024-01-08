@@ -1,0 +1,19 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Main</title>
+</head>
+
+<script src="https://unpkg.com/htmx.org@1.9.4"></script> 
+
+
+<button
+  hx-get="/htmx"
+  hx-target="#joke-container"
+>
+  Make me laugh!
+</button>
+
+<p id="joke-container">Click the button to load a joke...</p>
