@@ -1,8 +1,11 @@
-from fastapi import FastAPI, WebSocket,Request
+from fastapi import FastAPI, WebSocket, Request
+import json
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
-import json
+import uvicorn
+
+app = FastAPI()
 
 templates = Jinja2Templates(directory="templates")
 
@@ -50,6 +53,7 @@ async def read_item1(request: Request):
         },
     )
 
+
 @app.get("/web2/", response_class=HTMLResponse)
 async def read_item2(request: Request):
     return templates.TemplateResponse(
@@ -58,6 +62,7 @@ async def read_item2(request: Request):
             "request": request,
         },
     )
+
 
 @app.get("/web3/", response_class=HTMLResponse)
 async def read_item3(request: Request):
@@ -68,6 +73,7 @@ async def read_item3(request: Request):
         },
     )
 
+
 @app.get("/web4/", response_class=HTMLResponse)
 async def read_item4(request: Request):
     return templates.TemplateResponse(
@@ -76,6 +82,7 @@ async def read_item4(request: Request):
             "request": request,
         },
     )
+
 
 @app.websocket("/ws/{room_id}")
 async def websocket_chat(websocket: WebSocket, room_id: str):
@@ -93,3 +100,7 @@ async def websocket_chat(websocket: WebSocket, room_id: str):
     except Exception as e:
         print("Got an exception ", e)
         await manager.disconnect(room_id, websocket)
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
