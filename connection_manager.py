@@ -120,23 +120,6 @@ if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
 
-@app.websocket("/ws/{room_id}")
-async def websocket_chat(websocket: WebSocket, room_id: str):
-    await manager.connect(room_id, websocket)
-    try:
-        while True:
-            data = await websocket.receive_text()
-            message = json.loads(data)
-            print(message)
-            await manager.broadcast(
-                f" {message['user_name']} in room {room_id} says: {message['message_txt']}",
-                room_id,
-                websocket,
-            )
-    except Exception as e:
-        print("Got an exception ", e)
-        await manager.disconnect(room_id, websocket)
-
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
