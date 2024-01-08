@@ -1,6 +1,7 @@
-from fastapi import FastAPI, WebSocket
+from fastapi import FastAPI, WebSocket,Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
 import json
 
 templates = Jinja2Templates(directory="templates")
@@ -29,12 +30,52 @@ class ConnectionManager:
         print("Sent a personal msg to , ", websocket)
 
     async def broadcast(self, message: str, room_id: str, websocket: WebSocket):
-            for room,websocket in self.active_connections.items():
-                print(room,websocket)
-                await websocket[0].send_text(message)
-            await self.send_personal_message( "This goes to 2 only",self.active_connections['2'][0])
+        for room, websocket in self.active_connections.items():
+            print(room, websocket)
+            await websocket[0].send_text(message)
+        await self.send_personal_message(
+            "This goes to 2 only", self.active_connections["2"][0]
+        )
+
+
 manager = ConnectionManager()
 
+
+@app.get("/web1/", response_class=HTMLResponse)
+async def read_item1(request: Request):
+    return templates.TemplateResponse(
+        "web_client_1.html",
+        {
+            "request": request,
+        },
+    )
+
+@app.get("/web2/", response_class=HTMLResponse)
+async def read_item2(request: Request):
+    return templates.TemplateResponse(
+        "web_client_2.html",
+        {
+            "request": request,
+        },
+    )
+
+@app.get("/web3/", response_class=HTMLResponse)
+async def read_item3(request: Request):
+    return templates.TemplateResponse(
+        "web_client_3.html",
+        {
+            "request": request,
+        },
+    )
+
+@app.get("/web4/", response_class=HTMLResponse)
+async def read_item4(request: Request):
+    return templates.TemplateResponse(
+        "web_client_4.html",
+        {
+            "request": request,
+        },
+    )
 
 @app.websocket("/ws/{room_id}")
 async def websocket_chat(websocket: WebSocket, room_id: str):
