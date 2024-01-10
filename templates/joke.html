@@ -1,12 +1,12 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Main</title>
+    <title>Joke</title>
 </head>
 
 <script src="https://unpkg.com/htmx.org@1.9.4"></script> 
+<script src="https://unpkg.com/htmx.org/dist/ext/ws.js"></script>
 
 
 <button
@@ -17,3 +17,18 @@
 </button>
 
 <p id="joke-container">Click the button to load a joke...</p>
+
+
+<div hx-ext="ws" ws-connect="/ws/3">
+    <div id="notifications"></div>
+    <div id="joke-room">
+        ...
+    </div>
+    
+
+<form hx-ws="send">
+        <input name="user_name">
+        <input name="message_text">
+    </form>
+  </div>
+    
