@@ -104,8 +104,9 @@ async def websocket_chat(websocket: WebSocket, room_id: str):
     try:
         while True:
             data = await websocket.receive_text()
+            print(f"{data=}")
             message = json.loads(data)
-            print(message)
+            print(f"{message=}")
             await manager.broadcast(
                 f" {message['user_name']} in room {room_id} says: {message['message_txt']}",
                 room_id,
