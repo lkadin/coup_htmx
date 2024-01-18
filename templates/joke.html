@@ -20,16 +20,18 @@
 
 
 <div hx-ext="ws" ws-connect="/ws/3">
-    <div id="notifications"></div>
-    <div id="joke-room">
-        ...
-    </div>
     
 
 <form hx-ws="send">
         <input name="user_name">
         <input name="message_txt">
-        <button type="submit">Submit</button>
+        <button
+        hx-target="#notifications"
+         type="submit">Submit
+        </button>
     </form>
   </div>
     
+<div id="notifications" hx-swap-oob="beforeend">
+    New message received
+</div>
