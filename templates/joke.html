@@ -23,12 +23,11 @@
     
 
 <form hx-ws="send">
+  <hx-target="notifications"></hx-target>
+  <form>
         <input name="user_name">
         <input name="message_txt">
-        <button
-        hx-target="#notifications"
-         type="submit">Submit
-        </button>
+        <input type="submit" value="Submit">
     </form>
   </div>
     
