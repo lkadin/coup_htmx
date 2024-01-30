@@ -4,6 +4,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, PlainTextResponse
 import uvicorn
+from datetime import datetime
 
 app = FastAPI()
 
@@ -33,11 +34,21 @@ class ConnectionManager:
         print("Sent a personal msg to , ", websocket)
 
     async def broadcast(self, message: str, room_id: str, websocket: WebSocket):
+        time=   datetime.now()
+        content = f"""
+            <div hx-swap-oob="beforeend:#notifications">
+            <p>{time}: {message}</p>
+            </div>
+        """
         for room, websocket in self.active_connections.items():
-            print(room, websocket)
+            # print(room, websocket)
             await websocket[0].send_text(message)
         await self.send_personal_message(
-            "This goes to 2 only", self.active_connections["2"][0]
+            content, self.active_connections["2"][0]
+        )
+
+        await self.send_personal_message(
+            content, self.active_connections["3"][0]
         )
 
 
@@ -86,7 +97,8 @@ async def read_item4(request: Request):
 
 @app.get("/htmx/", response_class=PlainTextResponse)
 async def read_htmx(request: Request):
-    return "<h1>This is the response</h1>" 
+    return "<h1>This is the response</h1>"
+
 
 @app.get("/joke/", response_class=HTMLResponse)
 async def joke(request: Request):
@@ -98,13 +110,24 @@ async def joke(request: Request):
     )
 
 
+@app.get("/ltest/", response_class=HTMLResponse)
+async def ltest(request: Request):
+    return templates.TemplateResponse(
+        "ltest.html",
+        {
+            "request": request,
+        },
+    )
+
+
 @app.websocket("/ws/{room_id}")
 async def websocket_chat(websocket: WebSocket, room_id: str):
     await manager.connect(room_id, websocket)
+    print(f"room-{room_id}")
     try:
         while True:
             data = await websocket.receive_text()
-            print(f"{data=}")
+            # print(f"{data=}")
             message = json.loads(data)
             print(f"{message=}")
             await manager.broadcast(

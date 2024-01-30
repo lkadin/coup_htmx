@@ -7,8 +7,9 @@
 
 <script src="https://unpkg.com/htmx.org@1.9.4"></script> 
 <script src="https://unpkg.com/htmx.org/dist/ext/ws.js"></script>
+<script src="https://unpkg.com/htmx.org/dist/ext/debug.js"></script>
 
-
+<body>
 <button
   hx-get="/htmx"
   hx-target="#joke-container"
@@ -19,12 +20,11 @@
 <p id="joke-container">Click the button to load a joke...</p>
 
 
-<div hx-ext="ws" ws-connect="/ws/3">
+<div hx-ws="connect:/ws/3">
+
     
 
-<form hx-ws="send">
-  <hx-target="notifications"></hx-target>
-  <form>
+<form hx-ws="send"  hx-target="notifications">
         <input name="user_name">
         <input name="message_txt">
         <input type="submit" value="Submit">
@@ -34,3 +34,5 @@
 <div id="notifications" hx-swap-oob="beforeend">
     New message received
 </div>
+</body>
+</html>
