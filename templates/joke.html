@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Joke</title>
+    <title>HTMX Client 3</title>
 </head>
 
 <script src="https://unpkg.com/htmx.org@1.9.4"></script> 
@@ -10,15 +10,6 @@
 <script src="https://unpkg.com/htmx.org/dist/ext/debug.js"></script>
 
 <body>
-<button
-  hx-get="/htmx"
-  hx-target="#joke-container"
->
-  Make me laugh!
-</button>
-
-<p id="joke-container">Click the button to load a joke...</p>
-
 
 <div hx-ws="connect:/ws/3">
 
