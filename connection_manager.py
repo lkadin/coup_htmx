@@ -50,9 +50,9 @@ class ConnectionManager:
         await self.send_personal_message(content, self.active_connections["1"][0])
 
         content = f"""
-            <div hx-swap-oob="beforeend:#photo">
+            <div hx-swap-oob="innerHTML:#photo">
             <p>{time}: PRIVATE</p>
-            <img src="/static/jpg/CIMG4069.JPG" alt="Not Our wedding" width="500" height="600">
+            <img src="/static/jpg/CIMG4069.JPG" alt="Not Our wedding" width="800" height="600">
             </div>
         """
         await self.send_personal_message(content, self.active_connections["3"][0])
