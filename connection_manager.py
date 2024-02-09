@@ -2,7 +2,7 @@ from fastapi import FastAPI, WebSocket, Request
 import json
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse, PlainTextResponse
+from fastapi.responses import HTMLResponse
 import uvicorn
 from datetime import datetime
 
@@ -33,87 +33,27 @@ class ConnectionManager:
         await websocket.send_text(message)
         print("Sent a personal msg to , ", websocket)
 
-    async def broadcast(self, message: str, room_id: str, websocket: WebSocket):
-        time=   datetime.now()
+    async def broadcast(self, message: str,  websocket: WebSocket):
+        time = datetime.now()
         content = f"""
             <div hx-swap-oob="beforeend:#notifications">
             <p>{time}: {message}</p>
             </div>
         """
         for room, websocket in self.active_connections.items():
-            # print(room, websocket)
-            await websocket[0].send_text(message)
-        await self.send_personal_message(
-            content, self.active_connections["2"][0]
-        )
+            await self.send_personal_message(content, self.active_connections[room][0])
+        # await self.send_personal_message(content, self.active_connections["2"][0])
 
-        await self.send_personal_message(
-            content, self.active_connections["3"][0]
-        )
+        # await self.send_personal_message(content, self.active_connections["3"][0])
 
 
 manager = ConnectionManager()
 
 
-@app.get("/web1/", response_class=HTMLResponse)
-async def read_item1(request: Request):
+@app.get("/web/{room_id}/", response_class=HTMLResponse)
+async def read_itemx(request: Request, room_id: str):
     return templates.TemplateResponse(
-        "web_client_1.html",
-        {
-            "request": request,
-        },
-    )
-
-
-@app.get("/web2/", response_class=HTMLResponse)
-async def read_item2(request: Request):
-    return templates.TemplateResponse(
-        "web_client_2.html",
-        {
-            "request": request,
-        },
-    )
-
-
-@app.get("/web3/", response_class=HTMLResponse)
-async def read_item3(request: Request):
-    return templates.TemplateResponse(
-        "web_client_3.html",
-        {
-            "request": request,
-        },
-    )
-
-
-@app.get("/web4/", response_class=HTMLResponse)
-async def read_item4(request: Request):
-    return templates.TemplateResponse(
-        "web_client_4.html",
-        {
-            "request": request,
-        },
-    )
-
-
-@app.get("/htmx/", response_class=PlainTextResponse)
-async def read_htmx(request: Request):
-    return "<h1>This is the response</h1>"
-
-
-@app.get("/joke/", response_class=HTMLResponse)
-async def joke(request: Request):
-    return templates.TemplateResponse(
-        "joke.html",
-        {
-            "request": request,
-        },
-    )
-
-
-@app.get("/ltest/", response_class=HTMLResponse)
-async def ltest(request: Request):
-    return templates.TemplateResponse(
-        "ltest.html",
+        f"htmx_client_{room_id}.html",
         {
             "request": request,
         },
@@ -127,12 +67,11 @@ async def websocket_chat(websocket: WebSocket, room_id: str):
     try:
         while True:
             data = await websocket.receive_text()
-            # print(f"{data=}")
             message = json.loads(data)
             print(f"{message=}")
             await manager.broadcast(
                 f" {message['user_name']} in room {room_id} says: {message['message_txt']}",
-                room_id,
+                # room_id,
                 websocket,
             )
     except Exception as e:
