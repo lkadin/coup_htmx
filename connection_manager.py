@@ -42,7 +42,12 @@ class ConnectionManager:
         """
         for room, websocket in self.active_connections.items():
             await self.send_personal_message(content, self.active_connections[room][0])
-        # await self.send_personal_message(content, self.active_connections["2"][0])
+        content = f"""
+            <div hx-swap-oob="beforeend:#private_message">
+            <p>{time}: PRIVATE</p>
+            </div>
+        """
+        await self.send_personal_message(content, self.active_connections["1"][0])
 
         # await self.send_personal_message(content, self.active_connections["3"][0])
 
