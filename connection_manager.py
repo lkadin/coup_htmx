@@ -49,7 +49,13 @@ class ConnectionManager:
         """
         await self.send_personal_message(content, self.active_connections["1"][0])
 
-        # await self.send_personal_message(content, self.active_connections["3"][0])
+        content = f"""
+            <div hx-swap-oob="beforeend:#photo">
+            <p>{time}: PRIVATE</p>
+            <img src="/static/jpg/CIMG4069.JPG" alt="Not Our wedding" width="500" height="600">
+            </div>
+        """
+        await self.send_personal_message(content, self.active_connections["3"][0])
 
 
 manager = ConnectionManager()
@@ -77,7 +83,6 @@ async def websocket_chat(websocket: WebSocket, room_id: str):
             print(f"{message=}")
             await manager.broadcast(
                 f" {message['user_name']} in room {room_id} says: {message['message_txt']}",
-                # room_id,
                 websocket,
             )
     except Exception as e:
