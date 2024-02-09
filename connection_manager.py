@@ -58,9 +58,10 @@ manager = ConnectionManager()
 @app.get("/web/{room_id}/", response_class=HTMLResponse)
 async def read_itemx(request: Request, room_id: str):
     return templates.TemplateResponse(
-        f"htmx_client_{room_id}.html",
+        "htmx_client_generic.html",
         {
             "request": request,
+            "room_id":room_id
         },
     )
 
