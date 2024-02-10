@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 import uvicorn
 from datetime import datetime
+import random
 
 app = FastAPI()
 
@@ -13,6 +14,27 @@ templates = Jinja2Templates(directory="templates")
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+
+class Card:
+    def __init__(self, value) -> None:
+        self, value = value
+
+
+class Deck:
+    def __init__(self) -> None:
+        self.cards = []
+        for value in ["Duke", "Assassin", "Ambassador", "Captain", "Contessa"]:
+            for _ in range(3):
+                self.cards.append(value)
+
+    def shuffle(self):
+        random.shuffle(self.cards)
+
+    def draw(self):
+        return self.cards.pop()
+
+    def __repr__(self) -> str:
+        return ' '.join([self.card for self.card in self.cards])
 
 class ConnectionManager:
     def __init__(self) -> None:
@@ -33,7 +55,7 @@ class ConnectionManager:
         await websocket.send_text(message)
         print("Sent a personal msg to , ", websocket)
 
-    async def broadcast(self, message: str,  websocket: WebSocket):
+    async def broadcast(self, message: str, websocket: WebSocket):
         time = datetime.now()
         content = f"""
             <div hx-swap-oob="beforeend:#notifications">
@@ -58,6 +80,10 @@ class ConnectionManager:
         await self.send_personal_message(content, self.active_connections["3"][0])
 
 
+deck = Deck()
+deck.shuffle()
+print(deck.draw())
+print(deck)
 manager = ConnectionManager()
 
 
@@ -65,10 +91,7 @@ manager = ConnectionManager()
 async def read_itemx(request: Request, room_id: str):
     return templates.TemplateResponse(
         "htmx_client_generic.html",
-        {
-            "request": request,
-            "room_id":room_id
-        },
+        {"request": request, "room_id": room_id},
     )
 
 
