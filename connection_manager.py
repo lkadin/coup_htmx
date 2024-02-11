@@ -1,6 +1,7 @@
 from fastapi import WebSocket
 from datetime import datetime
 from content import Content
+from coup import Game
 
 
 class ConnectionManager:
@@ -22,7 +23,7 @@ class ConnectionManager:
         await websocket.send_text(message)
         print("Sent a personal msg to , ", websocket)
 
-    async def broadcast(self, message: str, websocket: WebSocket):
+    async def broadcast(self, message: str, websocket: WebSocket, game: Game):
         time = datetime.now()
         content = f"""
             <div hx-swap-oob="beforeend:#notifications">
