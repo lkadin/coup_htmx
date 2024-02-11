@@ -1,5 +1,6 @@
 import random
 
+
 class Card:
     def __init__(self, value) -> None:
         self, value = value
@@ -19,14 +20,51 @@ class Deck:
         return self.cards.pop()
 
     def __repr__(self) -> str:
-        return ' '.join([self.card for self.card in self.cards])
+        return " ".join([self.card for self.card in self.cards])
+
+
+class Player:
+    def __init__(self, name) -> None:
+        self.name = name
+        self.hand = []
+
+    def draw(self, deck):
+        self.hand.append(deck.draw())
+
+    def play_card(self):
+        return self.hand.pop()
+
+    def __repr__(self) -> str:
+        return self.name
+
+
+class Game:
+    def __init__(self, players) -> None:
+        self.players = []
+        self.NUM_OF_CARDS = 2
+        self.deck = Deck()
+        self.deck.shuffle()
+        self.player_ids = players
+        for player in self.player_ids:
+            self.add_player(Player(player))
+
+        for _ in range(self.NUM_OF_CARDS):
+            for player in self.players:
+                player.draw(self.deck)
+
+    def add_player(self, player):
+        self.players.append(player)
+
+    def play(self):
+        for player in self.players:
+            print(player)
+            print(player.hand)
 
 
 def main():
-    deck = Deck()
-    deck.shuffle()
-    print(deck.draw())
-    print(deck)
+    game = Game(["1", "2", "3", "4"])
+    game.play()
 
-if __name__=='__main__':
+
+if __name__ == "__main__":
     main()

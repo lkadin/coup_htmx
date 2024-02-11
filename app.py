@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 import uvicorn
 from connection_manager import ConnectionManager
+from coup import Game
 
 app = FastAPI()
 
@@ -13,7 +14,8 @@ templates = Jinja2Templates(directory="templates")
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-
+game = Game(["1", "2", "3", "4"])
+game.play()
 manager = ConnectionManager()
 
 
