@@ -1,5 +1,6 @@
 from fastapi import WebSocket
 from datetime import datetime
+from content import Content
 
 
 class ConnectionManager:
@@ -37,10 +38,13 @@ class ConnectionManager:
         """
         await self.send_personal_message(content, self.active_connections["1"][0])
 
-        content = f"""
+        content = """
             <div hx-swap-oob="innerHTML:#photo">
-            <p>{time}: PRIVATE</p>
             <img src="/static/jpg/duke.JPG" alt="duke">
             </div>
         """
         await self.send_personal_message(content, self.active_connections["3"][0])
+
+        html = Content("1")
+        content = html.html()
+        await self.send_personal_message(content, self.active_connections["2"][0])
