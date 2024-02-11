@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>HTMX Client {{room_id}}</title>
+    <title>HTMX Client {{user_id}}</title>
 </head>
 
 <script src="https://unpkg.com/htmx.org@1.9.4"></script> 
@@ -11,9 +11,9 @@
 
 <body>
 
-<div hx-ws="connect:/ws/{{room_id}}">
+<div hx-ws="connect:/ws/{{user_id}}">
 
-<h1> User {{room_id}} </h1>
+<h1> User {{user_id}} </h1>
 
 <form hx-ws="send"  hx-target="notifications">
         <input name="user_name">

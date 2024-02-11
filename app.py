@@ -17,30 +17,30 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 manager = ConnectionManager()
 
 
-@app.get("/web/{room_id}/", response_class=HTMLResponse)
-async def read_itemx(request: Request, room_id: str):
+@app.get("/web/{user_id}/", response_class=HTMLResponse)
+async def read_itemx(request: Request, user_id: str):
     return templates.TemplateResponse(
-        "htmx_client_generic.html",
-        {"request": request, "room_id": room_id},
+        "htmx_user_generic.html",
+        {"request": request, "user_id": user_id},
     )
 
 
-@app.websocket("/ws/{room_id}")
-async def websocket_chat(websocket: WebSocket, room_id: str):
-    await manager.connect(room_id, websocket)
-    print(f"room-{room_id}")
+@app.websocket("/ws/{user_id}")
+async def websocket_chat(websocket: WebSocket, user_id: str):
+    await manager.connect(user_id, websocket)
+    print(f"room-{user_id}")
     try:
         while True:
             data = await websocket.receive_text()
             message = json.loads(data)
             print(f"{message=}")
             await manager.broadcast(
-                f" {message['user_name']} in room {room_id} says: {message['message_txt']}",
+                f" {message['user_name']} in room {user_id} says: {message['message_txt']}",
                 websocket,
             )
     except Exception as e:
         print("Got an exception ", e)
-        await manager.disconnect(room_id, websocket)
+        await manager.disconnect(user_id, websocket)
 
 
 if __name__ == "__main__":
