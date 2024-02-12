@@ -14,7 +14,7 @@ templates = Jinja2Templates(directory="templates")
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-game = Game(["1", "2", "3", "4"])
+game = Game(["1", "2", "3", "9"])
 game.play()
 manager = ConnectionManager()
 
@@ -35,11 +35,11 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
         while True:
             data = await websocket.receive_text()
             message = json.loads(data)
-            print(f"{message=}")
+            # print(f"{message=}")
             await manager.broadcast(
                 f" {message['user_name']} in room {user_id} says: {message['message_txt']}",
                 websocket,
-                game,
+                game,user_id
             )
     except Exception as e:
         print("Got an exception ", e)
