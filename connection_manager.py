@@ -21,7 +21,7 @@ class ConnectionManager:
 
     async def send_personal_message(self, message: str, websocket: WebSocket):
         await websocket.send_text(message)
-        print("Sent a personal msg to , ", websocket)
+        # print("Sent a personal msg to , ", websocket)
 
     async def broadcast(
         self, message: str, websocket: WebSocket, game: Game, user_id: str

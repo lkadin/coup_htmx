@@ -42,7 +42,7 @@ class Content:
         pass
 
     def html(self):
-        print(self.player_ids)
+        print(f"{self.player_ids=}")
         print(f"Content for - {self.user_id}")
         if self.user_id == "1":
             return self.content1()
