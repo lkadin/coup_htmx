@@ -1,9 +1,8 @@
 class Content:
-    def __init__(self, player_ids, user_id) -> None:
+    def __init__(self, player_ids) -> None:
         self.player_ids = player_ids
-        self.user_id = user_id
 
-    def content_generic(self, user_id):
+    def content_generic(self):
         self.table = """
             <div hx-swap-oob="innerHTML:#photo">
             <table style='border-collapse: collapse;'>
@@ -36,4 +35,4 @@ class Content:
         return self.table
 
     def html(self):
-        return self.content_generic(self)
+        return self.content_generic()

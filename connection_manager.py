@@ -28,6 +28,6 @@ class ConnectionManager:
             """
             await self.send_personal_message(content, websocket)
 
-            html = Content(game.player_ids, user_id)
+            html = Content(game.player_ids)
             content = html.html()
             await self.send_personal_message(content, self.active_connections[user_id])
