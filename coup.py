@@ -56,10 +56,7 @@ class Game:
         self.players.append(player)
 
     def play(self):
-        for player in self.players:
-            print(player)
-            print(player.hand)
-
+        pass
 
 def main():
     game = Game(["1", "2", "3", "4"])
