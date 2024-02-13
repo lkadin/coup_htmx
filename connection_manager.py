@@ -24,7 +24,7 @@ class ConnectionManager:
         # print("Sent a personal msg to , ", websocket)
 
     async def broadcast(
-        self, message: str, websocket: WebSocket, game: Game, user_id: str
+        self, message: str,  game: Game, user_id: str
     ):
         time = datetime.now()
         content = f"""

@@ -38,7 +38,6 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
             # print(f"{message=}")
             await manager.broadcast(
                 f" {message['user_name']} in room {user_id} says: {message['message_txt']}",
-                websocket,
                 game,user_id
             )
     except Exception as e:
