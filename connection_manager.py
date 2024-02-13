@@ -20,12 +20,12 @@ class ConnectionManager:
 
     async def broadcast(self, message: str, game: Game):
         time = datetime.now()
-        content = f"""
+        for user_id, websocket in self.active_connections.items():
+            content = f"""
             <div hx-swap-oob="beforeend:#notifications">
             <p>{time}: {message}</p>
             </div>
-        """
-        for user_id, websocket in self.active_connections.items():
+            """
             await self.send_personal_message(content, websocket)
 
             html = Content(game.player_ids, user_id)
