@@ -39,11 +39,37 @@ class Content:
             """
 
     def content9(self):
-        pass
+        self.table = """
+            <div hx-swap-oob="innerHTML:#photo">
+            <table style='border-collapse: collapse;'>
+            <col width="40%">
+            <col width="40%">
+            <tr>
+            
+            """
+        for player_id in self.player_ids:
+            self.table += f"""
+            <td>
+            <p style=text-align:top;><strong>{player_id}</strong> has 2 coins</p>
+            """
+            for card in range(1):
+                self.table += """
+                <img src='/static/jpg/down.png' {card} style=opacity:0.4;>
+                </td>
+                </tr>
+            <tr>
+            <td><br><br></td>
+            </tr>
+            <tr>
+            </tr>
+            </table>
+            </div>
+            """
+        return self.table
 
     def html(self):
-        print(f"{self.player_ids=}")
-        print(f"Content for - {self.user_id}")
+        # print(f"{self.player_ids=}")
+        # print(f"Content for - {self.user_id}")
         if self.user_id == "1":
             return self.content1()
         if self.user_id == "2":
