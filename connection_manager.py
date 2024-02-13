@@ -9,14 +9,14 @@ class ConnectionManager:
         self.active_connections: list[str, WebSocket] = {}
         # print("Creating a list to hold active connections", self.active_connections)
 
-    async def connect(self, room_id: str, websocket: WebSocket):
+    async def connect(self, user_id: str, websocket: WebSocket):
         await websocket.accept()
-        if not self.active_connections.get(room_id):
-            self.active_connections[room_id] = []
-        self.active_connections[room_id].append(websocket)
+        if not self.active_connections.get(user_id):
+            self.active_connections[user_id] = []
+        self.active_connections[user_id].append(websocket)
 
-    async def disconnect(self, room_id: str, websocket: WebSocket):
-        self.active_connections[room_id].remove(websocket)
+    async def disconnect(self, user_id: str, websocket: WebSocket):
+        self.active_connections[user_id].remove(websocket)
         # print("After disconnect active connections are: ", self.active_connections)
 
     async def send_personal_message(self, message: str, websocket: WebSocket):
@@ -32,8 +32,10 @@ class ConnectionManager:
             <p>{time}: {message}</p>
             </div>
         """
-        for room, websocket in self.active_connections.items():
-            await self.send_personal_message(content, self.active_connections[room][0])
+        for user_id, websocket in self.active_connections.items():
+            await self.send_personal_message(
+                content, self.active_connections[user_id][0]
+            )
         content = f"""
             <div hx-swap-oob="beforeend:#private_message">
             <p>{time}: PRIVATE</p>
