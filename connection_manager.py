@@ -25,24 +25,9 @@ class ConnectionManager:
             <p>{time}: {message}</p>
             </div>
         """
-        for user_id,websocket in self.active_connections.items():
+        for user_id, websocket in self.active_connections.items():
             await self.send_personal_message(content, websocket)
 
-        content = f"""
-            <div hx-swap-oob="beforeend:#private_message">
-            <p>{time}: PRIVATE</p>
-            </div>
-        """
-        await self.send_personal_message(content, self.active_connections["1"])
-
-        html = Content(game.player_ids, "3")
-        content = html.html()
-        await self.send_personal_message(content, self.active_connections["3"])
-
-        html = Content(game.player_ids, "2")
-        content = html.html()
-        await self.send_personal_message(content, self.active_connections["2"])
-
-        html = Content(game.player_ids, "9")
-        content = html.html()
-        await self.send_personal_message(content, self.active_connections["9"])
+            html = Content(game.player_ids, user_id)
+            content = html.html()
+            await self.send_personal_message(content, self.active_connections[user_id])

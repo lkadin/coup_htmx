@@ -4,7 +4,11 @@ class Content:
         self.user_id = user_id
 
     def content1(self):
-        pass
+        return """
+            <div hx-swap-oob="innerHTML:#photo">
+            <img src="/static/jpg/duke.JPG" alt="duke">
+            </div>
+            """
 
     def content2(self):
         self.table = """
@@ -68,12 +72,9 @@ class Content:
             </table>
             </div>
             """
-        print(self.table)
         return self.table
 
     def html(self):
-        # print(f"{self.player_ids=}")
-        # print(f"Content for - {self.user_id}")
         if self.user_id == "1":
             return self.content1()
         if self.user_id == "2":
@@ -82,3 +83,4 @@ class Content:
             return self.content3()
         if self.user_id == "9":
             return self.content9()
+        return self.content9
