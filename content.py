@@ -45,18 +45,21 @@ class Content:
             <col width="40%">
             <col width="40%">
             <tr>
-            
             """
         for player_id in self.player_ids:
             self.table += f"""
             <td>
             <p style=text-align:top;><strong>{player_id}</strong> has 2 coins</p>
             """
-            for card in range(1):
+            for card in range(2):
                 self.table += """
                 <img src='/static/jpg/down.png' {card} style=opacity:0.4;>
-                </td>
-                </tr>
+                """
+            self.table += """
+            </td>
+            </tr>
+            """
+        self.table += """    
             <tr>
             <td><br><br></td>
             </tr>
@@ -65,6 +68,7 @@ class Content:
             </table>
             </div>
             """
+        print(self.table)
         return self.table
 
     def html(self):
