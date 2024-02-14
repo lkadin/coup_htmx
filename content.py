@@ -1,6 +1,6 @@
 class Content:
-    def __init__(self, player_ids) -> None:
-        self.player_ids = player_ids
+    def __init__(self, game) -> None:
+        self.players = game.players
 
     def content_generic(self):
         self.table = """
@@ -10,10 +10,11 @@ class Content:
             <col width="40%">
             <tr>
             """
-        for player_id in self.player_ids:
+        for id, player in self.players.items():
+            print(player, id)
             self.table += f"""
             <td>
-            <p style=text-align:top;><strong>{player_id}</strong> has 2 coins</p>
+            <p style=text-align:top;><strong>{player.id}</strong> has 2 coins</p>
             """
             for card in range(2):
                 self.table += """
