@@ -9,7 +9,7 @@ class Card:
 class Deck:
     def __init__(self) -> None:
         self.cards = []
-        for value in ["Duke", "Assassin", "Ambassador", "Captain", "Contessa"]:
+        for value in ["duke", "assassin", "ambassador", "captain", "contessa"]:
             for _ in range(3):
                 self.cards.append(value)
 
