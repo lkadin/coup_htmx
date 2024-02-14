@@ -30,18 +30,17 @@ async def read_itemx(request: Request, user_id: str):
 @app.websocket("/ws/{user_id}")
 async def websocket_chat(websocket: WebSocket, user_id: str):
     await manager.connect(user_id, websocket)
-    try:
-        while True:
-            data = await websocket.receive_text()
-            message = json.loads(data)
-            await manager.broadcast(
-                f" {message['user_name']} in room {user_id} says: {message['message_txt']}",
-                game,
-                
-            )
-    except Exception as e:
-        print("Got an exception ", e)
-        await manager.disconnect(user_id, websocket)
+    # try:
+    while True:
+        data = await websocket.receive_text()
+        message = json.loads(data)
+        await manager.broadcast(
+            f" {message['user_name']} in room {user_id} says: {message['message_txt']}",
+            game,
+        )
+    # except Exception as e:
+    #     print("Got an exception ", e)
+    # await manager.disconnect(user_id, websocket)
 
 
 if __name__ == "__main__":
