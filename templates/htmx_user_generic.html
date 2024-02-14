@@ -12,17 +12,12 @@
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 <body>
-
     <div class="container">
-        <div class="row align-items-start">
-            <div class="col">
-                <div id="notifications" hx-swap-oob="beforeend">
-                    One of two columns
-                </div>
+        <div class="row">
+
+            <div class="col-2" class="d-flex justify-content-start" id="notifications" hx-swap-oob="beforeend">
                 <div hx-ws="connect:/ws/{{user_id}}">
-
                     <h1> User {{user_id}} </h1>
-
                     <form hx-ws="send" hx-target="notifications">
                         <input name="user_name">
                         <input name="message_txt">
@@ -30,14 +25,14 @@
                     </form>
                 </div>
             </div>
-
-            <div class="col">
-                Two of two columns
-                <div id="photo">
-                    <img src="/static/jpg/contessa.jpg" alt="countessa">
-                </div>
+            <div class="col-9" id="photo">
+                <img src="/static/jpg/contessa.jpg" alt="countessa">
+                <img src="/static/jpg/contessa.jpg" alt="countessa">
             </div>
         </div>
+
+
+    </div>
     </div>
 </body>
 

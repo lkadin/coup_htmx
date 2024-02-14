@@ -6,9 +6,6 @@ class Content:
     def content_generic(self):
         self.table = """
             <div hx-swap-oob="innerHTML:#photo">
-            <table style='border-collapse: collapse;'>
-            <col width="40%">
-            <col width="40%">
             <tr>
             """
         for id, player in self.players.items():
