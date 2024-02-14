@@ -24,9 +24,10 @@ class Deck:
 
 
 class Player:
-    def __init__(self, name) -> None:
-        self.name = name
+    def __init__(self, id) -> None:
+        self.id = id
         self.hand = []
+        self.coins = 2
 
     def draw(self, deck):
         self.hand.append(deck.draw())
@@ -35,28 +36,26 @@ class Player:
         return self.hand.pop()
 
     def __repr__(self) -> str:
-        return self.name
+        return self.id + "-" + " ".join(self.hand)
 
 
 class Game:
-    def __init__(self, players) -> None:
-        self.players = []
+    def __init__(self, player_ids) -> None:
+        self.player_ids = player_ids
+        self.players = {}
         self.NUM_OF_CARDS = 2
         self.deck = Deck()
         self.deck.shuffle()
-        self.player_ids = players
-        for player in self.player_ids:
-            self.add_player(Player(player))
+        for player_id in self.player_ids:
+            self.players[player_id] = Player(player_id)
 
         for _ in range(self.NUM_OF_CARDS):
-            for player in self.players:
+            for player_id, player in self.players.items():
                 player.draw(self.deck)
-
-    def add_player(self, player):
-        self.players.append(player)
 
     def play(self):
         pass
+
 
 def main():
     game = Game(["1", "2", "3", "4"])
