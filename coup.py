@@ -35,8 +35,11 @@ class Player:
     def play_card(self):
         return self.hand.pop()
 
+    def add_remove_coins(self, num_of_coins):
+        self.coins += num_of_coins
+
     def __repr__(self) -> str:
-        return self.id + "-" + " ".join(self.hand)
+        return self.id + "-" + " ".join(self.hand) + f"{self.coins=}"
 
 
 class Action:
