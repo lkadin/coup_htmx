@@ -3,7 +3,7 @@ import random
 
 class Card:
     def __init__(self, value) -> None:
-        self, value = value
+        self.value = value
 
 
 class Deck:
@@ -39,6 +39,13 @@ class Player:
         return self.id + "-" + " ".join(self.hand)
 
 
+class Action:
+    def __init__(self, name, coins_required, url) -> None:
+        self.name = name
+        self.coins_required = coins_required
+        self.url = url
+
+
 class Game:
     def __init__(self, player_ids) -> None:
         self.player_ids = player_ids
@@ -46,12 +53,17 @@ class Game:
         self.NUM_OF_CARDS = 2
         self.deck = Deck()
         self.deck.shuffle()
-        for player_id in self.player_ids:
-            self.players[player_id] = Player(player_id)
+        self.add_all_players()
+        self.initial_deal()
 
+    def initial_deal(self):
         for _ in range(self.NUM_OF_CARDS):
             for player_id, player in self.players.items():
                 player.draw(self.deck)
+
+    def add_all_players(self):
+        for player_id in self.player_ids:
+            self.players[player_id] = Player(player_id)
 
     def play(self):
         pass
