@@ -12,7 +12,7 @@
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 <body>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <div id="notifications" class="col-2">
                 <div hx-ws="connect:/ws/{{user_id}}">
@@ -23,6 +23,9 @@
                         <input type="submit" value="Submit">
                     </form>
                 </div>
+                <a href="/coup/action.url?action=Steal"><b>Steal</b></a>
+                <br>
+                <a href="/coup/action.url?action=Take 3 coins"><b>Take 3 coins</b></a>
             </div>
             <div class="col-3" id="photo">
                 <img src="/static/jpg/contessa.jpg" alt="countessa">
