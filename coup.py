@@ -59,7 +59,7 @@ class Game:
 
     def initial_deal(self):
         for _ in range(self.NUM_OF_CARDS):
-            for player_id, player in self.players.items():
+            for player in self.players.values():
                 player.draw(self.deck)
 
     def add_all_players(self):

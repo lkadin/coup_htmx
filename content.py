@@ -7,7 +7,7 @@ class Content:
         self.table = """
             <div hx-swap-oob="innerHTML:#photo">
             """
-        for id, player in self.players.items():
+        for player in self.players.values():
             self.table += f"""
             <p style=text-align:top;><strong>{player.id}</strong> has 2 coins</p>
             """
