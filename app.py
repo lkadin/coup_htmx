@@ -23,7 +23,7 @@ manager = ConnectionManager()
 async def read_itemx(request: Request, user_id: str):
     return templates.TemplateResponse(
         "htmx_user_generic.html",
-        {"request": request, "user_id": user_id},
+        {"request": request, "user_id": user_id, "actions": game.actions},
     )
 
 

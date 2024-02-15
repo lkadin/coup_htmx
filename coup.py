@@ -40,10 +40,9 @@ class Player:
 
 
 class Action:
-    def __init__(self, name, coins_required, url) -> None:
+    def __init__(self, name, coins_required) -> None:
         self.name = name
         self.coins_required = coins_required
-        self.url = url
 
 
 class Game:
@@ -55,6 +54,8 @@ class Game:
         self.deck.shuffle()
         self.add_all_players()
         self.initial_deal()
+        self.actions = []
+        self.add_all_actions()
 
     def initial_deal(self):
         for _ in range(self.NUM_OF_CARDS):
@@ -64,6 +65,17 @@ class Game:
     def add_all_players(self):
         for player_id in self.player_ids:
             self.players[player_id] = Player(player_id)
+
+    def add_all_actions(self):
+        for name, number_of_coins in [
+            ("Assassinate", 3),
+            ("Coup", 7),
+            ("Steal", 0),
+            ("Take 3 coins", 0),
+            ("Foreign aid", 0),
+            ("Income", 0),
+        ]:
+            self.actions.append(Action(name, number_of_coins))
 
     def play(self):
         pass

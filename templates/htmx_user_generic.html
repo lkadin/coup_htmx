@@ -23,9 +23,10 @@
                         <input type="submit" value="Submit">
                     </form>
                 </div>
-                <a href="/coup/action.url?action=Steal"><b>Steal</b></a>
+                {% for action in actions %}
+                <a href="/coup/action.url?action={action.name}"><b>{{action.name}}</b></a>
                 <br>
-                <a href="/coup/action.url?action=Take 3 coins"><b>Take 3 coins</b></a>
+                {% endfor %}
             </div>
             <div class="col-3" id="photo">
                 <img src="/static/jpg/contessa.jpg" alt="countessa">
