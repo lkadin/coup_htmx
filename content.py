@@ -5,10 +5,10 @@ class Content:
 
     def content_generic(self):
         self.table = """
-            <div hx-swap-oob="innerHTML:#photo">
             """
         for player in self.players.values():
             self.table += f"""
+            <div hx-swap-oob="innerHTML:#photo">
             <p style=text-align:top;><strong>{player.id}</strong> has 2 coins</p>
             """
             for card in player.hand:
