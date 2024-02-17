@@ -24,9 +24,16 @@ manager = ConnectionManager()
 
 @app.get("/web/{user_id}/", response_class=HTMLResponse)
 async def read_itemx(request: Request, user_id: str):
+    user_name = game.players[user_id].name
+    print(user_name)
     return templates.TemplateResponse(
         "htmx_user_generic.html",
-        {"request": request, "user_id": user_id, "actions": game.actions},
+        {
+            "request": request,
+            "user_id": user_id,
+            "user_name": user_name,
+            "actions": game.actions,
+        },
     )
 
 
