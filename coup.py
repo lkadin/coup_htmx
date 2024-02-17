@@ -68,6 +68,13 @@ class Game:
     def add_all_players(self):
         for player_id in self.player_ids:
             self.players[player_id] = Player(player_id)
+        random.shuffle(self.player_ids)
+        self.current_player_index = 0
+
+    def next_turn(self):
+        self.current_player_index += 1
+        if self.current_player_index > 3:
+            self.current_player_index0
 
     def add_all_actions(self):
         for name, number_of_coins in [
