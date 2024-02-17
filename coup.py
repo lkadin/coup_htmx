@@ -24,7 +24,7 @@ class Deck:
 
 
 class Player:
-    def __init__(self, id) -> None:
+    def __init__(self, id: str) -> None:
         self.id = id
         self.hand = []
         self.coins = 2
@@ -32,10 +32,10 @@ class Player:
     def draw(self, deck):
         self.hand.append(deck.draw())
 
-    def play_card(self):
+    def play_card(self) -> list[str]:
         return self.hand.pop()
 
-    def add_remove_coins(self, num_of_coins):
+    def add_remove_coins(self, num_of_coins: int):
         self.coins += num_of_coins
 
     def __repr__(self) -> str:
@@ -43,13 +43,13 @@ class Player:
 
 
 class Action:
-    def __init__(self, name, coins_required) -> None:
+    def __init__(self, name, coins_required: int) -> None:
         self.name = name
         self.coins_required = coins_required
 
 
 class Game:
-    def __init__(self, player_ids) -> None:
+    def __init__(self, player_ids: list) -> None:
         self.player_ids = player_ids
         self.players = {}
         self.NUM_OF_CARDS = 2
