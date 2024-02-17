@@ -24,7 +24,7 @@ class Content:
     def whose_turn(self):
         self.table = f"""
         <div hx-swap-oob="innerHTML:#user{self.user_id}">
-        <p style=text-align:top;><strong>Player {self.game.whose_turn()} it's your turn</strong> </p>
+        <p style=text-align:top;><strong>Player {self.game.whose_turn_name()} it's your turn</strong> </p>
         """
         return self.table
 

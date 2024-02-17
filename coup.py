@@ -79,6 +79,9 @@ class Game:
     def whose_turn(self):
         return self.current_player_index
 
+    def whose_turn_name(self):
+        return self.player_ids[self.current_player_index]
+
     def add_all_actions(self):
         for name, number_of_coins in [
             ("Assassinate", 3),
