@@ -14,8 +14,9 @@ templates = Jinja2Templates(directory="templates")
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-game = Game(["1", "2", "3", "9"])
-game.play()
+ids = [("1", "Lee"), ("2", "Adina"), ("3", "Joey"), ("9", "Jamie")]
+game = Game(ids)
+# game.play()
 game.players["1"].add_remove_coins(4)
 game.players["9"].add_remove_coins(-1)
 manager = ConnectionManager()

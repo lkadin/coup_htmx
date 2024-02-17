@@ -24,8 +24,9 @@ class Deck:
 
 
 class Player:
-    def __init__(self, id: str) -> None:
+    def __init__(self, id: str, name: str = None) -> None:
         self.id = id
+        self.name = name
         self.hand = []
         self.coins = 2
 
@@ -49,7 +50,7 @@ class Action:
 
 
 class Game:
-    def __init__(self, player_ids: list) -> None:
+    def __init__(self, player_ids: list[tuple]) -> None:
         self.player_ids = player_ids
         self.players = {}
         self.NUM_OF_CARDS = 2
@@ -66,8 +67,8 @@ class Game:
                 player.draw(self.deck)
 
     def add_all_players(self):
-        for player_id in self.player_ids:
-            self.players[player_id] = Player(player_id)
+        for player_id, player_name in self.player_ids:
+            self.players[player_id] = Player(player_id, player_name)
         random.shuffle(self.player_ids)
         self.current_player_index = 0
 
@@ -80,7 +81,7 @@ class Game:
         return self.current_player_index
 
     def whose_turn_name(self):
-        return self.player_ids[self.current_player_index]
+        return self.player_ids[self.current_player_index][1]
 
     def add_all_actions(self):
         for name, number_of_coins in [
@@ -94,11 +95,12 @@ class Game:
             self.actions.append(Action(name, number_of_coins))
 
     def play(self):
-        pass
+        print(self.whose_turn_name())
 
 
 def main():
-    game = Game(["1", "2", "3", "4"])
+    ids = [("1", "Lee"), ("2", "Adina"), ("3", "Joey"), ("4", "Jamie")]
+    game = Game(ids)
     game.play()
 
 
