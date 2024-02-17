@@ -16,7 +16,7 @@ class Deck:
     def shuffle(self):
         random.shuffle(self.cards)
 
-    def draw(self):
+    def draw(self) -> Card:
         return self.cards.pop()
 
     def __repr__(self) -> str:
