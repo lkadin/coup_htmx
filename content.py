@@ -1,5 +1,6 @@
 class Content:
     def __init__(self, game, user_id) -> None:
+        self.game = game
         self.players = game.players
         self.user_id = user_id
 
@@ -18,6 +19,13 @@ class Content:
         self.table += """    
             </div>
             """
+        return self.table
+
+    def whose_turn(self):
+        self.table = f"""
+        <div hx-swap-oob="innerHTML:#user{self.user_id}">
+        <p style=text-align:top;><strong>Player {self.game.whose_turn()} it's your turn</strong> </p>
+        """
         return self.table
 
     def html(self):

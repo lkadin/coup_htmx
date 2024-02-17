@@ -74,7 +74,10 @@ class Game:
     def next_turn(self):
         self.current_player_index += 1
         if self.current_player_index > 3:
-            self.current_player_index0
+            self.current_player_index
+
+    def whose_turn(self):
+        return self.current_player_index
 
     def add_all_actions(self):
         for name, number_of_coins in [
