@@ -17,16 +17,16 @@
             <div id="notifications" class="col-2">
                 <div hx-ws="connect:/ws/{{user_id}}">
                     <h1> User {{user_id}} </h1>
+                    {% for action in actions %}
                     <form hx-ws="send" hx-target="notifications">
-                        <input name="user_name">
-                        <input name="message_txt">
-                        <input type="submit" value="Submit">
+                        <input type="hidden" name="user_name" value="Fred">
+                        <input type="hidden" name="message_txt" value={{action.name}}>
+                        <input type="submit" value={{action.name}}>
                     </form>
+                    {% endfor %}
                 </div>
-                {% for action in actions %}
-                <a href="/coup/action.url?action={action.name}"><b>{{action.name}}</b></a>
+
                 <br>
-                {% endfor %}
             </div>
             <div class="col-2" id="photo">
                 <p>User x has x coins</p>
