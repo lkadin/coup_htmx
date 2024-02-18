@@ -26,9 +26,9 @@ class ConnectionManager:
             """
             await self.send_personal_message(content, websocket)
 
-            html = Content(game, user_id)
-            content = html.html()
-            await self.send_personal_message(content, self.active_connections[user_id])
+            content = Content(game, user_id)
+            table = content.show_table()
+            await self.send_personal_message(table, self.active_connections[user_id])
 
-            content = html.whose_turn()
-            await self.send_personal_message(content, self.active_connections[user_id])
+            turn = content.whose_turn()
+            await self.send_personal_message(turn, self.active_connections[user_id])

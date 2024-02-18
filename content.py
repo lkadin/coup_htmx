@@ -4,7 +4,7 @@ class Content:
         self.players = game.players
         self.user_id = user_id
 
-    def content_generic(self):
+    def show_table(self):
         self.table = """
             """
         for player in self.players.values():
@@ -27,6 +27,3 @@ class Content:
         <p style=text-align:top;><strong>{self.game.whose_turn_name()} it's your turn</strong> </p>
         """
         return self.table
-
-    def html(self):
-        return self.content_generic()
