@@ -39,6 +39,10 @@ async def read_itemx(request: Request, user_id: str):
 @app.websocket("/ws/{user_id}")
 async def websocket_chat(websocket: WebSocket, user_id: str):
     await manager.connect(user_id, websocket)
+    await manager.broadcast(
+        "Start of game",
+        game,
+    )
     # try:
     while True:
         data = await websocket.receive_text()
