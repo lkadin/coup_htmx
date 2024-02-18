@@ -47,10 +47,20 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
     while True:
         data = await websocket.receive_text()
         message = json.loads(data)
-        await manager.broadcast(
-            f" {game.players[user_id].name} says: {message['message_txt']}",
-            game,
+        print(
+            user_id,
+            message,
+            game.whose_turn(),
+            game.whose_turn_name(),
+            game.players[user_id].name,
         )
+        if game.whose_turn_name() != game.players[user_id].name:
+            print("Not your Turn")
+        else:
+            await manager.broadcast(
+                f" {game.players[user_id].name} says: {message['message_txt']}",
+                game,
+            )
     # except Exception as e:
     #     print("Got an exception ", e)
     # await manager.disconnect(user_id, websocket)
