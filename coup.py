@@ -99,7 +99,7 @@ class Game:
 
 
 def main():
-    ids = [("1", "Lee"), ("2", "Adina"), ("3", "Joey"), ("4", "Jamie")]
+    ids = [("1", "Lee"), ("2", "Adina"), ("3", "Joey"), ("9", "Jamie")]
     game = Game(ids)
     game.play()
 
