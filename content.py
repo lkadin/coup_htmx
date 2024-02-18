@@ -14,7 +14,7 @@ class Content:
             """
             for card in player.hand:
                 self.table += f"""
-                <img src='/static/jpg/{card}.jpg' {card} style=opacity:0.4;>
+                <img src='/static/jpg/{card}.jpg' {card} style=opacity:1.0;>
                 """
         self.table += """    
             </div>
