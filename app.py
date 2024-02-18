@@ -44,7 +44,7 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
         data = await websocket.receive_text()
         message = json.loads(data)
         await manager.broadcast(
-            f" {user_id} says: {message['message_txt']}",
+            f" {game.players[user_id].name} says: {message['message_txt']}",
             game,
         )
     # except Exception as e:
