@@ -96,7 +96,7 @@ class Game:
             self.actions.append(Action(name, number_of_coins))
 
     def play(self):
-        self.staus = "In progress"
+        self.status = "In progress"
 
 
 def main():
