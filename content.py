@@ -4,6 +4,19 @@ class Content:
         self.players = game.players
         self.user_id = user_id
 
+    def show_hand(self, player):
+        self.add_to_table = ""
+        for card in player.hand:
+            if player.name == self.players[self.user_id].name:
+                self.add_to_table += f"""
+                <img src='/static/jpg/{card}.jpg' {card} style=opacity:1.0;>
+                """
+            else:
+                self.add_to_table += f"""
+                <img src='/static/jpg/down.png' {card} style=opacity:1.0;>
+                """
+        return self.add_to_table
+
     def show_table(self):
         self.table = """
             <div hx-swap-oob="innerHTML:#photo">
@@ -12,15 +25,7 @@ class Content:
             self.table += f"""
             <p style=text-align:top;><strong>{player.name}</strong> coins -  {player.coins}</p>
             """
-            for card in player.hand:
-                if player.name == self.players[self.user_id].name:
-                    self.table += f"""
-                    <img src='/static/jpg/{card}.jpg' {card} style=opacity:1.0;>
-                    """
-                else:
-                    self.table += f"""
-                    <img src='/static/jpg/down.png' {card} style=opacity:1.0;>
-                    """
+            self.table += self.show_hand(player)
         self.table += """    
             </div>
             """
