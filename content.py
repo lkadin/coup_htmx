@@ -44,5 +44,4 @@ class Content:
             <div hx-swap-oob="innerHTML:#turn">
            <p style=text-align:top;><strong></strong> </p>
             """
-        print(self.turn)
         return self.turn
