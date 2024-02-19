@@ -33,9 +33,16 @@ class Content:
         """
         return self.turn
 
-    def not_your_turn(self):
-        self.table = """
-        <div hx-swap-oob="innerHTML:#turn">
-        <p style=text-align:top;><strong>It's not your turn</strong> </p>
-        """
-        return self.table
+    def not_your_turn(self, on_off):
+        if on_off:
+            self.turn = """
+            <div hx-swap-oob="innerHTML:#turn">
+           <p style=text-align:top;><strong>It's not your turn</strong> </p>
+            """
+        else:
+            self.turn = """
+            <div hx-swap-oob="innerHTML:#turn">
+           <p style=text-align:top;><strong></strong> </p>
+            """
+        print(self.turn)
+        return self.turn
