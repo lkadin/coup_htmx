@@ -45,3 +45,11 @@ class Content:
            <p style=text-align:top;><strong></strong> </p>
             """
         return self.turn
+
+    def show_notification(self, message):
+        self.show_notification = f"""
+        <div hx-swap-oob="beforeend:#notifications">
+        <p>{message}</p>
+        </div>
+        """
+        return self.show_notification
