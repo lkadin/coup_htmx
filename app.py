@@ -47,13 +47,6 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
     while True:
         data = await websocket.receive_text()
         message = json.loads(data)
-        print(
-            user_id,
-            message,
-            game.whose_turn(),
-            game.whose_turn_name(),
-            game.players[user_id].name,
-        )
         if game.whose_turn_name() != game.players[user_id].name:
             print("Not your Turn")
         else:
