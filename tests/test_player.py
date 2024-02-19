@@ -10,10 +10,10 @@ def test_draw(player, deck):
 
 
 def test_play_card(player):
-    player.hand = ["Card1", "Card2", "Card3"]
+    player.hand = ["contessa", "duke"]
     played_card = player.play_card()
-    assert played_card == "Card3"
-    assert player.hand == ["Card1", "Card2"]
+    assert played_card == "duke"
+    assert player.hand == ["contessa"]
 
 
 def test_add_remove_coins(player):
