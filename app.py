@@ -40,18 +40,23 @@ async def read_itemx(request: Request, user_id: str):
 @app.websocket("/ws/{user_id}")
 async def websocket_chat(websocket: WebSocket, user_id: str):
     await manager.connect(user_id, websocket)
-    await manager.broadcast(
-        "Start of game",
-        game,
-    )
+    print(game.status)
+    # if game.status == "Not started":
+    #     await manager.broadcast(
+    #         "Start of game",
+    #         game,
+    #     )
+
     # try:
     while True:
         data = await websocket.receive_text()
+        print(game.status)
         message = json.loads(data)
         if game.whose_turn_name() != game.players[user_id].name:
             content = Content(game, user_id).not_your_turn()
             await manager.send_personal_message(content, websocket)
         else:
+            game.next_turn()
             await manager.broadcast(
                 f" {game.players[user_id].name} says: {message['message_txt']}",
                 game,
