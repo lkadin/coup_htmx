@@ -1,22 +1,3 @@
-import pytest
-from coup import Player, Deck, Card
-
-
-@pytest.fixture
-def player():
-    return Player("1")
-
-
-@pytest.fixture
-def deck():
-    return Deck()
-
-
-@pytest.fixture
-def card():
-    return Card("countessa")
-
-
 def test_init(player):
     assert player.id == "1"
     assert player.hand == []

@@ -1,17 +1,3 @@
-import pytest
-from coup import Deck, Card
-
-
-@pytest.fixture
-def deck():
-    return Deck()
-
-
-@pytest.fixture
-def card():
-    return Card("Ace")
-
-
 def test_init(deck):
     assert len(deck.cards) == 15  # 5 roles, each with 3 copies
     assert deck.cards.count("duke") == 3
