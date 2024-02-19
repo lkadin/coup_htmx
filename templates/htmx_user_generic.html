@@ -17,6 +17,7 @@
             <div id="notifications" class="col-2">
                 <div hx-ws="connect:/ws/{{user_id}}">
                     <h1> User {{user_name}} </h1>
+                    <h1 id="turn"></h1>
                     <br><br>
                     <p id="user{{user_id}}"></p>
                     {% for action in actions %}

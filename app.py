@@ -6,6 +6,7 @@ from fastapi.responses import HTMLResponse
 import uvicorn
 from connection_manager import ConnectionManager
 from coup import Game
+from content import Content
 
 app = FastAPI()
 
@@ -48,7 +49,9 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
         data = await websocket.receive_text()
         message = json.loads(data)
         if game.whose_turn_name() != game.players[user_id].name:
-            print("Not your Turn")
+            content = Content(game, user_id).not_your_turn()
+            print(content)
+            await manager.send_personal_message(content, websocket)
         else:
             await manager.broadcast(
                 f" {game.players[user_id].name} says: {message['message_txt']}",
