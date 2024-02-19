@@ -20,7 +20,7 @@ game = Game(ids)
 # game.play()
 game.players["1"].add_remove_coins(4)
 game.players["9"].add_remove_coins(-1)
-manager = ConnectionManager()
+manager = ConnectionManager(game)
 
 
 @app.get("/web/{user_id}/", response_class=HTMLResponse)
@@ -40,14 +40,7 @@ async def read_itemx(request: Request, user_id: str):
 @app.websocket("/ws/{user_id}")
 async def websocket_chat(websocket: WebSocket, user_id: str):
     await manager.connect(user_id, websocket)
-    print(game.status)
-    if game.status == "Not started":
-        await manager.broadcast(
-            "Start of game",
-            game,
-        )
-        game.play()
-        print(game.status)
+    game.play()
 
     # try:
     while game.status == "In progress":
