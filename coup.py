@@ -54,6 +54,7 @@ class Game:
         self.player_ids = player_ids
         self.players = {}
         self.NUM_OF_CARDS = 2
+        self.status = "Not started"
         self.deck = Deck()
         self.deck.shuffle()
         self.add_all_players()
@@ -95,7 +96,7 @@ class Game:
             self.actions.append(Action(name, number_of_coins))
 
     def play(self):
-        print(self.whose_turn_name())
+        self.staus = "In progress"
 
 
 def main():
