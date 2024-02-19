@@ -4,12 +4,14 @@ from coup import Game
 
 
 class ConnectionManager:
-    def __init__(self) -> None:
+    def __init__(self, game: Game) -> None:
         self.active_connections: list[str, WebSocket] = {}
+        self.game = Game
 
     async def connect(self, user_id: str, websocket: WebSocket):
         await websocket.accept()
         self.active_connections[user_id] = websocket
+        self.broadcast(f"{user_id} Connected", self.game)
 
     async def disconnect(self, user_id: str, websocket: WebSocket):
         del self.active_connections[user_id]
