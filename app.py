@@ -41,16 +41,17 @@ async def read_itemx(request: Request, user_id: str):
 async def websocket_chat(websocket: WebSocket, user_id: str):
     await manager.connect(user_id, websocket)
     print(game.status)
-    # if game.status == "Not started":
-    #     await manager.broadcast(
-    #         "Start of game",
-    #         game,
-    #     )
+    if game.status == "Not started":
+        await manager.broadcast(
+            "Start of game",
+            game,
+        )
+        game.play()
+        print(game.status)
 
     # try:
-    while True:
+    while game.status == "In progress":
         data = await websocket.receive_text()
-        print(game.status)
         message = json.loads(data)
         if game.whose_turn_name() != game.players[user_id].name:
             content = Content(game, user_id).not_your_turn()
