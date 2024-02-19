@@ -6,27 +6,32 @@ class Content:
 
     def show_table(self):
         self.table = """
+            <div hx-swap-oob="innerHTML:#photo">
             """
         for player in self.players.values():
             self.table += f"""
-            <div hx-swap-oob="innerHTML:#photo">
             <p style=text-align:top;><strong>{player.name}</strong> coins -  {player.coins}</p>
             """
             for card in player.hand:
-                self.table += f"""
-                <img src='/static/jpg/{card}.jpg' {card} style=opacity:1.0;>
-                """
+                if player.name == self.players[self.user_id].name:
+                    self.table += f"""
+                    <img src='/static/jpg/{card}.jpg' {card} style=opacity:1.0;>
+                    """
+                else:
+                    self.table += f"""
+                    <img src='/static/jpg/down.png' {card} style=opacity:1.0;>
+                    """
         self.table += """    
             </div>
             """
         return self.table
 
     def whose_turn(self):
-        self.table = f"""
+        self.turn = f"""
         <div hx-swap-oob="innerHTML:#user{self.user_id}">
         <p style=text-align:top;><strong>{self.game.whose_turn_name()}'s turn</strong> </p>
         """
-        return self.table
+        return self.turn
 
     def not_your_turn(self):
         self.table = """
