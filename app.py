@@ -50,7 +50,6 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
         message = json.loads(data)
         if game.whose_turn_name() != game.players[user_id].name:
             content = Content(game, user_id).not_your_turn()
-            print(content)
             await manager.send_personal_message(content, websocket)
         else:
             await manager.broadcast(
