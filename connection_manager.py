@@ -33,7 +33,7 @@ class ConnectionManager:
             turn = content.whose_turn()
             await self.send_personal_message(turn, self.active_connections[user_id])
 
-            not_you_turn = content.not_your_turn(False)
+            not_your_turn = content.not_your_turn(False)
             await self.send_personal_message(
-                not_you_turn, self.active_connections[user_id]
+                not_your_turn, self.active_connections[user_id]
             )
