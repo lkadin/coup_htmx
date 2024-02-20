@@ -20,24 +20,16 @@
                     <h1 id="turn"></h1>
                     <br><br>
                     <p id="user{{user_id}}"></p>
-                    {% for action in actions %}
                     <form hx-ws="send" hx-target="notifications">
                         <input type="hidden" name="user_name" value={{user_id}}>
-                        <input type="hidden" name="message_txt" value={{action.name}}>
-                        <input type="submit" value={{action.name}}>
+                        <input type="hidden" name="message_txt" value="Start">
+                        <input type="submit" value="Start">
                     </form>
-                    {% endfor %}
                 </div>
 
                 <br>
             </div>
             <div class="col-8" id="photo">
-                <p>User x has x coins</p>
-                <img id="u1_card1" src="/static/jpg/contessa.jpg" alt="countessa">
-                <img id="u1_card2" src="/static/jpg/duke.jpg" alt="countessa">
-                <p>User x has x coins</p>
-                <img id="u1_card3" src="/static/jpg/assassin.jpg" alt="countessa">
-                <img id="u1_card4" src="/static/jpg/ambassador.jpg" alt="countessa">
             </div>
         </div>
 
