@@ -54,12 +54,16 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
             await manager.send_personal_message(content, websocket)
 
         game.next_turn()
-        content = Content(game, user_id).not_your_turn(False)
-        await manager.send_personal_message(content, websocket)
-        await manager.broadcast(
-            f" {game.players[user_id].name} says: {message['message_txt']}",
-            game,
-        )
+        await clear_and_show_board(websocket, user_id, message)
+
+
+async def clear_and_show_board(websocket, user_id, message):
+    content = Content(game, user_id).not_your_turn(False)
+    await manager.send_personal_message(content, websocket)
+    await manager.broadcast(
+        f" {game.players[user_id].name} says: {message['message_txt']}",
+        game,
+    )
 
 
 # except Exception as e:
