@@ -1,5 +1,5 @@
 class Content:
-    def __init__(self, game, user_id) -> None:
+    def __init__(self, game, user_id: str) -> None:
         self.game = game
         self.players = game.players
         self.user_id = user_id
