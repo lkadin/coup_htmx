@@ -41,25 +41,30 @@ async def read_itemx(request: Request, user_id: str):
 async def websocket_chat(websocket: WebSocket, user_id: str):
     await manager.connect(user_id, websocket)
     game.play()
+    # await manager.broadcast(f" {user_id} has joined ", game, "notification")
 
     # try:
     while game.status == "In progress":
         data = await websocket.receive_text()
         message = json.loads(data)
-        if game.whose_turn_name() != game.players[user_id].name:
+        if message["message_txt"] == "start":
+            await manager.broadcast(f" {user_id} has joined ", game, "notification")
+        elif game.whose_turn_name() != game.players[user_id].name:
             content = Content(game, user_id).not_your_turn(True)
             await manager.send_personal_message(content, websocket)
-        else:
-            game.next_turn()
-            content = Content(game, user_id).not_your_turn(False)
-            await manager.send_personal_message(content, websocket)
-            await manager.broadcast(
-                f" {game.players[user_id].name} says: {message['message_txt']}",
-                game,
-            )
-    # except Exception as e:
-    #     print("Got an exception ", e)
-    # await manager.disconnect(user_id, websocket)
+
+        game.next_turn()
+        content = Content(game, user_id).not_your_turn(False)
+        await manager.send_personal_message(content, websocket)
+        await manager.broadcast(
+            f" {game.players[user_id].name} says: {message['message_txt']}",
+            game,
+        )
+
+
+# except Exception as e:
+#     print("Got an exception ", e)
+# await manager.disconnect(user_id, websocket)
 
 
 if __name__ == "__main__":
