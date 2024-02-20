@@ -6,7 +6,7 @@ from coup import Game
 class ConnectionManager:
     def __init__(self, game: Game) -> None:
         self.active_connections: list[str, WebSocket] = {}
-        self.game = Game
+        self.game = game
 
     async def connect(self, user_id: str, websocket: WebSocket):
         await websocket.accept()
