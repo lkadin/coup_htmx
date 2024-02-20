@@ -11,7 +11,6 @@ class ConnectionManager:
     async def connect(self, user_id: str, websocket: WebSocket):
         await websocket.accept()
         self.active_connections[user_id] = websocket
-        self.broadcast(f"{user_id} Connected", self.game)
 
     async def disconnect(self, user_id: str, websocket: WebSocket):
         del self.active_connections[user_id]
@@ -19,19 +18,26 @@ class ConnectionManager:
     async def send_personal_message(self, message: str, websocket: WebSocket):
         await websocket.send_text(message)
 
-    async def broadcast(self, message: str, game: Game):
+    async def broadcast(self, message: str, game: Game, message_type: str = "all"):
         for user_id, websocket in self.active_connections.items():
             content = Content(game, user_id)
-            notification = content.show_notification(message)
-            await self.send_personal_message(notification, websocket)
 
-            table = content.show_table()
-            await self.send_personal_message(table, self.active_connections[user_id])
+            if message_type in ("all", "notification"):
+                notification = content.show_notification(message)
+                await self.send_personal_message(notification, websocket)
 
-            turn = content.whose_turn()
-            await self.send_personal_message(turn, self.active_connections[user_id])
+            if message_type in ("all", "table"):
+                table = content.show_table()
+                await self.send_personal_message(
+                    table, self.active_connections[user_id]
+                )
 
-            not_your_turn = content.not_your_turn(False)
-            await self.send_personal_message(
-                not_your_turn, self.active_connections[user_id]
-            )
+            if message_type in ("all", "whose_turn"):
+                turn = content.whose_turn()
+                await self.send_personal_message(turn, self.active_connections[user_id])
+
+            if message_type in ("all", "not_your_turn"):
+                not_your_turn = content.not_your_turn(False)
+                await self.send_personal_message(
+                    not_your_turn, self.active_connections[user_id]
+                )
