@@ -70,7 +70,7 @@ class Game:
 
     def next_turn(self):
         self.current_player_index += 1
-        if self.current_player_index > 3:
+        if self.current_player_index >= len(self.players):
             self.current_player_index = 0
 
     def whose_turn(self):
