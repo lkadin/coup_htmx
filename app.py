@@ -40,9 +40,8 @@ async def read_itemx(request: Request, user_id: str):
 async def websocket_chat(websocket: WebSocket, user_id: str):
     await manager.connect(user_id, websocket)
     game.play()
-    # await manager.broadcast(f" {user_id} has joined ", game, "notification")
+    await manager.broadcast(f" {user_id} has joined ", game, "notification")
 
-    # try:
     while game.status == "In progress":
         data = await websocket.receive_text()
         message = json.loads(data)
