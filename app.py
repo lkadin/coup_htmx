@@ -46,14 +46,18 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
     while game.status == "In progress":
         data = await websocket.receive_text()
         message = json.loads(data)
-        if message["message_txt"] == "start":
-            await manager.broadcast(f" {user_id} has joined ", game, "notification")
-        elif game.whose_turn_name() != game.players[user_id].name:
-            content = Content(game, user_id).not_your_turn(True)
-            await manager.send_personal_message(content, websocket)
+        await process_message(websocket, user_id, message)
 
-        game.next_turn()
-        await clear_and_show_board(websocket, user_id, message)
+
+async def process_message(websocket, user_id, message):
+    if message["message_txt"] == "start":
+        await manager.broadcast(f" {user_id} has joined ", game, "notification")
+    elif game.whose_turn_name() != game.players[user_id].name:
+        content = Content(game, user_id).not_your_turn(True)
+        await manager.send_personal_message(content, websocket)
+
+    game.next_turn()
+    await clear_and_show_board(websocket, user_id, message)
 
 
 async def clear_and_show_board(websocket, user_id, message):
