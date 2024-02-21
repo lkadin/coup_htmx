@@ -50,8 +50,7 @@ class Action:
 
 
 class Game:
-    def __init__(self, player_ids: list[tuple]) -> None:
-        self.player_ids = player_ids
+    def __init__(self) -> None:
         self.players = {}
         self.NUM_OF_CARDS = 2
         self.status = "Not started"
@@ -62,7 +61,8 @@ class Game:
             for player in self.players.values():
                 player.draw(self.deck)
 
-    def add_all_players(self):
+    def add_all_players(self, player_ids: list[str]):
+        self.player_ids = player_ids
         for player_id, player_name in self.player_ids:
             self.players[player_id] = Player(player_id, player_name)
         random.shuffle(self.player_ids)
@@ -96,14 +96,14 @@ class Game:
     def start(self):
         self.deck = Deck()
         self.deck.shuffle()
-        self.add_all_players()
         self.add_all_actions()
         self.initial_deal()
 
 
 def main():
     ids = [("1", "Lee"), ("2", "Adina"), ("3", "Joey"), ("9", "Jamie")]
-    game = Game(ids)
+    game = Game()
+    game.add_all_players(ids)
     game.play()
 
 

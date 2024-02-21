@@ -16,9 +16,10 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 ids = [("1", "Lee"), ("2", "Adina"), ("3", "Joey"), ("9", "Jamie")]
-game = Game(ids)
-game.start()
+game = Game()
 manager = ConnectionManager(game)
+game.add_all_players(ids)
+game.start()
 
 
 @app.get("/web/{user_id}/", response_class=HTMLResponse)
