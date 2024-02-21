@@ -2,6 +2,7 @@ import pytest
 from coup import Card
 from coup import Deck
 from coup import Player
+from coup import Game
 
 
 @pytest.fixture
@@ -17,3 +18,8 @@ def card():
 @pytest.fixture
 def deck():
     return Deck()
+
+
+@pytest.fixture
+def game():
+    return Game()
