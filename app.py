@@ -17,9 +17,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 ids = [("1", "Lee"), ("2", "Adina"), ("3", "Joey"), ("9", "Jamie")]
 game = Game(ids)
-# game.play()
-game.players["1"].add_remove_coins(4)
-game.players["9"].add_remove_coins(-1)
+game.start()
 manager = ConnectionManager(game)
 
 

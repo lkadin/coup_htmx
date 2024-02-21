@@ -55,12 +55,7 @@ class Game:
         self.players = {}
         self.NUM_OF_CARDS = 2
         self.status = "Not started"
-        self.deck = Deck()
-        self.deck.shuffle()
-        self.add_all_players()
-        self.initial_deal()
         self.actions = []
-        self.add_all_actions()
 
     def initial_deal(self):
         for _ in range(self.NUM_OF_CARDS):
@@ -97,6 +92,13 @@ class Game:
 
     def play(self):
         self.status = "In progress"
+
+    def start(self):
+        self.deck = Deck()
+        self.deck.shuffle()
+        self.add_all_players()
+        self.add_all_actions()
+        self.initial_deal()
 
 
 def main():
