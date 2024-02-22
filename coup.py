@@ -99,6 +99,9 @@ class Game:
         self.add_all_actions()
         self.initial_deal()
 
+    def your_turn(self, user_id):
+        return self.whose_turn_name() == self.players[user_id].name
+
 
 def main():
     ids = [("1", "Lee"), ("2", "Adina"), ("3", "Joey"), ("9", "Jamie")]

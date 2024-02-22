@@ -47,7 +47,7 @@ class Content:
         else:
             self.turn = """
             <div hx-swap-oob="innerHTML:#turn">
-           <p style=text-align:top;><strong></strong> </p>
+           <p style=text-align:top;><strong>It's your turn</strong> </p>
             """
         return self.turn
 

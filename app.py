@@ -52,9 +52,11 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
 
 
 async def process_message(websocket, user_id, message):
-    if game.whose_turn_name() != game.players[user_id].name:
+
+    if not game.your_turn(user_id):
         content = Content(game, user_id).not_your_turn(True)
         await manager.send_personal_message(content, websocket)
+        return
 
     game.next_turn()
     await clear_and_show_board(websocket, user_id, message)
