@@ -29,8 +29,8 @@ class TestGame:
         game.add_all_actions()
         assert len(game.actions) == 6
 
-    def test_play(self, game):
-        game.play()
+    def test_wait(self, game):
+        game.wait()
         assert game.status == "In progress"
 
     def test_start(self, game):
