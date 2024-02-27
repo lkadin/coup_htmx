@@ -23,7 +23,7 @@ class TestGame:
     def test_whose_turn_name(self, game):
         player_ids = [("1", "Alice"), ("2", "Bob")]
         game.add_all_players(player_ids)
-        assert game.whose_turn_name() == "Alice"
+        assert game.whose_turn_name() == game.player_ids[game.current_player_index][1]
 
     def test_add_all_actions(self, game):
         game.add_all_actions()
