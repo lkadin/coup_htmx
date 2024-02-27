@@ -48,6 +48,9 @@ class Action:
         self.name = name
         self.coins_required = coins_required
 
+    def __repr__(self) -> str:
+        return self.name
+
 
 class Game:
     def __init__(self) -> None:
@@ -90,10 +93,15 @@ class Game:
         ]:
             self.actions.append(Action(name, number_of_coins))
 
-    def play(self):
-        self.status = "In progress"
+        if self.status == "Waiting":
+            self.actions = [Action("Start", 0)]
 
     def start(self):
+        self.status = "In progress"
+
+    def wait(self):
+        self.status = "Waiting"
+
         self.deck = Deck()
         self.deck.shuffle()
         self.add_all_actions()
@@ -107,7 +115,14 @@ def main():
     ids = [("1", "Lee"), ("2", "Adina"), ("3", "Joey"), ("9", "Jamie")]
     game = Game()
     game.add_all_players(ids)
-    game.play()
+    print(game.status)
+    print(game.actions)
+    game.wait()
+    print(game.status)
+    print(game.actions)
+    game.start()
+    print(game.status)
+    print(game.actions)
 
 
 if __name__ == "__main__":

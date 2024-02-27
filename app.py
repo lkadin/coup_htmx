@@ -20,7 +20,7 @@ ids = [("1", "Lee"), ("2", "Adina")]
 game = Game()
 manager = ConnectionManager(game)
 game.add_all_players(ids)
-game.start()
+game.wait()
 
 
 @app.get("/web/{user_id}/", response_class=HTMLResponse)
@@ -40,11 +40,12 @@ async def read_itemx(request: Request, user_id: str):
 @app.websocket("/ws/{user_id}")
 async def websocket_chat(websocket: WebSocket, user_id: str):
     await manager.connect(user_id, websocket)
-    game.play()
+    game.wait()
     await manager.broadcast(
         f" {game.players[user_id].name} has joined ", game, "notification"
     )
 
+    print(game.status)
     while game.status == "In progress":
         data = await websocket.receive_text()
         message = json.loads(data)
@@ -52,6 +53,10 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
 
 
 async def process_message(websocket, user_id, message):
+    print(message["message_txt"])
+    if message["message_txt"] == "Start":
+        game.start()
+        print(game.actions)
 
     if not game.your_turn(user_id):
         content = Content(game, user_id).not_your_turn(True)
