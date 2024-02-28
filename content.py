@@ -38,18 +38,18 @@ class Content:
         """
         return self.turn
 
-    def not_your_turn(self, on_off):
-        if on_off:
-            self.turn = """
-            <div hx-swap-oob="innerHTML:#turn">
-           <p style=text-align:top;><strong>It's not your turn</strong> </p>
-            """
-        else:
-            self.turn = """
-            <div hx-swap-oob="innerHTML:#turn">
-           <p style=text-align:top;><strong>It's your turn</strong> </p>
-            """
-        return self.turn
+    # def not_your_turn(self, on_off):
+    #     if on_off:
+    #         self.turn = """
+    #         <div hx-swap-oob="innerHTML:#turn">
+    #        <p style=text-align:top;><strong>It's not your turn</strong> </p>
+    #         """
+    #     else:
+    #         self.turn = """
+    #         <div hx-swap-oob="innerHTML:#turn">
+    #        <p style=text-align:top;><strong>It's your turn</strong> </p>
+    #         """
+    #     return self.turn
 
     def show_notification(self, message):
         self.show_notification = f"""
