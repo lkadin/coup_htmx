@@ -43,7 +43,7 @@ async def read_itemx(request: Request, user_id: str):
 @app.websocket("/ws/{user_id}")
 async def websocket_chat(websocket: WebSocket, user_id: str):
     await manager.connect(user_id, websocket)
-    game.wait()
+    # game.wait()
     await manager.broadcast(
         f" {game.players[user_id].name} has joined ", game, "notification"
     )
