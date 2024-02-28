@@ -133,7 +133,7 @@ def main():
     print(player)
     content = Content(game, user_id)
 
-    print(content.show_table())
+    print(content.show_turn())
 
 
 if __name__ == "__main__":
