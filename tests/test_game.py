@@ -31,7 +31,7 @@ class TestGame:
 
     def test_wait(self, game):
         game.wait()
-        assert game.status == "In progress"
+        assert game.status == "Waiting"
 
     def test_start(self, game):
         game.start()

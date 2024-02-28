@@ -7,7 +7,7 @@ def test_init(deck):
     assert deck.cards.count("contessa") == 3
 
 
-def test_shuffle(deck, card):
+def test_shuffle(deck):
     original_order = deck.cards[:]
     deck.shuffle()
     assert deck.cards != original_order  # Cards should be shuffled
