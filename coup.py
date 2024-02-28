@@ -1,4 +1,5 @@
 import random
+from content import Content
 
 
 class Card:
@@ -30,7 +31,7 @@ class Player:
         self.hand = []
         self.coins = 2
 
-    def draw(self, deck):
+    def draw(self, deck: Deck):
         self.hand.append(deck.draw())
 
     def play_card(self) -> list[str]:
@@ -40,7 +41,7 @@ class Player:
         self.coins += num_of_coins
 
     def __repr__(self) -> str:
-        return self.id + "-" + " ".join(self.hand) + f"{self.coins=}"
+        return self.id + " - " + " ".join(self.hand) + " " + f"{self.coins=}"
 
 
 class Action:
@@ -58,6 +59,7 @@ class Game:
         self.NUM_OF_CARDS = 2
         self.status = "Not started"
         self.actions = []
+        self.current_action = None
 
     def initial_deal(self):
         for _ in range(self.NUM_OF_CARDS):
@@ -108,22 +110,30 @@ class Game:
         self.add_all_actions()
         self.initial_deal()
 
-    def your_turn(self, user_id):
+    def your_turn(self, user_id: str) -> bool:
         return self.whose_turn_name() == self.players[user_id].name
+
+    def process_action(self, action: Action, user_id: str):
+        if action == "Take 3 coins":
+            self.get_player(user_id).add_remove_coins(3)
+
+    def player(self, user_id) -> Player:
+        return self.players[user_id]
 
 
 def main():
     ids = [("1", "Lee"), ("2", "Adina"), ("3", "Joey"), ("9", "Jamie")]
     game = Game()
     game.add_all_players(ids)
-    print(game.status)
-    print(game.actions)
     game.wait()
-    print(game.status)
-    print(game.actions)
+    user_id = "1"
     game.start()
-    print(game.status)
-    print(game.actions)
+    player = game.player(user_id)
+    player.add_remove_coins(3)
+    print(player)
+    content = Content(game, user_id)
+
+    print(content.show_table())
 
 
 if __name__ == "__main__":
