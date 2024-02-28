@@ -55,8 +55,8 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
 
 async def process_message(websocket, user_id, message):
     if not game.your_turn(user_id):
-        content = Content(game, user_id).not_your_turn(True)
-        await manager.send_personal_message(content, websocket)
+        # content = Content(game, user_id).not_your_turn(True)
+        # await manager.send_personal_message(content, websocket)
         return
 
     if message["message_txt"] == "Start":
