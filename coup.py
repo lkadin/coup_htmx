@@ -96,11 +96,12 @@ class Game:
         if self.status == "Waiting":
             self.actions = [Action("Start", 0)]
 
-    def start(self):
-        self.status = "In progress"
-
     def wait(self):
         self.status = "Waiting"
+        self.add_all_actions()
+
+    def start(self):
+        self.status = "In progress"
 
         self.deck = Deck()
         self.deck.shuffle()

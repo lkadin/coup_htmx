@@ -33,6 +33,7 @@ async def read_itemx(request: Request, user_id: str):
             "user_id": user_id,
             "user_name": user_name,
             "actions": game.actions,
+            "status": game.status,
         },
     )
 
@@ -45,18 +46,15 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
         f" {game.players[user_id].name} has joined ", game, "notification"
     )
 
-    print(game.status)
-    while game.status == "In progress":
+    while game.status == "Waiting":
         data = await websocket.receive_text()
         message = json.loads(data)
         await process_message(websocket, user_id, message)
 
 
 async def process_message(websocket, user_id, message):
-    print(message["message_txt"])
     if message["message_txt"] == "Start":
         game.start()
-        print(game.actions)
 
     if not game.your_turn(user_id):
         content = Content(game, user_id).not_your_turn(True)
