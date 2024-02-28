@@ -34,6 +34,7 @@ async def read_itemx(request: Request, user_id: str):
             "user_name": user_name,
             "actions": game.actions,
             "status": game.status,
+            "turn": game.whose_turn_name(),
         },
     )
 
@@ -53,13 +54,13 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
 
 
 async def process_message(websocket, user_id, message):
-    if message["message_txt"] == "Start":
-        game.start()
-
     if not game.your_turn(user_id):
         content = Content(game, user_id).not_your_turn(True)
         await manager.send_personal_message(content, websocket)
         return
+
+    if message["message_txt"] == "Start":
+        game.start()
 
     game.next_turn()
     await clear_and_show_board(websocket, user_id, message)
