@@ -7,7 +7,7 @@ import uvicorn
 from connection_manager import ConnectionManager
 from coup import Game
 
-# from content import Content
+from content import Content
 
 app = FastAPI()
 
@@ -64,13 +64,14 @@ async def process_message(websocket, user_id, message):
     if message["message_txt"] == "Start":
         game.start()
 
-    game.next_turn()
+    else:
+        game.process_action(message["message_txt"], user_id)
     await clear_and_show_board(websocket, user_id, message)
 
 
 async def clear_and_show_board(websocket, user_id, message):
-    # content = Content(game, user_id).not_your_turn(False)
-    # await manager.send_personal_message(content, websocket)
+    content = Content(game, user_id).show_hand(user_id)
+    await manager.send_personal_message(content, websocket)
     await manager.broadcast(
         f" {game.players[user_id].name} says: {message['message_txt']}",
         game,
