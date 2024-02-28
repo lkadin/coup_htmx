@@ -16,11 +16,12 @@
         <div class="row">
             <div id="notifications" class="col-2">
                 <div hx-ws="connect:/ws/{{user_id}}">
+                    <h4 id="status">{{status}}</h4>
                     <h1> {{user_name}} </h1>
                     <h1 id="turn"></h1>
                     <br><br>
                     <p id="user{{user_id}}"></p>
-                    <form hx-ws="psend" hx-target="notifications">
+                    <form hx-ws="send" hx-target="notifications">
                         {% for action in actions %}
                         <br>
                         <input type="hidden" name="user_name" value={{user_id}}>
