@@ -16,9 +16,8 @@
         <div class="row">
             <div id="notifications" class="col-2">
                 <div hx-ws="connect:/ws/{{user_id}}">
-                    <h4 id="status">{{status}}</h4>
-                    <h1> {{user_name}} </h1>
-                    <h1 id="turn"></h1>
+                    <h4>{{user_name}} - {{status}}</h4>
+                    <h4 id="turn">{{turn}}'s Turn</h4>
                     <br><br>
                     <p id="user{{user_id}}"></p>
                     <form hx-ws="send" hx-target="notifications">

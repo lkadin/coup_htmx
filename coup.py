@@ -102,7 +102,6 @@ class Game:
 
     def start(self):
         self.status = "In progress"
-
         self.deck = Deck()
         self.deck.shuffle()
         self.add_all_actions()
