@@ -31,12 +31,12 @@ class Content:
             """
         return self.table
 
-    # def whose_turn(self):
-    #     self.turn = f"""
-    #     <div hx-swap-oob="innerHTML:#user{self.user_id}">
-    #     <p style=text-align:top;><strong>{self.game.whose_turn_name()}'s turn</strong> </p>
-    #     """
-    #     return self.turn
+    def show_turn(self):
+        self.turn = f"""
+        <div hx-swap-oob="innerHTML:#turn{self.user_id}">
+        <p style=text-align:top;><strong>{self.game.whose_turn_name()}'s turn</strong> </p>
+        """
+        return self.turn
 
     # def not_your_turn(self, on_off):
     #     if on_off:
