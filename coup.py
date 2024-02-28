@@ -83,6 +83,7 @@ class Game:
         return self.player_ids[self.current_player_index][1]
 
     def add_all_actions(self):
+        self.actions = []
         for name, number_of_coins in [
             ("Assassinate", 3),
             ("Coup", 7),
