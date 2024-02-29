@@ -114,8 +114,13 @@ class Game:
         return self.whose_turn_name() == self.players[user_id].name
 
     def process_action(self, action: Action, user_id: str):
+        if action == "Start" and self.status == "Waiting":
+            self.start()
+            return
+
         if action == "Take 3 coins":
             self.get_player(user_id).add_remove_coins(3)
+        self.next_turn()
 
     def player(self, user_id) -> Player:
         return self.players[user_id]
@@ -130,10 +135,10 @@ def main():
     game.start()
     player = game.player(user_id)
     player.add_remove_coins(3)
-    print(player)
+    # print(player)
     content = Content(game, user_id)
 
-    print(content.show_turn())
+    print(content.show_actions())
 
 
 if __name__ == "__main__":
