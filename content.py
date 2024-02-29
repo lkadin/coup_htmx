@@ -1,7 +1,7 @@
 class Content:
     def __init__(self, game, user_id: str) -> None:
         self.game = game
-        self.players = game.players
+        self.players = self.game.players
         self.user_id = user_id
 
     def show_hand(self, player):
@@ -26,6 +26,7 @@ class Content:
             <p style=text-align:top;><strong>{player.name}</strong> coins -  {player.coins}</p>
             """
             self.table += self.show_hand(player)
+        self.table += self.show_actions()
         self.table += """    
             </div>
             """
@@ -33,23 +34,26 @@ class Content:
 
     def show_turn(self):
         self.turn = f"""
-        <div hx-swap-oob="innerHTML:#turn{self.user_id}">
+        <div hx-swap-oob="innerHTML:#turn">
         <p style=text-align:top;><strong>{self.game.whose_turn_name()}'s turn</strong> </p>
         """
         return self.turn
 
-    # def not_your_turn(self, on_off):
-    #     if on_off:
-    #         self.turn = """
-    #         <div hx-swap-oob="innerHTML:#turn">
-    #        <p style=text-align:top;><strong>It's not your turn</strong> </p>
-    #         """
-    #     else:
-    #         self.turn = """
-    #         <div hx-swap-oob="innerHTML:#turn">
-    #        <p style=text-align:top;><strong>It's your turn</strong> </p>
-    #         """
-    #     return self.turn
+    def show_actions(self):
+        self.actions = """ <form hx-ws="send" hx-target="#notifications">"""
+        for action in self.game.actions:
+            self.actions += f"""
+                    <br>
+                    <input type="hidden" name="user_name" value={self.user_id}>
+                    <input type="hidden" name="message_txt" value={action}>
+                    <input type="submit" value={action}>
+                    """
+
+        self.actions += """
+         </form>
+                </div>
+                """
+        return self.actions
 
     def show_notification(self, message):
         self.show_notification = f"""
