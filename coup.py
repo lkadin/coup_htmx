@@ -1,5 +1,6 @@
 import random
-from content import Content
+
+# from content import Content
 
 
 class Card:
@@ -96,8 +97,10 @@ class Game:
         ]:
             self.actions.append(Action(name, number_of_coins))
 
-        # if self.status == "Waiting":
-        #     self.actions = [Action("Start", 0)]
+        if self.status == "Waiting":
+            self.actions.append(Action("Start", 0))
+        if self.status == "In Progress":
+            del self.actions["Start"]
 
     def wait(self):
         self.status = "Waiting"
@@ -131,7 +134,9 @@ def main():
     game = Game()
     game.add_all_players(ids)
     game.wait()
+    print(game.actions)
     game.start()
+    print(game.actions)
     print(game.player("1"))
 
 
