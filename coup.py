@@ -133,8 +133,8 @@ def main():
     game.wait()
     user_id = "1"
     game.start()
-    player = game.player(user_id)
-    player.add_remove_coins(3)
+    # player = game.player(user_id)
+    # player.add_remove_coins(3)
     # print(player)
     content = Content(game, user_id)
 
