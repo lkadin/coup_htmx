@@ -11,9 +11,7 @@ def test_show_table(content):
 
 def test_show_actions(content):
     assert len(content.show_actions()) >= 100
-    assert (
-        """<form hx-ws="send" hx-target="#notifications">""" in content.show_actions()
-    )
+    assert """<form hx-ws="send" hx-target="#actions">""" in content.show_actions()
 
 
 def test_show_turn(content):
