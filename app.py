@@ -55,8 +55,8 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
 
 async def process_message(websocket, user_id, message):
     print(message["message_txt"])
-    # if not game.your_turn(user_id):
-    # return
+    if not game.your_turn(user_id):
+        return
 
     game.process_action(message["message_txt"], user_id)
     await clear_and_show_board(websocket, user_id, message)
