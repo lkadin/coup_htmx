@@ -135,7 +135,7 @@ def main():
     game.start()
     content = Content(game, user_id)
 
-    print(content.show_table())
+    print(content.show_actions())
 
 
 if __name__ == "__main__":
