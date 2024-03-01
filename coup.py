@@ -133,12 +133,9 @@ def main():
     game.wait()
     user_id = "1"
     game.start()
-    # player = game.player(user_id)
-    # player.add_remove_coins(3)
-    # print(player)
     content = Content(game, user_id)
 
-    print(content.show_actions())
+    print(content.show_table())
 
 
 if __name__ == "__main__":
