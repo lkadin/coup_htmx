@@ -90,14 +90,14 @@ class Game:
             ("Assassinate", 3),
             ("Coup", 7),
             ("Steal", 0),
-            ("Take 3 coins", 0),
+            ("Take_3_coins", 0),
             ("Foreign aid", 0),
             ("Income", 0),
         ]:
             self.actions.append(Action(name, number_of_coins))
 
-        if self.status == "Waiting":
-            self.actions = [Action("Start", 0)]
+        # if self.status == "Waiting":
+        #     self.actions = [Action("Start", 0)]
 
     def wait(self):
         self.status = "Waiting"
@@ -118,8 +118,8 @@ class Game:
             self.start()
             return
 
-        if action == "Take 3 coins":
-            self.get_player(user_id).add_remove_coins(3)
+        if action == "Take_3_coins":
+            self.player(user_id).add_remove_coins(3)
         self.next_turn()
 
     def player(self, user_id) -> Player:
@@ -131,11 +131,8 @@ def main():
     game = Game()
     game.add_all_players(ids)
     game.wait()
-    user_id = "1"
     game.start()
-    content = Content(game, user_id)
-
-    print(content.show_actions())
+    print(game.player("1"))
 
 
 if __name__ == "__main__":
