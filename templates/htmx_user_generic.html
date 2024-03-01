@@ -20,14 +20,16 @@
                     <h4 id="turn">{{turn}}'s Turn</h4>
                     <br><br>
                     <p id="user{{user_id}}"></p>
-                    <form hx-ws="send" hx-target="notifications">
-                        {% for action in actions %}
-                        <br>
-                        <input type="hidden" name="user_name" value={{user_id}}>
-                        <input type="hidden" name="message_txt" value={{action}}>
-                        <input type="submit" value={{action}}>
-                        {% endfor %}
-                    </form>
+                    <div id="actions">
+                        <form hx-ws="send" hx-target="#actions">
+                            {% for action in actions %}
+                            <br>
+                            <input type="hidden" name="user_name" value={{user_id}}>
+                            <input type="hidden" name="message_txt" value={{action}}>
+                            <input type="submit" value={{action}}>
+                            {% endfor %}
+                        </form>
+                    </div>
                 </div>
 
                 <br>

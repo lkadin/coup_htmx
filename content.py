@@ -40,7 +40,10 @@ class Content:
         return self.turn
 
     def show_actions(self):
-        self.actions = """ <form hx-ws="send" hx-target="#notifications">"""
+        self.actions = """ 
+        <div hx-swap-oob="innerHTML:#actions">
+        <form hx-ws="send" hx-target="#actions">
+        """
         for action in self.game.actions:
             self.actions += f"""
                     <br>
