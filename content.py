@@ -26,7 +26,7 @@ class Content:
             <p style=text-align:top;><strong>{player.name}</strong> coins -  {player.coins}</p>
             """
             self.table += self.show_hand(player)
-        self.table += self.show_actions()
+        # self.table += self.show_actions()
         self.table += """    
             </div>
             """
@@ -39,24 +39,24 @@ class Content:
         """
         return self.turn
 
-    def show_actions(self):
-        self.actions = """ 
-        <div hx-swap-oob="innerHTML:#actions">
-        <form hx-ws="send" hx-target="#actions">
-        """
-        for action in self.game.actions:
-            self.actions += f"""
-                    <br>
-                    <input type="hidden" name="user_name" value={self.user_id}>
-                    <input type="hidden" name="message_txt" value={action}>
-                    <input type="submit" value={action}>
-                    """
+    # def show_actions(self):
+    #     self.actions = """
+    #     <div hx-swap-oob="innerHTML:#actions">
+    #     <form hx-ws="send" hx-target="#actions">
+    #     """
+    #     for action in self.game.actions:
+    #         self.actions += f"""
+    #                 <br>
+    #                 <input type="hidden" name="user_name" value={self.user_id}>
+    #                 <input type="hidden" name="message_txt" value={action}>
+    #                 <input type="submit" value={action}>
+    #                 """
 
-        self.actions += """
-         </form>
-                </div>
-                """
-        return self.actions
+    #     self.actions += """
+    #      </form>
+    #             </div>
+    #             """
+    #     return self.actions
 
     def show_notification(self, message):
         self.show_notification = f"""
