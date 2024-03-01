@@ -1,3 +1,6 @@
+from coup import Player
+
+
 class TestGame:
 
     def test_initialization(self, game):
@@ -37,3 +40,9 @@ class TestGame:
         game.start()
         assert game.deck is not None
         assert len(game.actions) > 0
+
+    def test_player(self, game, player):
+        player_ids = [("1", "Alice"), ("2", "Bob")]
+        game.add_all_players(player_ids)
+        game.start()
+        assert isinstance(game.player("1"), Player)
