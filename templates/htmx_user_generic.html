@@ -21,14 +21,13 @@
                     <br><br>
                     <p id="user{{user_id}}"></p>
                     <div id="actions">
+                        {% for action in actions %}
                         <form hx-ws="send" hx-target="#actions">
-                            {% for action in actions %}
-                            <br>
                             <input type="hidden" name="user_name" value={{user_id}}>
                             <input type="hidden" name="message_txt" value={{action}}>
                             <input type="submit" value={{action}}>
-                            {% endfor %}
                         </form>
+                        {% endfor %}
                     </div>
                 </div>
 
