@@ -67,14 +67,6 @@ async def process_message(websocket, user_id, message):
 
 
 async def clear_and_show_board(websocket, user_id, message):
-    # content = Content(game, user_id).show_hand(game.player(user_id))
-    # await manager.send_personal_message(content, websocket)
-    # content = Content(game, user_id).show_turn()
-    # await manager.send_personal_message(content, websocket)
-    # content = Content(game, user_id).show_actions()
-    # print(content)
-    # await manager.send_personal_message(content, websocket)
-
     await manager.broadcast(
         f" {game.players[user_id].name} says: {message['message_txt']}",
         game,

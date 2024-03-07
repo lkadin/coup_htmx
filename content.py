@@ -35,33 +35,16 @@ class Content:
     def show_turn(self):
         self.turn = f"""
         <div hx-swap-oob="innerHTML:#turn">
-        <p style=text-align:top;><strong>{self.game.whose_turn_name()}'s turn</strong> </p>
+        <p style=text-align:top;><strong>{self.game.whose_turn_name()}xxxx's turn</strong> </p>
         """
         return self.turn
-
-    # def show_actions(self):
-    #     self.actions = """
-    #     <div hx-swap-oob="innerHTML:#actions">
-    #     <form hx-ws="send" hx-target="#actions">
-    #     """
-    #     for action in self.game.actions:
-    #         self.actions += f"""
-    #                 <br>
-    #                 <input type="hidden" name="user_name" value={self.user_id}>
-    #                 <input type="hidden" name="message_txt" value={action}>
-    #                 <input type="submit" value={action}>
-    #                 """
-
-    #     self.actions += """
-    #      </form>
-    #             </div>
-    #             """
-    #     return self.actions
 
     def show_notification(self, message):
         self.show_notification = f"""
         <div hx-swap-oob="beforeend:#notifications">
-        <p>{message}</p>
+        {message}
+        <br>
         </div>
+
         """
         return self.show_notification
