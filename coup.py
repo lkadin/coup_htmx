@@ -1,6 +1,6 @@
 import random
 
-# from content import Content
+from content import Content
 
 
 class Card:
@@ -134,10 +134,10 @@ def main():
     game = Game()
     game.add_all_players(ids)
     game.wait()
-    print(game.actions)
     game.start()
-    print(game.actions)
-    print(game.player("1"))
+    # print(game.whose_turn_name())
+    content = Content(game, "1")
+    print(content.show_turn())
 
 
 if __name__ == "__main__":
