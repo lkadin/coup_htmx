@@ -46,11 +46,15 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
     await manager.broadcast(
         f" {game.players[user_id].name} has joined ", game, "notification"
     )
+    try:
+        while game.status == "Waiting":
+            data = await websocket.receive_text()
+            message = json.loads(data)
+            await process_message(websocket, user_id, message)
 
-    while game.status == "Waiting":
-        data = await websocket.receive_text()
-        message = json.loads(data)
-        await process_message(websocket, user_id, message)
+    except Exception as e:
+        print(f"{user_id} - disconnected")
+        print(e)
 
 
 async def process_message(websocket, user_id, message):
