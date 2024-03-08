@@ -41,7 +41,7 @@ class Content:
 
     def show_notification(self, message):
         self.show_notification = f"""
-        <div hx-swap-oob="beforeend:#notifications">
+        <div hx-swap-oob="beforeend:#history">
         {message}
         <br>
         </div>
