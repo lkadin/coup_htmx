@@ -22,15 +22,15 @@
                     </div>
                     <br><br>
                     <p id="user{{user_id}}"></p>
-                    <div id="actions">
-                        {% for action in actions %}
+                    {% for action in actions %}
+                    <div id="{{action}}">
                         <form hx-ws="send" hx-target="#actions">
                             <input type="hidden" name="user_name" value={{user_id}}>
                             <input type="hidden" name="message_txt" value={{action}}>
                             <input type="submit" value={{action}}>
                         </form>
-                        {% endfor %}
                     </div>
+                    {% endfor %}
                 </div>
 
                 <br>
