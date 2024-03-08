@@ -132,6 +132,10 @@ class Game:
             self.player(user_id).add_remove_coins(3)
             self.next_turn()
 
+        if action == "Income":
+            self.player(user_id).add_remove_coins(1)
+            self.next_turn()
+
     def player(self, user_id) -> Player:
         return self.players[user_id]
 
