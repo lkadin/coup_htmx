@@ -32,6 +32,11 @@ class TestGame:
         game.add_all_actions()
         assert len(game.actions) == 6
 
+    def enable_all_actions(self, game):
+        game.enable_all_actions()
+        for action in game.actions:
+            assert action.status == "enabled"
+
     def test_wait(self, game):
         game.wait()
         assert game.status == "Waiting"
