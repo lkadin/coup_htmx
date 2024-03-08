@@ -46,9 +46,10 @@ class Player:
 
 
 class Action:
-    def __init__(self, name, coins_required: int) -> None:
+    def __init__(self, name, coins_required: int, status: str) -> None:
         self.name = name
         self.coins_required = coins_required
+        self.status = status
 
     def __repr__(self) -> str:
         return self.name
@@ -87,18 +88,18 @@ class Game:
 
     def add_all_actions(self):
         self.actions = []
-        for name, number_of_coins in [
-            ("Assassinate", 3),
-            ("Coup", 7),
-            ("Steal", 0),
-            ("Take_3_coins", 0),
-            ("Foreign_aid", 0),
-            ("Income", 0),
+        for name, number_of_coins, status in [
+            ("Assassinate", 3, "disabled"),
+            ("Coup", 7, "disabled"),
+            ("Steal", 0, "disabled"),
+            ("Take_3_coins", 0, "disabled"),
+            ("Foreign_aid", 0, "disabled"),
+            ("Income", 0, "disabled"),
         ]:
-            self.actions.append(Action(name, number_of_coins))
+            self.actions.append(Action(name, number_of_coins, status))
 
         if self.status == "Waiting":
-            self.actions.append(Action("Start", 0))
+            self.actions.append(Action("Start", 0, "enabled"))
         if self.status == "In Progress":
             del self.actions["Start"]
 
@@ -106,12 +107,19 @@ class Game:
         self.status = "Waiting"
         self.add_all_actions()
 
+    def enable_all_actions(self):
+        for self.action in self.actions:
+            self.action.status = "enabled"
+
     def start(self):
         self.status = "In progress"
         self.deck = Deck()
         self.deck.shuffle()
         self.add_all_actions()
+        self.enable_all_actions()
         self.initial_deal()
+        content = Content(self, "1")
+        print(content.show_actions())
 
     def your_turn(self, user_id: str) -> bool:
         return self.whose_turn_name() == self.players[user_id].name
@@ -150,9 +158,6 @@ def main():
     game.add_all_players(ids)
     game.wait()
     game.start()
-    # print(game.whose_turn_name())
-    content = Content(game, "1")
-    print(content.show_turn())
 
 
 if __name__ == "__main__":
