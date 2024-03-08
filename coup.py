@@ -117,13 +117,20 @@ class Game:
         return self.whose_turn_name() == self.players[user_id].name
 
     def process_action(self, action: Action, user_id: str):
+        print(f"{self.your_turn(user_id)=}")
+        if not self.your_turn(user_id):
+            return
+
         if action == "Start" and self.status == "Waiting":
             self.start()
             return
 
+        if self.status == "Waiting":
+            return
+
         if action == "Take_3_coins":
             self.player(user_id).add_remove_coins(3)
-        self.next_turn()
+            self.next_turn()
 
     def player(self, user_id) -> Player:
         return self.players[user_id]
