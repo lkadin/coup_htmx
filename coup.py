@@ -92,7 +92,7 @@ class Game:
             ("Coup", 7),
             ("Steal", 0),
             ("Take_3_coins", 0),
-            ("Foreign aid", 0),
+            ("Foreign_aid", 0),
             ("Income", 0),
         ]:
             self.actions.append(Action(name, number_of_coins))
@@ -134,6 +134,10 @@ class Game:
 
         if action == "Income":
             self.player(user_id).add_remove_coins(1)
+            self.next_turn()
+
+        if action == "Foreign_aid":
+            self.player(user_id).add_remove_coins(2)
             self.next_turn()
 
     def player(self, user_id) -> Player:
