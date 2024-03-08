@@ -26,7 +26,6 @@ class Content:
             <p style=text-align:top;><strong>{player.name}</strong> coins -  {player.coins}</p>
             """
             self.table += self.show_hand(player)
-        # self.table += self.show_actions()
         self.table += """    
             </div>
             """
@@ -34,9 +33,10 @@ class Content:
 
     def show_turn(self):
         self.turn = f"""
-        <div hx-swap-oob="innerHTML:#turn">
-        <p style=text-align:top;><strong>{self.game.whose_turn_name()}xxxx's turn</strong> </p>
-        """
+            <div hx-swap-oob="innerHTML:#turn">
+            <h4>{self.game.whose_turn_name()}'s Turn</h4>
+            </div>
+            """
         return self.turn
 
     def show_notification(self, message):
