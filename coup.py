@@ -118,8 +118,6 @@ class Game:
         self.add_all_actions()
         self.enable_all_actions()
         self.initial_deal()
-        content = Content(self, "1")
-        print(content.show_actions())
 
     def your_turn(self, user_id: str) -> bool:
         return self.whose_turn_name() == self.players[user_id].name
