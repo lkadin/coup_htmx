@@ -155,7 +155,9 @@ def main():
     game = Game()
     game.add_all_players(ids)
     game.wait()
+    print(game.actions)
     game.start()
+    print(game.actions)
 
 
 if __name__ == "__main__":
