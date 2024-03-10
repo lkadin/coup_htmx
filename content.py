@@ -49,9 +49,24 @@ class Content:
         """
         return self.show_notification
 
+    def delete_start_action(self):
+        self.show_actions += f"""
+                <div id="Start">
+                <form hx-ws="send" hx-target="#actions">
+                <input type="hidden" name="user_name" value={self.user_id}>
+                <input type="hidden" name="message_txt" value=Start>
+                <input type="submit" value="Start" hidden>
+                </form>
+                </div>
+                """
+        return self.show_actions
+
     def show_actions(self):
+        start = False
         self.show_actions = ""
         for action in self.game.actions:
+            if action.name == "Start":
+                start = True
             visible = ""
             if action.status == "disabled":
                 visible = "hidden"
@@ -64,4 +79,6 @@ class Content:
                 </form>
                 </div>
             """
+        if not start:
+            self.show_actions += self.delete_start_action()
         return self.show_actions
