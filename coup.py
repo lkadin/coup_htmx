@@ -1,7 +1,5 @@
 import random
 
-from content import Content
-
 
 class Card:
     def __init__(self, value) -> None:
