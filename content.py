@@ -52,12 +52,15 @@ class Content:
     def show_actions(self):
         self.show_actions = ""
         for action in self.game.actions:
+            visible = ""
+            if action.status == "disabled":
+                visible = "hidden"
             self.show_actions += f"""
                 <div id="{action}">
                 <form hx-ws="send" hx-target="#actions">
                 <input type="hidden" name="user_name" value={self.user_id}>
                 <input type="hidden" name="message_txt" value={action}>
-                <input type="submit" value={action} {action.status}>
+                <input type="submit" value={action} {action.status} {visible}>
                 </form>
                 </div>
             """
