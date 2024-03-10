@@ -13,8 +13,7 @@ def test_show_turn(content):
     assert """<div hx-swap-oob="innerHTML:#turn">""" in content.show_turn()
 
 
-def test_show_notification(content):
-    assert (
-        """<div hx-swap-oob="beforeend:#notifications">"""
-        in content.show_notification("Test")
+def test_show_history(content):
+    assert """<div hx-swap-oob="beforeend:#history">""" in content.show_notification(
+        "Test"
     )
