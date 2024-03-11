@@ -29,6 +29,7 @@ def game():
 @pytest.fixture
 def game_ready(game):
     ids = [("1", "Lee"), ("2", "Adina"), ("3", "Joey"), ("9", "Jamie")]
+    game.deck = Deck()
     game.add_all_players(ids)
     game.start()
     return game
