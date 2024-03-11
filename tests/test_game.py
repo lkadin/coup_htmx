@@ -46,8 +46,15 @@ class TestGame:
         assert game.deck is not None
         assert len(game.actions) > 0
 
-    def test_player(self, game, player):
+    def test_player(self, game):
         player_ids = [("1", "Alice"), ("2", "Bob")]
         game.add_all_players(player_ids)
         game.start()
         assert isinstance(game.player("1"), Player)
+
+    def test_initial_deal(self, game):
+        player_ids = [("1", "Alice"), ("2", "Bob")]
+        game.add_all_players(player_ids)
+        game.start()
+        for player in game.players.values():
+            assert len(player.hand) == 2
