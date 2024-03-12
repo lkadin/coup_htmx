@@ -7,7 +7,6 @@ import uvicorn
 from connection_manager import ConnectionManager
 from coup import Game
 
-# from content import Content
 
 app = FastAPI()
 
@@ -62,7 +61,8 @@ async def process_message(websocket, user_id, message):
     print(game.your_turn(user_id), message["message_txt"])
     if not game.your_turn(user_id):
         return
-
+    if message["message_txt"] in ("Assassinate", "Coup", "Steal"):
+        print("This requres an additional player")
     game.process_action(message["message_txt"], user_id)
     await clear_and_show_board(websocket, user_id, message)
 
