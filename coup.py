@@ -147,6 +147,10 @@ class Game:
     def player(self, user_id) -> Player:
         return self.players[user_id]
 
+    def steal(self, give_to, steal_from):
+        self.player(steal_from).add_remove_coins(-2)
+        self.player(give_to).add_remove_coins(2)
+
 
 def main():
     ids = [("1", "Lee"), ("2", "Adina"), ("3", "Joey"), ("9", "Jamie")]
@@ -156,6 +160,8 @@ def main():
     print(game.actions)
     game.start()
     print(game.actions)
+    game.steal("2", "1")
+    print(game.players)
 
 
 if __name__ == "__main__":
