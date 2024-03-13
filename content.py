@@ -41,6 +41,7 @@ class Content:
 
     def show_notification(self, message):
         self.show_notification = f"""
+        <br>
         <div hx-swap-oob="beforeend:#history">
         {message}
         <br>
@@ -79,6 +80,7 @@ class Content:
                 </form>
                 </div>
             """
+        self.show_actions += "<br>"
         if not start:
             self.show_actions += self.delete_start_action()
         return self.show_actions
@@ -86,6 +88,7 @@ class Content:
     def pick_second_player(self):
         self.show_other_players = """
             <div id="second_player" >
+            <br>
                 <label for="players">Pick a player</label>
                 <select name="players id="player">
              """
@@ -98,6 +101,7 @@ class Content:
         self.show_other_players += """
             </select>
             <input type="submit" value="Submit">
+            <br>
             </div>
             """
         return self.show_other_players
