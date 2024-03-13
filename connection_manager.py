@@ -43,3 +43,9 @@ class ConnectionManager:
                 await self.send_personal_message(
                     table, self.active_connections[user_id]
                 )
+
+            if message_type in ("pick"):
+                table = content.pick_second_player()
+                await self.send_personal_message(
+                    table, self.active_connections[user_id]
+                )

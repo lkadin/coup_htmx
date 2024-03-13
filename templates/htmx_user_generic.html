@@ -35,17 +35,20 @@
                     </div>
                     {% endfor %}
                     <br>
+                    <div id="second_player">
+                        <form hx-ws="send" hx-target="#second_player">
+                            <label for="player">Pick a player</label>
+                            <select name="player" id="player">
+                                <option value="Lee">Lee</option>
+                                <option value="Adina">Adina</option>
+                            </select>
+                            <input type="submit" value="Submit">
+                        </form>
+                    </div>
                 </div>
                 <div id="history" class="overflow-auto p-3 bg-light" style="max-width: 260px; max-height: 100px;">
                 </div>
                 <br>
-                <div id="second_player" hidden>
-                    <label for="players">Pick a player</label>
-                    <select name="players id=" players">
-                        <option value="Lee">Lee</option>
-                        <option value="Adina">Adina</option>
-                    </select>
-                </div>
             </div>
             <div class="col-8" id="photo">
             </div>

@@ -82,3 +82,22 @@ class Content:
         if not start:
             self.show_actions += self.delete_start_action()
         return self.show_actions
+
+    def pick_second_player(self):
+        self.show_other_players = """
+            <div id="second_player" >
+                <label for="players">Pick a player</label>
+                <select name="players id="player">
+             """
+        for player in self.players.values():
+            if player.id == self.user_id:
+                continue
+            self.show_other_players += f"""
+                <option value="{player.name}">{player.name}</option>
+                """
+        self.show_other_players += """
+            </select>
+            <input type="submit" value="Submit">
+            </div>
+            """
+        return self.show_other_players
