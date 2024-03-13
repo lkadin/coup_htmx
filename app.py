@@ -53,16 +53,36 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
                 await process_message(websocket, user_id, message)
 
     except Exception as e:
-        print(f"{user_id} - disconnected")
+        message = f"{game.players[user_id].name} has disconnetd"
+        print(message)
+        await manager.disconnect(user_id, websocket)
+        await manager.broadcast(message, game)
         print(e)
 
 
 async def process_message(websocket, user_id, message):
+
+    if not message.get("message_txt"):
+        message["message_txt"] = "Not Sent"
+
     print(game.your_turn(user_id), message["message_txt"])
     if not game.your_turn(user_id):
         return
+
+    try:
+        player = message["player"]
+    except KeyError:
+        player = None
+    print(f"{player=}")
+
     if message["message_txt"] in ("Assassinate", "Coup", "Steal"):
         print("This requres an additional player")
+        await manager.broadcast(
+            f" {game.players[user_id].name} says: {message['message_txt']}",
+            game,
+            message_type="pick",
+        )
+
     game.process_action(message["message_txt"], user_id)
     await clear_and_show_board(websocket, user_id, message)
 
