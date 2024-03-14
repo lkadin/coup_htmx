@@ -93,6 +93,9 @@ class Game:
             ("Take_3_coins", 0, "disabled"),
             ("Foreign_aid", 0, "disabled"),
             ("Income", 0, "disabled"),
+            ("Exchange", 0, "disabled"),
+            ("Block", 0, "disabled"),
+            ("Challenge", 0, "disabled"),
         ]:
             self.actions.append(Action(name, number_of_coins, status))
 
