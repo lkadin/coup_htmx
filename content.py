@@ -89,6 +89,7 @@ class Content:
         self.show_other_players = """
             <div id="second_player" >
             <br>
+                <form hx-ws="send" hx-target="#second_player" >
                 <label for="players">Pick a player</label>
                 <select name="players id="player">
              """
