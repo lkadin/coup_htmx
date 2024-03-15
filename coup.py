@@ -60,6 +60,7 @@ class Game:
         self.status = "Not started"
         self.actions = []
         self.current_action = None
+        self.second_player = None
 
     def initial_deal(self):
         for _ in range(self.NUM_OF_CARDS):
@@ -124,7 +125,6 @@ class Game:
         return self.whose_turn_name() == self.players[user_id].name
 
     def process_action(self, action: Action, user_id: str):
-        print(f"{self.your_turn(user_id)=}")
         if not self.your_turn(user_id):
             return
 
@@ -147,12 +147,21 @@ class Game:
             self.player(user_id).add_remove_coins(2)
             self.next_turn()
 
+        if action in ("Steal"):
+            self.current_action = action
+
     def player(self, user_id) -> Player:
         return self.players[user_id]
 
+    def player_id(self, name) -> str:
+        for player_id in self.player_ids:
+            if player_id[1] == name:
+                return player_id[0]
+
     def steal(self, give_to, steal_from):
-        self.player(steal_from).add_remove_coins(-2)
         self.player(give_to).add_remove_coins(2)
+        self.player(steal_from).add_remove_coins(-2)
+        self.next_turn()
 
 
 def main():

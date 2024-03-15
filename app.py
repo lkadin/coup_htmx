@@ -54,7 +54,6 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
 
     except Exception as e:
         message = f"{game.players[user_id].name} has disconnetd"
-        print(message)
         await manager.disconnect(user_id, websocket)
         await manager.broadcast(message, game)
         print(e)
@@ -62,21 +61,21 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
 
 async def process_message(websocket, user_id, message):
 
-    if not message.get("message_txt"):
-        message["message_txt"] = "Not Sent"
+    def second_player():
+        if not message.get("message_txt"):
+            message["message_txt"] = "Not Sent"
+        try:
+            game.second_player = game.player_id(message["player"])
+            game.steal(give_to=user_id, steal_from=game.second_player)
+        except KeyError:
+            game.second_player = None
 
-    print(game.your_turn(user_id), message["message_txt"])
     if not game.your_turn(user_id):
         return
 
-    try:
-        player = message["player"]
-    except KeyError:
-        player = None
-    print(f"{player=}")
+    second_player()  # check if second player was passed
 
     if message["message_txt"] in ("Assassinate", "Coup", "Steal"):
-        print("This requres an additional player")
         await manager.broadcast(
             f" {game.players[user_id].name} says: {message['message_txt']}",
             game,
@@ -84,10 +83,6 @@ async def process_message(websocket, user_id, message):
         )
 
     game.process_action(message["message_txt"], user_id)
-    await clear_and_show_board(websocket, user_id, message)
-
-
-async def clear_and_show_board(websocket, user_id, message):
     await manager.broadcast(
         f" {game.players[user_id].name} says: {message['message_txt']}",
         game,
