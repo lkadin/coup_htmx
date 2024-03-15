@@ -90,8 +90,8 @@ class Content:
             <div id="second_player" >
             <br>
                 <form hx-ws="send" hx-target="#second_player" >
-                <label for="players">Pick a player</label>
-                <select name="players id="player">
+                <label for="player">Pick a player</label>
+                <select name="player" id="player">
              """
         for player in self.players.values():
             if player.id == self.user_id:
