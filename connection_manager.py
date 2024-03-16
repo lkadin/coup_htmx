@@ -32,13 +32,13 @@ class ConnectionManager:
                     table, self.active_connections[user_id]
                 )
 
-            if message_type in ("all", "table"):
+            if message_type in ("all", "turn"):
                 table = content.show_turn()
                 await self.send_personal_message(
                     table, self.active_connections[user_id]
                 )
 
-            if message_type in ("all", "table"):
+            if message_type in ("all", "action"):
                 table = content.show_actions()
                 await self.send_personal_message(
                     table, self.active_connections[user_id]
