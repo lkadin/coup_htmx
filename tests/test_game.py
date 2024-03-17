@@ -65,3 +65,7 @@ class TestGame:
             assert game.action_from_action_name(action) is Action
         assert game.action_from_action_name(None) is None
         assert game.action_from_action_name("FRED") is None
+
+    def test_process_actions(self, game):
+        for action in game.actions:
+            assert game.process_action(action) is None
