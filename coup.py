@@ -78,6 +78,8 @@ class Game:
         self.current_player_index += 1
         if self.current_player_index >= len(self.players):
             self.current_player_index = 0
+        self.second_player = None
+        self.current_action = None
 
     def whose_turn(self):
         return self.current_player_index
