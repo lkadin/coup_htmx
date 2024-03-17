@@ -106,3 +106,9 @@ class Content:
             </div>
             """
         return self.show_other_players
+
+    def hide_second_player(self):
+        self.hide_other_players = """
+            <div id="second_player" hidden >
+            """
+        return self.hide_other_players
