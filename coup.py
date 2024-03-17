@@ -44,10 +44,13 @@ class Player:
 
 
 class Action:
-    def __init__(self, name, coins_required: int, status: str) -> None:
+    def __init__(
+        self, name, coins_required: int, status: str, second_player_required: bool
+    ) -> None:
         self.name = name
         self.coins_required = coins_required
         self.status = status
+        self.second_player_required = second_player_required
 
     def __repr__(self) -> str:
         return self.name
@@ -89,21 +92,23 @@ class Game:
 
     def add_all_actions(self):
         self.actions = []
-        for name, number_of_coins, status in [
-            ("Assassinate", 3, "disabled"),
-            ("Coup", 7, "disabled"),
-            ("Steal", 0, "disabled"),
-            ("Take_3_coins", 0, "disabled"),
-            ("Foreign_aid", 0, "disabled"),
-            ("Income", 0, "disabled"),
-            ("Exchange", 0, "disabled"),
-            ("Block", 0, "disabled"),
-            ("Challenge", 0, "disabled"),
+        for name, number_of_coins, status, second_player_required in [
+            ("Assassinate", 3, "disabled", True),
+            ("Coup", 7, "disabled", True),
+            ("Steal", 0, "disabled", True),
+            ("Take_3_coins", 0, "disabled", False),
+            ("Foreign_aid", 0, "disabled", False),
+            ("Income", 0, "disabled", False),
+            ("Exchange", 0, "disabled", False),
+            ("Block", 0, "disabled", False),
+            ("Challenge", 0, "disabled", False),
         ]:
-            self.actions.append(Action(name, number_of_coins, status))
+            self.actions.append(
+                Action(name, number_of_coins, status, second_player_required)
+            )
 
         if self.status == "Waiting":
-            self.actions.append(Action("Start", 0, "enabled"))
+            self.actions.append(Action("Start", 0, "enabled", False))
         if self.status == "In Progress":
             del self.actions["Start"]
 
@@ -149,7 +154,7 @@ class Game:
             self.player(user_id).add_remove_coins(2)
             self.next_turn()
 
-        if action in ("Steal"):
+        if self.action_from_action_name(action).second_player_required:
             self.current_action = action
 
     def player(self, user_id) -> Player:
@@ -164,6 +169,11 @@ class Game:
         self.player(give_to).add_remove_coins(2)
         self.player(steal_from).add_remove_coins(-2)
         self.next_turn()
+
+    def action_from_action_name(self, action_name: str) -> Action:
+        for action in self.actions:
+            if action.name == action_name:
+                return action
 
 
 def main():
