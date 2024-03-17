@@ -70,9 +70,6 @@ async def process_message(websocket, user_id, message):
         except KeyError:
             game.second_player = None
 
-    if not game.your_turn(user_id):
-        return
-
     second_player()  # check if second player was passed
 
     if message["message_txt"] in ("Assassinate", "Coup", "Steal"):
@@ -81,6 +78,13 @@ async def process_message(websocket, user_id, message):
             game,
             message_type="pick",
         )
+
+    # if not game.second_player:
+    #     await manager.broadcast(
+    #         f" {game.players[user_id].name} says: {message['message_txt']}",
+    #         game,
+    #         message_type="hide",
+    #     )
 
     game.process_action(message["message_txt"], user_id)
     await manager.broadcast(
