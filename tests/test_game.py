@@ -1,4 +1,5 @@
 from coup import Player
+from coup import Action
 
 
 class TestGame:
@@ -30,7 +31,7 @@ class TestGame:
 
     def test_add_all_actions(self, game):
         game.add_all_actions()
-        assert len(game.actions) == 6
+        assert len(game.actions) == 9
 
     def enable_all_actions(self, game):
         game.enable_all_actions()
@@ -58,3 +59,9 @@ class TestGame:
         game.start()
         for player in game.players.values():
             assert len(player.hand) == 2
+
+    def test_action_from_action_name(self, game):
+        for action in game.actions:
+            assert game.action_from_action_name(action) is Action
+        assert game.action_from_action_name(None) is None
+        assert game.action_from_action_name("FRED") is None
