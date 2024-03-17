@@ -79,13 +79,6 @@ async def process_message(websocket, user_id, message):
             message_type="pick",
         )
 
-    # if not game.second_player:
-    #     await manager.broadcast(
-    #         f" {game.players[user_id].name} says: {message['message_txt']}",
-    #         game,
-    #         message_type="hide",
-    #     )
-
     game.process_action(message["message_txt"], user_id)
     await manager.broadcast(
         f" {game.players[user_id].name} says: {message['message_txt']}",
