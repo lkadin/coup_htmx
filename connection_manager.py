@@ -49,3 +49,9 @@ class ConnectionManager:
                 await self.send_personal_message(
                     table, self.active_connections[user_id]
                 )
+
+            if message_type in ("hide") and self.game.your_turn(user_id):
+                table = content.hide_second_player()
+                await self.send_personal_message(
+                    table, self.active_connections[user_id]
+                )
