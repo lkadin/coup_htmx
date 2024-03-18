@@ -56,23 +56,22 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
         message = f"{game.players[user_id].name} has disconnetd"
         await manager.disconnect(user_id, websocket)
         await manager.broadcast(message, game)
-        print(e)
+        print(f"Exception = {e}")
 
 
 async def process_message(websocket, user_id, message):
 
     def second_player():
         if not message.get("message_txt"):
-            message["message_txt"] = "Not Sent"
+            message["message_txt"] = game.current_action
         try:
             game.second_player = game.player_id(message["player"])
-            game.steal(give_to=user_id, steal_from=game.second_player)
         except KeyError:
             game.second_player = None
 
     second_player()  # check if second player was passed
 
-    if game.action_from_action_name(message["message_txt"]):
+    if game.action_from_action_name(message["message_txt"]).second_player_required:
         await manager.broadcast(
             f" {game.players[user_id].name} says: {message['message_txt']}",
             game,

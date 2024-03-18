@@ -157,6 +157,9 @@ class Game:
         if self.action_from_action_name(action).second_player_required:
             self.current_action = action
 
+        if action == "Steal" and self.second_player:
+            self.steal(give_to=user_id, steal_from=self.second_player)
+
     def player(self, user_id) -> Player:
         return self.players[user_id]
 
