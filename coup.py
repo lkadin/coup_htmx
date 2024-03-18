@@ -62,7 +62,7 @@ class Game:
         self.NUM_OF_CARDS = 2
         self.status = "Not started"
         self.actions = []
-        self.current_action = None
+        self.current_action: Action = None
         self.second_player = None
 
     def initial_deal(self):
@@ -132,29 +132,30 @@ class Game:
         return self.whose_turn_name() == self.players[user_id].name
 
     def process_action(self, action: Action, user_id: str):
+        assert isinstance(action, Action)
         if not self.your_turn(user_id):
             return
 
-        if action == "Start" and self.status == "Waiting":
+        if action.name == "Start" and self.status == "Waiting":
             self.start()
             return
 
         if self.status == "Waiting":
             return
 
-        if action == "Take_3_coins":
+        if action.name == "Take_3_coins":
             self.player(user_id).add_remove_coins(3)
             self.next_turn()
 
-        if action == "Income":
+        if action.name == "Income":
             self.player(user_id).add_remove_coins(1)
             self.next_turn()
 
-        if action == "Foreign_aid":
+        if action.name == "Foreign_aid":
             self.player(user_id).add_remove_coins(2)
             self.next_turn()
 
-        if self.action_from_action_name(action).second_player_required:
+        if action.second_player_required:
             self.current_action = action
 
         if action == "Steal" and self.second_player:
@@ -189,6 +190,8 @@ def main():
     print(game.actions)
     game.steal("2", "1")
     print(game.players)
+    print(type(game.whose_turn()))
+    print(game.player_id("Lee"))
 
 
 if __name__ == "__main__":
