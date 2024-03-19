@@ -76,8 +76,6 @@ async def process_message(websocket, user_id, message):
 
     second_player()  # check if second player was passed
 
-    # action = game.action_from_action_name(game.current_action)
-
     if game.current_action.second_player_required:
         await manager.broadcast(
             f" {game.players[user_id].name}: {message['message_txt']}",
