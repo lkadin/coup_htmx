@@ -129,10 +129,13 @@ class Game:
         self.initial_deal()
 
     def your_turn(self, user_id: str) -> bool:
-        return self.whose_turn_name() == self.players[user_id].name
+        whose_turn = self.whose_turn_name()
+        name = self.players[user_id].name
+        return whose_turn == name
 
     def process_action(self, action: Action, user_id: str):
-        assert isinstance(action, Action)
+        if not isinstance(action, Action):
+            action = self.action_from_action_name(action)
         if not self.your_turn(user_id):
             return
 
@@ -158,7 +161,7 @@ class Game:
         if action.second_player_required:
             self.current_action = action
 
-        if action == "Steal" and self.second_player:
+        if action.name == "Steal" and self.second_player:
             self.steal(give_to=user_id, steal_from=self.second_player)
 
     def player(self, user_id) -> Player:
@@ -179,6 +182,12 @@ class Game:
             if action.name == action_name:
                 return action
 
+    def set_current_action(self, action_name: str):
+        self.current_action = action_name
+
+    def set_second_player(self, player_name: str):
+        self.second_player = player_name
+
 
 def main():
     ids = [("1", "Lee"), ("2", "Adina"), ("3", "Joey"), ("9", "Jamie")]
@@ -192,6 +201,8 @@ def main():
     print(game.players)
     print(type(game.whose_turn()))
     print(game.player_id("Lee"))
+    print(game.your_turn("1"))
+    print(game.whose_turn_name())
 
 
 if __name__ == "__main__":

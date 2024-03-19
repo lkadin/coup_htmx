@@ -53,7 +53,7 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
                 await process_message(websocket, user_id, message)
 
     except Exception as e:
-        message = f"{game.players[user_id].name} has disconnetd"
+        message = f"{game.players[user_id].name} has disconnected"
         await manager.disconnect(user_id, websocket)
         await manager.broadcast(message, game)
         print(f"Exception = {e}")
@@ -65,13 +65,20 @@ async def process_message(websocket, user_id, message):
         if not message.get("message_txt"):
             message["message_txt"] = game.current_action
         try:
-            game.second_player = game.player_id(message["player"])
+            game.set_second_player(game.player_id(message["player"]))
         except KeyError:
-            game.second_player = None
+            game.set_second_player(None)
+
+    if message.get("message_txt"):
+        game.set_current_action(
+            game.action_from_action_name(message.get("message_txt"))
+        )
 
     second_player()  # check if second player was passed
 
-    if game.action_from_action_name(message["message_txt"]).second_player_required:
+    # action = game.action_from_action_name(game.current_action)
+
+    if game.current_action.second_player_required:
         await manager.broadcast(
             f" {game.players[user_id].name}: {message['message_txt']}",
             game,
