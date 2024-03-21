@@ -65,12 +65,15 @@ class TestGame:
         assert game_ready.action_from_action_name("FRED") is None
         assert isinstance(game_ready.action_from_action_name("Assassinate"), Action)
 
-    def test_process_actions(self, game_ready, ids):
-        user_id = "1"
+    def test_process_actions(self, game_ready):
+        user_id = "2"
         for action in game_ready.actions:
             assert game_ready.process_action(action, user_id) is None
+        coins1 = game_ready.players[user_id].coins
+        game_ready.process_action("Take_3_coins", user_id)
+        assert game_ready.players[user_id].coins == coins1
 
-    def test_steal(self, game_ready, ids):
+    def test_steal(self, game_ready):
         coins1 = game_ready.players["1"].coins
         coins2 = game_ready.players["2"].coins
         game_ready.steal(
