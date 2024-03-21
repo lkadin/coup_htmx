@@ -197,12 +197,14 @@ def main():
     print(game.actions)
     game.start()
     print(game.actions)
-    game.steal("2", "1")
+    # game.steal("2", "1")
     print(game.players)
     print(type(game.whose_turn()))
     print(game.player_id("Lee"))
     print(game.your_turn("1"))
     print(game.whose_turn_name())
+    game.process_action("Take_3_coins", "2")
+    print(game.players["2"])
 
 
 if __name__ == "__main__":
