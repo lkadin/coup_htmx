@@ -61,20 +61,14 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
 
 async def process_message(websocket, user_id, message):
 
-    def second_player():
-        if not message.get("message_txt"):
-            message["message_txt"] = game.current_action
-        try:
-            game.set_second_player(game.player_id(message["player"]))
-        except KeyError:
-            game.set_second_player(None)
-
     if message.get("message_txt"):
         game.set_current_action(
             game.action_from_action_name(message.get("message_txt"))
         )
+    else:
+        message["message_txt"] = game.current_action
 
-    second_player()  # check if second player was passed
+    game.set_second_player(game.player_id(message.get("player")))
 
     if game.current_action.second_player_required:
         await manager.broadcast(
