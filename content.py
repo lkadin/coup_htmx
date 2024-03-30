@@ -5,7 +5,7 @@ class Content:
         self.user_id = user_id
 
     def show_hand(self, player):
-        self.add_to_table = ""
+        self.add_to_table = f"<a href='/web/{self.user_id}' hx-boost='true'>"
         for card in player.hand:
             if player.name == self.players[self.user_id].name:
                 self.add_to_table += f"""
@@ -15,6 +15,7 @@ class Content:
                 self.add_to_table += f"""
                 <img src='/static/jpg/down.png' {card} style=opacity:1.0;>
                 """
+        self.add_to_table += "</a>"
         return self.add_to_table
 
     def show_table(self):
@@ -112,3 +113,27 @@ class Content:
             <div id="second_player" hidden >
             """
         return self.hide_other_players
+
+    def hide_exchange(self):
+        self.hide_exchange = """
+            <div class="col-8" id="exchange" hidden>
+            """
+        return self.hide_exchange
+
+    def exchange_draw(self, user_id):
+        player = self.game.player(user_id)
+        self.player = player
+        exchange = """
+        <div class="col-8" id="exchange">
+        <form hx-ws="send" hx-target="exchange">
+        """
+        for cardname in self.player.hand:
+            exchange += f"""
+            <input type="checkbox" name="cardnames" value="{cardname}" <td><img src="/static/jpg/{cardname}.jpg" height="350">
+            """
+        exchange += """
+            <p> Which cards do you want to discard?</p>
+            <input type="submit" id="test" value="Submit">
+            </form>
+            """
+        return exchange

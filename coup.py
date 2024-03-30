@@ -19,6 +19,9 @@ class Deck:
     def draw(self) -> Card:
         return self.cards.pop()
 
+    def return_to_deck(self, cardname):
+        self.cards.append(cardname)
+
     def __repr__(self) -> str:
         return " ".join([self.card for self.card in self.cards])
 
@@ -30,8 +33,19 @@ class Player:
         self.hand = []
         self.coins = 2
 
+    def get_index(self, cardname: str):
+        for index, card in enumerate(self.hand):
+            if card == cardname:
+                return index
+
     def draw(self, deck: Deck):
         self.hand.append(deck.draw())
+
+    def discard(self, cardnames: list, deck: Deck):
+        for cardname in cardnames:
+            index = self.get_index(cardname)
+            self.hand.pop(index)
+            deck.return_to_deck(cardname)
 
     def play_card(self) -> list[str]:
         return self.hand.pop()
@@ -64,6 +78,8 @@ class Game:
         self.actions = []
         self.current_action: Action = None
         self.second_player = None
+        self.cards_to_exchange = None
+        self.exchange_in_progress = False
 
     def initial_deal(self):
         for _ in range(self.NUM_OF_CARDS):
@@ -158,6 +174,9 @@ class Game:
             self.player(user_id).add_remove_coins(2)
             self.next_turn()
 
+        if action.name == "Exchange":
+            self.exchange(user_id)
+
         if action.second_player_required:
             self.current_action = action
 
@@ -177,6 +196,18 @@ class Game:
         self.player(steal_from).add_remove_coins(-2)
         self.next_turn()
 
+    def exchange(self, user_id):
+        if len(self.player(user_id).hand) == 2:
+            self.player(user_id).draw(self.deck)
+            self.player(user_id).draw(self.deck)
+            self.exchange_in_progress = True
+
+        if self.cards_to_exchange:
+            self.player(user_id).discard(self.cards_to_exchange, self.deck)
+            self.cards_to_exchange = None
+            self.exchange_in_progress = False
+            self.next_turn()
+
     def action_from_action_name(self, action_name: str) -> Action:
         for action in self.actions:
             if action.name == action_name:
@@ -188,9 +219,12 @@ class Game:
     def set_second_player(self, player_name: str):
         self.second_player = player_name
 
+    def set_cards_to_exchange(self, cardnames: list[str]):
+        self.cards_to_exchange = cardnames
+
 
 def main():
-    ids = [("1", "Lee"), ("2", "Adina"), ("3", "Joey"), ("9", "Jamie")]
+    ids = [("1", "Lee"), ("2", "Adina")]
     game = Game()
     game.add_all_players(ids)
     game.wait()
@@ -205,6 +239,12 @@ def main():
     print(game.whose_turn_name())
     game.process_action("Take_3_coins", "2")
     print(game.players["2"])
+    game.process_action("Exchange_draw", "1")
+    print(game.players["1"])
+    cards = ["contessa", "ambassador"]
+    game.set_cards_to_exchange(cards)
+    game.process_action("Exchange_discard", "1")
+    print(game.players["1"])
 
 
 if __name__ == "__main__":

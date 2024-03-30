@@ -24,7 +24,7 @@ game.wait()
 
 
 @app.get("/web/{user_id}/", response_class=HTMLResponse)
-async def read_itemx(request: Request, user_id: str):
+async def read_item(request: Request, user_id: str):
     user_name = game.players[user_id].name
     return templates.TemplateResponse(
         "htmx_user_generic.html",
@@ -69,6 +69,7 @@ async def process_message(websocket, user_id, message):
         message["message_txt"] = game.current_action
 
     game.set_second_player(game.player_id(message.get("player")))
+    game.cards_to_exchange = message.get("cardnames")
 
     if game.current_action.second_player_required:
         await manager.broadcast(
@@ -83,11 +84,25 @@ async def process_message(websocket, user_id, message):
             game,
             message_type="hide",
         )
+    if message.get("message_txt") == "Exchange" and not game.cards_to_exchange:
+        game.process_action(message["message_txt"], user_id)
+        await manager.broadcast(
+            f" {game.players[user_id].name}: {message['message_txt']}",
+            game,
+            message_type="exchange_draw",
+        )
+
     game.process_action(message["message_txt"], user_id)
     await manager.broadcast(
         f" {game.players[user_id].name}: {message['message_txt']}",
         game,
     )
+    if not game.exchange_in_progress:
+        await manager.broadcast(
+            f" {game.players[user_id].name}: {message['message_txt']}",
+            game,
+            message_type="hide_exchange",
+        )
 
 
 if __name__ == "__main__":

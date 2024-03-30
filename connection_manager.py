@@ -55,3 +55,14 @@ class ConnectionManager:
                 await self.send_personal_message(
                     table, self.active_connections[user_id]
                 )
+
+            if message_type in ("hide_exchange"):
+                table = content.hide_exchange()
+                await self.send_personal_message(
+                    table, self.active_connections[user_id]
+                )
+            if message_type in ("exchange_draw") and self.game.your_turn(user_id):
+                table = content.exchange_draw(user_id)
+                await self.send_personal_message(
+                    table, self.active_connections[user_id]
+                )
