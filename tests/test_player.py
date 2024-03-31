@@ -16,6 +16,16 @@ def test_play_card(player):
     assert player.hand == ["contessa"]
 
 
+def test_get_index(player):
+    player.hand = ["contessa", "duke"]
+    cardname = "contessa"
+    assert player.get_index(cardname) == 0
+    cardname = "duke"
+    assert player.get_index(cardname) == 1
+    cardname = None
+    assert player.get_index(cardname) is None
+
+
 def test_add_remove_coins(player):
     player.add_remove_coins(3)
     assert player.coins == 5
