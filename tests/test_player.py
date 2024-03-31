@@ -1,3 +1,6 @@
+import pytest
+
+
 def test_init(player):
     assert player.id == "1"
     assert player.hand == []
@@ -7,6 +10,12 @@ def test_init(player):
 def test_draw(player, deck):
     player.draw(deck)
     assert player.hand == ["contessa"]
+
+
+def test_discard(player, deck):
+    player.hand = ["contessa", "contessa", "assassin", "duke"]
+    player.discard(["duke", "contessa"], deck)
+    assert len(player.hand) == 2
 
 
 def test_play_card(player):
@@ -23,7 +32,8 @@ def test_get_index(player):
     cardname = "duke"
     assert player.get_index(cardname) == 1
     cardname = None
-    assert player.get_index(cardname) is None
+    with pytest.raises(Exception) as e:
+        player.get_index(cardname)
 
 
 def test_add_remove_coins(player):
@@ -31,3 +41,8 @@ def test_add_remove_coins(player):
     assert player.coins == 5
     player.add_remove_coins(-2)
     assert player.coins == 3
+
+
+def test_repr(player):
+    player.hand = ["contessa", "duke"]
+    assert player == "1-['contessa', 'duke'] self.coins=2"
