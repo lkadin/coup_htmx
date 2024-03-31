@@ -47,7 +47,7 @@ class TestGame:
         assert game.deck is not None
         assert len(game.actions) > 0
 
-    def test_your_turn(self, game_ready, ids):
+    def test_your_turn(self, game_ready):
         user_id = "1"
         assert isinstance(game_ready.your_turn(user_id), bool)
 
@@ -84,3 +84,11 @@ class TestGame:
 
     def test_player_id(self, game_ready, ids):
         assert game_ready.player_id("Lee") == "1"
+
+    def test_exchange(self, game_ready):
+        user_id = "1"
+        game_ready.exchange(user_id)
+        assert len(game_ready.players["1"].hand) == 4
+        game_ready.cards_to_exchange = ["captain", "duke"]
+        game_ready.exchange(user_id)
+        assert len(game_ready.players["1"].hand) == 2
