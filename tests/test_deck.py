@@ -22,3 +22,10 @@ def test_draw(deck):
 
 def test_repr(deck):
     assert repr(deck) == " ".join(deck.cards)
+
+
+def test_return_to_deck(deck):
+    cardname = "contessa"
+    deck_length = len(deck.cards)
+    deck.return_to_deck(cardname)
+    assert len(deck.cards) == deck_length + 1
