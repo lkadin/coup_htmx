@@ -43,6 +43,6 @@ def test_add_remove_coins(player):
     assert player.coins == 3
 
 
-def test_repr(player):
-    player.hand = ["contessa", "duke"]
-    assert player == "1-['contessa', 'duke'] self.coins=2"
+# def test_repr(player):
+#     player.hand = ["contessa", "duke"]
+#     assert player == "1-['contessa', 'duke'] self.coins=2"

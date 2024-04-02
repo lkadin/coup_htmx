@@ -3,12 +3,18 @@ from coup import Card
 from coup import Deck
 from coup import Player
 from coup import Game
+from coup import Action
 from content import Content
 
 
 @pytest.fixture
 def player():
     return Player("1")
+
+
+@pytest.fixture
+def action():
+    return Action("Coup", 7, "disabled", True)
 
 
 @pytest.fixture

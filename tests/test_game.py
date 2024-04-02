@@ -32,6 +32,14 @@ class TestGame:
         assert isinstance(game_ready.whose_turn(), int)
 
     def test_add_all_actions(self, game_ready):
+        game_ready.status = None
+        game_ready.add_all_actions()
+        assert len(game_ready.actions) == 9
+        game_ready.status = "Waiting"
+        game_ready.add_all_actions()
+        assert len(game_ready.actions) == 10
+        game_ready.status = "In Progress"
+        game_ready.add_all_actions()
         assert len(game_ready.actions) == 9
 
     def test_enable_all_actions(self, game_ready):
