@@ -87,8 +87,9 @@ class TestGame:
 
     def test_exchange(self, game_ready):
         user_id = "1"
+        game_ready.players[user_id].hand = ["captain", "duke"]
         game_ready.exchange(user_id)
-        assert len(game_ready.players["1"].hand) == 4
+        assert len(game_ready.players[user_id].hand) == 4
         game_ready.cards_to_exchange = ["captain", "duke"]
         game_ready.exchange(user_id)
         assert len(game_ready.players["1"].hand) == 2
