@@ -37,6 +37,7 @@ class Player:
         for index, card in enumerate(self.hand):
             if card == cardname:
                 return index
+        raise Exception("Card to discard not found in hand")
 
     def draw(self, deck: Deck):
         self.hand.append(deck.draw())
@@ -54,7 +55,7 @@ class Player:
         self.coins += num_of_coins
 
     def __repr__(self) -> str:
-        return self.id + " - " + " ".join(self.hand) + " " + f"{self.coins=}"
+        return f"{self.id}-{self.hand} {self.coins=}"
 
 
 class Action:
@@ -125,8 +126,9 @@ class Game:
 
         if self.status == "Waiting":
             self.actions.append(Action("Start", 0, "enabled", False))
-        if self.status == "In Progress":
-            del self.actions["Start"]
+
+        if self.status == "In Progress" and self.actions[-1:] == "Start":
+            self.actions.pop()
 
     def wait(self):
         self.status = "Waiting"
@@ -222,6 +224,12 @@ class Game:
     def set_cards_to_exchange(self, cardnames: list[str]):
         self.cards_to_exchange = cardnames
 
+    def set_status(self, status: str):
+        self.status = status
+
+    def get_status(self):
+        return self.status
+
 
 def main():
     ids = [("1", "Lee"), ("2", "Adina")]
@@ -231,19 +239,16 @@ def main():
     print(game.actions)
     game.start()
     print(game.actions)
-    # game.steal("2", "1")
     print(game.players)
     print(type(game.whose_turn()))
     print(game.player_id("Lee"))
     print(game.your_turn("1"))
     print(game.whose_turn_name())
-    game.process_action("Take_3_coins", "2")
-    print(game.players["2"])
-    game.process_action("Exchange_draw", "1")
+    game.process_action("Exchange", "1")
     print(game.players["1"])
     cards = ["contessa", "ambassador"]
     game.set_cards_to_exchange(cards)
-    game.process_action("Exchange_discard", "1")
+    game.process_action("Exchange", "1")
     print(game.players["1"])
 
 
