@@ -34,12 +34,14 @@ class TestGame:
         assert isinstance(game_ready.whose_turn(), int)
 
     def test_add_all_actions(self, game_ready):
-        game_ready.status = None
+        game_ready.set_status(None)
         game_ready.add_all_actions()
         assert len(game_ready.actions) == 9
+
         game_ready.set_status("Waiting")
         game_ready.add_all_actions()
         assert len(game_ready.actions) == 10
+
         game_ready.set_status("In Progress")
         game_ready.add_all_actions()
         assert len(game_ready.actions) == 9
@@ -75,8 +77,8 @@ class TestGame:
         assert game_ready.action_from_action_name("FRED") is None
         assert isinstance(game_ready.action_from_action_name("Assassinate"), Action)
 
-    def test_process_actions(self, game_ready):
-        user_id = "2"
+    def test_process_action(self, game_ready):
+        user_id = str(int(game_ready.whose_turn()) + 1)
         for action in game_ready.actions:
             assert game_ready.process_action(action, user_id) is None
         # Take_3_coins
@@ -91,6 +93,15 @@ class TestGame:
         game_ready.process_action("Steal", user_id)
         assert game_ready.players[user_id].coins == coins1
         assert game_ready.players["1"].coins == coins2
+
+        # Start
+
+    def test_process_action_start(self, game_ready):
+        user_id = str(int(game_ready.whose_turn()) + 1)
+        action = Action("Start", 0, "enabled", False)
+        game_ready.set_status("Waiting")
+        game_ready.process_action(action, user_id)
+        assert game_ready.game_status == "In progress"
 
     def test_steal(self, game_ready):
         coins1 = game_ready.players["1"].coins
