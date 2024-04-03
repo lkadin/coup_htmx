@@ -60,11 +60,15 @@ class Player:
 
 class Action:
     def __init__(
-        self, name, coins_required: int, status: str, second_player_required: bool
+        self,
+        name,
+        coins_required: int,
+        action_status: str,
+        second_player_required: bool,
     ) -> None:
         self.name = name
         self.coins_required = coins_required
-        self.action_status = status
+        self.action_status = action_status
         self.second_player_required = second_player_required
 
     def __repr__(self) -> str:
@@ -226,8 +230,9 @@ class Game:
     def set_cards_to_exchange(self, cardnames: list[str]):
         self.cards_to_exchange = cardnames
 
-    def set_status(self, status: str):
-        self.game_status = status
+    def set_status(self, game_status: str):
+        self.game_status = game_status
+        pass
 
     def get_status(self):
         return self.game_status
