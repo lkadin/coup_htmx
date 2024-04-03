@@ -7,7 +7,7 @@ class TestGame:
     def test_initialization(self, game):
         assert game.players == {}
         assert game.NUM_OF_CARDS == 2
-        assert game.status == "Not started"
+        assert game.game_status == "Not started"
         assert game.actions == []
 
     def test_add_all_players(self, game, ids):
@@ -21,6 +21,8 @@ class TestGame:
         assert game.whose_turn() == 0
         game.next_turn()
         assert game.whose_turn() == 1
+        game.next_turn()
+        assert game.whose_turn() == 0
 
     def test_whose_turn_name(self, game_ready, ids):
         assert (
@@ -35,10 +37,10 @@ class TestGame:
         game_ready.status = None
         game_ready.add_all_actions()
         assert len(game_ready.actions) == 9
-        game_ready.status = "Waiting"
+        game_ready.set_status("Waiting")
         game_ready.add_all_actions()
         assert len(game_ready.actions) == 10
-        game_ready.status = "In Progress"
+        game_ready.set_status("In Progress")
         game_ready.add_all_actions()
         assert len(game_ready.actions) == 9
 
@@ -48,7 +50,7 @@ class TestGame:
 
     def test_wait(self, game):
         game.wait()
-        assert game.status == "Waiting"
+        assert game.game_status == "Waiting"
 
     def test_start(self, game):
         game.start()
@@ -77,9 +79,18 @@ class TestGame:
         user_id = "2"
         for action in game_ready.actions:
             assert game_ready.process_action(action, user_id) is None
+        # Take_3_coins
         coins1 = game_ready.players[user_id].coins
         game_ready.process_action("Take_3_coins", user_id)
         assert game_ready.players[user_id].coins == coins1
+
+        # Steal
+        coins1 = game_ready.players[user_id].coins
+        coins2 = game_ready.players["1"].coins
+        game_ready.second_player = user_id
+        game_ready.process_action("Steal", user_id)
+        assert game_ready.players[user_id].coins == coins1
+        assert game_ready.players["1"].coins == coins2
 
     def test_steal(self, game_ready):
         coins1 = game_ready.players["1"].coins

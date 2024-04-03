@@ -32,7 +32,7 @@ def test_get_index(player):
     cardname = "duke"
     assert player.get_index(cardname) == 1
     cardname = None
-    with pytest.raises(Exception) as e:
+    with pytest.raises(Exception):
         player.get_index(cardname)
 
 
@@ -43,6 +43,6 @@ def test_add_remove_coins(player):
     assert player.coins == 3
 
 
-# def test_repr(player):
-#     player.hand = ["contessa", "duke"]
-#     assert player == "1-['contessa', 'duke'] self.coins=2"
+def test_repr(player):
+    player.hand = ["contessa", "duke"]
+    assert repr(player) == "1-['contessa', 'duke'] self.coins=2"

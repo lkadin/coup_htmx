@@ -64,7 +64,7 @@ class Action:
     ) -> None:
         self.name = name
         self.coins_required = coins_required
-        self.status = status
+        self.action_status = status
         self.second_player_required = second_player_required
 
     def __repr__(self) -> str:
@@ -75,7 +75,7 @@ class Game:
     def __init__(self) -> None:
         self.players = {}
         self.NUM_OF_CARDS = 2
-        self.status = "Not started"
+        self.game_status = "Not started"
         self.actions = []
         self.current_action: Action = None
         self.second_player = None
@@ -109,7 +109,7 @@ class Game:
 
     def add_all_actions(self):
         self.actions = []
-        for name, number_of_coins, status, second_player_required in [
+        for name, number_of_coins, self.action_status, second_player_required in [
             ("Assassinate", 3, "disabled", True),
             ("Coup", 7, "disabled", True),
             ("Steal", 0, "disabled", True),
@@ -121,17 +121,19 @@ class Game:
             ("Challenge", 0, "disabled", False),
         ]:
             self.actions.append(
-                Action(name, number_of_coins, status, second_player_required)
+                Action(
+                    name, number_of_coins, self.action_status, second_player_required
+                )
             )
 
-        if self.status == "Waiting":
+        if self.game_status == "Waiting":
             self.actions.append(Action("Start", 0, "enabled", False))
 
-        if self.status == "In Progress" and self.actions[-1:] == "Start":
+        if self.game_status == "In Progress" and self.actions[-1:] == "Start":
             self.actions.pop()
 
     def wait(self):
-        self.status = "Waiting"
+        self.game_status = "Waiting"
         self.add_all_actions()
 
     def enable_all_actions(self):
@@ -139,7 +141,7 @@ class Game:
             self.action.status = "enabled"
 
     def start(self):
-        self.status = "In progress"
+        self.game_status = "In progress"
         self.deck = Deck()
         self.deck.shuffle()
         self.add_all_actions()
@@ -157,11 +159,11 @@ class Game:
         if not self.your_turn(user_id):
             return
 
-        if action.name == "Start" and self.status == "Waiting":
+        if action.name == "Start" and self.game_status == "Waiting":
             self.start()
             return
 
-        if self.status == "Waiting":
+        if self.game_status == "Waiting":
             return
 
         if action.name == "Take_3_coins":
@@ -225,10 +227,10 @@ class Game:
         self.cards_to_exchange = cardnames
 
     def set_status(self, status: str):
-        self.status = status
+        self.game_status = status
 
     def get_status(self):
-        return self.status
+        return self.game_status
 
 
 def main():
