@@ -48,7 +48,7 @@ class TestGame:
 
     def test_enable_all_actions(self, game_ready):
         for action in game_ready.actions:
-            assert action.game_status == "enabled"
+            assert action.action_status == "enabled"
 
     def test_wait(self, game):
         game.wait()
