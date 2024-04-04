@@ -85,6 +85,7 @@ class Game:
         self.second_player = None
         self.cards_to_exchange = None
         self.exchange_in_progress = False
+        self.current_player_index = 0
 
     def initial_deal(self):
         for _ in range(self.NUM_OF_CARDS):
@@ -96,7 +97,6 @@ class Game:
         for player_id, player_name in self.player_ids:
             self.players[player_id] = Player(player_id, player_name)
         random.shuffle(self.player_ids)
-        self.current_player_index = 0
 
     def next_turn(self):
         self.current_player_index += 1
