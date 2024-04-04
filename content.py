@@ -70,14 +70,14 @@ class Content:
             if action.name == "Start":
                 start = True
             visible = ""
-            if action.status == "disabled":
+            if action.action_status == "disabled":
                 visible = "hidden"
             self.show_actions += f"""
                 <div id="{action}">
                 <form hx-ws="send" hx-target="#actions">
                 <input type="hidden" name="user_name" value={self.user_id}>
                 <input type="hidden" name="message_txt" value={action}>
-                <input type="submit" value={action} {action.status} {visible}>
+                <input type="submit" value={action} {action.action_status} {visible}>
                 </form>
                 </div>
             """

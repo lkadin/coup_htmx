@@ -142,7 +142,7 @@ class Game:
 
     def enable_all_actions(self):
         for self.action in self.actions:
-            self.action.status = "enabled"
+            self.action.action_status = "enabled"
 
     def start(self):
         self.game_status = "In progress"
