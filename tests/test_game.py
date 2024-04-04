@@ -97,8 +97,9 @@ class TestGame:
         # Start
 
     def test_process_action_start(self, game_ready):
-        user_id = str(int(game_ready.whose_turn()) + 1)
         action = Action("Start", 0, "enabled", False)
+        # user_id = str(int(game_ready.current_player_index()) + 1)
+        user_id = game_ready.player_ids[game_ready.current_player_index][0]
         game_ready.set_status("Waiting")
         game_ready.process_action(action, user_id)
         assert game_ready.game_status == "In progress"
