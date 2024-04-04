@@ -33,7 +33,7 @@ async def read_item(request: Request, user_id: str):
             "user_id": user_id,
             "user_name": user_name,
             "actions": game.actions,
-            "status": game.game_status,
+            "game_status": game.game_status,
             "turn": game.whose_turn_name(),
         },
     )
