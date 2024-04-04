@@ -117,6 +117,13 @@ class TestGame:
         game_ready.process_action(action, user_id)
         assert game_ready.players[user_id].coins == coins + 1
 
+    def test_process_action_foreign_aid(self, game_ready):
+        action = "Foreign_aid"
+        user_id = game_ready.player_ids[game_ready.current_player_index][0]
+        coins = game_ready.players[user_id].coins
+        game_ready.process_action(action, user_id)
+        assert game_ready.players[user_id].coins == coins + 2
+
     def test_steal(self, game_ready):
         coins1 = game_ready.players["1"].coins
         coins2 = game_ready.players["2"].coins
