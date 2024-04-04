@@ -103,6 +103,13 @@ class TestGame:
         game_ready.process_action(action, user_id)
         assert game_ready.game_status == "In progress"
 
+    def test_process_action_take_3_coins(self, game_ready):
+        action = "Take_3_coins"
+        user_id = game_ready.player_ids[game_ready.current_player_index][0]
+        coins = game_ready.players[user_id].coins
+        game_ready.process_action(action, user_id)
+        assert game_ready.players[user_id].coins == coins + 3
+
     def test_steal(self, game_ready):
         coins1 = game_ready.players["1"].coins
         coins2 = game_ready.players["2"].coins
