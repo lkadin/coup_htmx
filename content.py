@@ -5,8 +5,7 @@ class Content:
         self.user_id = user_id
 
     def show_hand(self, player):
-        self.display_hand = f"<a href='/web/{self.user_id}' hx-boost='true'>"
-        for card in player.hand:
+        def non_exchange():
             if player.name == self.players[self.user_id].name:
                 self.display_hand += f"""
                 <img src='/static/jpg/{card}.jpg' {card} style=opacity:1.0;>
@@ -15,6 +14,10 @@ class Content:
                 self.display_hand += f"""
                 <img src='/static/jpg/down.png' {card} style=opacity:1.0;>
                 """
+
+        self.display_hand = f"<a href='/web/{self.user_id}' hx-boost='true'>"
+        for card in player.hand:
+            non_exchange()
         self.display_hand += "</a>"
         return self.display_hand
 
