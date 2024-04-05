@@ -129,8 +129,7 @@ class Content:
         return self.hide_exchange
 
     def exchange_draw(self, user_id):
-        player = self.game.player(user_id)
-        self.player = player
+        self.player = self.game.player(user_id)
         exchange = """
         <div class="col-8" id="exchange">
         <form hx-ws="send" hx-target="exchange">
