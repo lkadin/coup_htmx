@@ -5,18 +5,18 @@ class Content:
         self.user_id = user_id
 
     def show_hand(self, player):
-        self.add_to_table = f"<a href='/web/{self.user_id}' hx-boost='true'>"
+        self.display_hand = f"<a href='/web/{self.user_id}' hx-boost='true'>"
         for card in player.hand:
             if player.name == self.players[self.user_id].name:
-                self.add_to_table += f"""
+                self.display_hand += f"""
                 <img src='/static/jpg/{card}.jpg' {card} style=opacity:1.0;>
                 """
             else:
-                self.add_to_table += f"""
+                self.display_hand += f"""
                 <img src='/static/jpg/down.png' {card} style=opacity:1.0;>
                 """
-        self.add_to_table += "</a>"
-        return self.add_to_table
+        self.display_hand += "</a>"
+        return self.display_hand
 
     def show_table(self):
         self.table = """
