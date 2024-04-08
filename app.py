@@ -97,12 +97,6 @@ async def process_message(websocket, user_id, message):
         f" {game.players[user_id].name}: {message['message_txt']}",
         game,
     )
-    # if not game.exchange_in_progress:
-    #     await manager.broadcast(
-    #         f" {game.players[user_id].name}: {message['message_txt']}",
-    #         game,
-    #         message_type="hide_exchange",
-    #     )
 
 
 if __name__ == "__main__":
