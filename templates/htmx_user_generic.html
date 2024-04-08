@@ -13,9 +13,9 @@
 
 <body>
     <div class="container-fluid">
-        <div class="row">
-            <div id="notifications" class="col-2">
-                <div hx-ws="connect:/ws/{{user_id}}">
+        <div hx-ws="connect:/ws/{{user_id}}">
+            <div class="row">
+                <div id="notifications" class="col-2">
                     <div id="game_status">
                         <h4>{{user_name}} - {{game_status}}</h4>
                     </div>
@@ -49,30 +49,15 @@
                         </form>
                         <br>
                     </div>
-                    <div class="col-8" id="exchange">
-                        <form hx-ws="send" hx-target="exchange" hidden>
-                            <input type="checkbox" name="message_txt" value="card1" <td><img src="/static/jpg/down.png"
-                                height="350">
-                            <input type="checkbox" name="message_txt" value="card2" <td><img src="/static/jpg/down.png"
-                                height="350">
-                            <input type="checkbox" name="message_txt" value="card3" <td><img src="/static/jpg/down.png"
-                                height="350">
-                            <input type="checkbox" name="message_txt" value="card4" <td><img src="/static/jpg/down.png"
-                                height="350">
-                            <p> Which cards do you want to discard?</p>
-                            <input type="submit" id="test" value="Submit">
-                        </form>
-                    </div>
                 </div>
                 <br>
                 <div id="history" class="overflow-auto p-3 bg-light" style="max-width: 260px; max-height: 100px;">
                 </div>
                 <br>
-            </div>
-            <div class="col-8" id="photo">
+                <div class="col-8" id="photo">
+                </div>
             </div>
         </div>
-    </div>
 </body>
 
 </html>
