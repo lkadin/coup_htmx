@@ -5,7 +5,7 @@ class Content:
         self.user_id = user_id
 
     def show_hand(self, player):
-        def non_exchange():
+        def non_exchange(card):
             if player.name == self.players[self.user_id].name:
                 self.display_hand += f"""
                 <img src='/static/jpg/{card}.jpg' {card} style=opacity:1.0;>
@@ -15,9 +15,38 @@ class Content:
                 <img src='/static/jpg/down.png' {card} style=opacity:1.0;>
                 """
 
-        self.display_hand = f"<a href='/web/{self.user_id}' hx-boost='true'>"
+        def exchange(card):
+            if player.name == self.players[self.user_id].name:
+                self.display_hand += f"""
+                <input type="checkbox" name="cardnames" value="{card}" <td><img src="/static/jpg/{card}.jpg" height="350">
+                """
+            else:
+                self.display_hand += f"""
+                <img src='/static/jpg/down.png' {card} style=opacity:1.0;>
+                """
+
+        if (
+            self.game.exchange_in_progress
+            and player.name == self.players[self.user_id].name
+        ):
+            self.display_hand = '<form hx-ws="send" hx-target="photo">'
+        else:
+            self.display_hand = ""
         for card in player.hand:
-            non_exchange()
+            if self.game.exchange_in_progress and self.game.your_turn(self.user_id):
+                exchange(card)
+            else:
+                non_exchange(card)
+        if (
+            self.game.exchange_in_progress
+            and player.name == self.players[self.user_id].name
+            and self.game.your_turn(self.user_id)
+        ):
+            self.display_hand += """
+                <p> Which cards do you want to discard?</p>
+                <input type="submit" id="test" value="Submit">
+                </form>
+                """
         self.display_hand += "</a>"
         return self.display_hand
 
@@ -125,25 +154,25 @@ class Content:
             """
         return self.hide_other_players
 
-    def hide_exchange(self):
-        self.hide_exchange = """
-            <div class="col-8" id="exchange" hidden>
-            """
-        return self.hide_exchange
+    # def hide_exchange(self):
+    # self.hide_exchange = """
+    #     <div class="col-8" id="exchange" hidden>
+    #     """
+    # return self.hide_exchange
 
-    def exchange_draw(self, user_id):
-        self.player = self.game.player(user_id)
-        exchange = """
-        <div class="col-8" id="exchange">
-        <form hx-ws="send" hx-target="exchange">
-        """
-        for cardname in self.player.hand:
-            exchange += f"""
-            <input type="checkbox" name="cardnames" value="{cardname}" <td><img src="/static/jpg/{cardname}.jpg" height="350">
-            """
-        exchange += """
-            <p> Which cards do you want to discard?</p>
-            <input type="submit" id="test" value="Submit">
-            </form>
-            """
-        return exchange
+    # def exchange_draw(self, user_id):
+    #     self.player = self.game.player(user_id)
+    #     exchange = """
+    #     <div class="col-8" id="exchange">
+    #     <form hx-ws="send" hx-target="exchange">
+    #     """
+    #     for cardname in self.player.hand:
+    #         exchange += f"""
+    #         <input type="checkbox" name="cardnames" value="{cardname}" <td><img src="/static/jpg/{cardname}.jpg" height="350">
+    #         """
+    #     exchange += """
+    #         <p> Which cards do you want to discard?</p>
+    #         <input type="submit" id="test" value="Submit">
+    #         </form>
+    #         """
+    #     return exchange
