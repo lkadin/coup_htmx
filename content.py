@@ -153,26 +153,3 @@ class Content:
             <div id="second_player" hidden >
             """
         return self.hide_other_players
-
-    # def hide_exchange(self):
-    # self.hide_exchange = """
-    #     <div class="col-8" id="exchange" hidden>
-    #     """
-    # return self.hide_exchange
-
-    # def exchange_draw(self, user_id):
-    #     self.player = self.game.player(user_id)
-    #     exchange = """
-    #     <div class="col-8" id="exchange">
-    #     <form hx-ws="send" hx-target="exchange">
-    #     """
-    #     for cardname in self.player.hand:
-    #         exchange += f"""
-    #         <input type="checkbox" name="cardnames" value="{cardname}" <td><img src="/static/jpg/{cardname}.jpg" height="350">
-    #         """
-    #     exchange += """
-    #         <p> Which cards do you want to discard?</p>
-    #         <input type="submit" id="test" value="Submit">
-    #         </form>
-    #         """
-    #     return exchange
