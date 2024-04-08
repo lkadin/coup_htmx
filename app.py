@@ -84,13 +84,6 @@ async def process_message(websocket, user_id, message):
             game,
             message_type="hide",
         )
-    if message.get("message_txt") == "Exchange" and not game.cards_to_exchange:
-        game.process_action(message["message_txt"], user_id)
-        await manager.broadcast(
-            f" {game.players[user_id].name}: {message['message_txt']}",
-            game,
-            message_type="exchange_draw",
-        )
 
     game.process_action(message["message_txt"], user_id)
     await manager.broadcast(
