@@ -4,7 +4,7 @@ import random
 class Card:
     def __init__(self, value) -> None:
         self.value = value
-        self.card_status = "up"
+        self.card_status = "down"
 
 
 class Deck:
@@ -197,7 +197,7 @@ class Game:
             self.steal(give_to=user_id, steal_from=self.second_player)
 
         if action.name == "Coup":
-            self.coup()
+            self.coup(user_id)
 
     def player(self, user_id) -> Player:
         return self.players[user_id]
@@ -245,7 +245,9 @@ class Game:
     def get_status(self):
         return self.game_status
 
-    def coup(self):
+    def coup(self, user_id):
+        # coup_player = self.player(user_id)
+        # coup_player.hand[0].card_status = "up"
         pass
 
 
