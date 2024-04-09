@@ -15,42 +15,8 @@
     <div class="container-fluid">
         <div hx-ws="connect:/ws/{{user_id}}">
             <div class="row">
-                <div id="notifications" class="col-2">
-                    <div id="game_status">
-                        <h4>{{user_name}} - {{game_status}}</h4>
-                    </div>
-                    <div id="turn">
-                        <h4>{{turn}}'s Turn</h4>
-                    </div>
-                    <br><br>
-                    <p id="user{{user_id}}"></p>
-                    {% for action in actions %}
-                    {% if 'disabled' == action.action_status %}
-                    {% set visible = "hidden" %}
-                    {% endif %}
-                    <div id="{{action}}">
-                        <form hx-ws="send" hx-target="#actions">
-                            <input type="hidden" name="user_name" value={{user_id}}>
-                            <input type="hidden" name="message_txt" value={{action}}>
-                            <input type="submit" value={{action}} {{action.action_status}} {{visible}}>
-                        </form>
-                    </div>
-                    {% endfor %}
-                    <br>
-                    <div id="second_player">
-                        <br>
-                        <form hx-ws="send" hx-target="#second_player" hidden>
-                            <label for="player">Pick a player</label>
-                            <select name="player" id="player">
-                                <option value="Lee">Lee</option>
-                                <option value="Adina">Adina</option>
-                            </select>
-                            <input type="submit" value="Submit">
-                        </form>
-                        <br>
-                    </div>
-                </div>
-                <br>
+                {% include './notifications.html' %}
+                {% include './second_player.html' %}
                 <div id="history" class="overflow-auto p-3 bg-light" style="max-width: 260px; max-height: 100px;">
                 </div>
                 <br>
