@@ -4,6 +4,7 @@ import random
 class Card:
     def __init__(self, value) -> None:
         self.value = value
+        self.card_status = "up"
 
 
 class Deck:
@@ -35,12 +36,12 @@ class Player:
 
     def get_index(self, cardname: str):
         for index, card in enumerate(self.hand):
-            if card == cardname:
+            if card.value == cardname:
                 return index
         raise Exception("Card to discard not found in hand")
 
     def draw(self, deck: Deck):
-        self.hand.append(deck.draw())
+        self.hand.append(Card(deck.draw()))
 
     def discard(self, cardnames: list, deck: Deck):
         for cardname in cardnames:
@@ -53,6 +54,10 @@ class Player:
 
     def add_remove_coins(self, num_of_coins: int):
         self.coins += num_of_coins
+
+    def lose_life(self, card):
+        self.card = card
+        self.card_status = "D"
 
     def __repr__(self) -> str:
         return f"{self.id}-{self.hand} {self.coins=}"
@@ -191,6 +196,9 @@ class Game:
         if action.name == "Steal" and self.second_player:
             self.steal(give_to=user_id, steal_from=self.second_player)
 
+        if action.name == "Coup":
+            self.coup()
+
     def player(self, user_id) -> Player:
         return self.players[user_id]
 
@@ -236,6 +244,9 @@ class Game:
 
     def get_status(self):
         return self.game_status
+
+    def coup(self):
+        pass
 
 
 def main():

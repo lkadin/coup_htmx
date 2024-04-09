@@ -1,4 +1,5 @@
 import pytest
+from coup import Card
 
 
 def test_init(player):
@@ -9,11 +10,11 @@ def test_init(player):
 
 def test_draw(player, deck):
     player.draw(deck)
-    assert player.hand == ["contessa"]
+    assert player.hand[0].value == "contessa"
 
 
 def test_discard(player, deck):
-    player.hand = ["contessa", "contessa", "assassin", "duke"]
+    player.hand = [Card("contessa"), Card("contessa"), Card("assassin"), Card("duke")]
     player.discard(["duke", "contessa"], deck)
     assert len(player.hand) == 2
 
@@ -26,7 +27,7 @@ def test_play_card(player):
 
 
 def test_get_index(player):
-    player.hand = ["contessa", "duke"]
+    player.hand = [Card("contessa"), Card("duke")]
     cardname = "contessa"
     assert player.get_index(cardname) == 0
     cardname = "duke"

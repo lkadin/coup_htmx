@@ -8,21 +8,21 @@ class Content:
         def non_exchange(card):
             if player.name == self.players[self.user_id].name:
                 self.display_hand += f"""
-                <img src='/static/jpg/{card}.jpg' {card} style=opacity:1.0;>
+                <img src='/static/jpg/{card.value}.jpg' {card.value} style=opacity:1.0;>
                 """
             else:
                 self.display_hand += f"""
-                <img src='/static/jpg/down.png' {card} style=opacity:1.0;>
+                <img src='/static/jpg/down.png' {card.value} style=opacity:1.0;>
                 """
 
         def exchange(card):
             if player.name == self.players[self.user_id].name:
                 self.display_hand += f"""
-                <input type="checkbox" name="cardnames" value="{card}" <td><img src="/static/jpg/{card}.jpg" height="350">
+                <input type="checkbox" name="cardnames" value="{card.value}" <td><img src="/static/jpg/{card.value}.jpg" height="350">
                 """
             else:
                 self.display_hand += f"""
-                <img src='/static/jpg/down.png' {card} style=opacity:1.0;>
+                <img src='/static/jpg/down.png' {card.value} style=opacity:1.0;>
                 """
 
         if (
