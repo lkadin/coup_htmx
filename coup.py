@@ -98,6 +98,7 @@ class Game:
         self.cards_to_exchange = None
         self.exchange_in_progress = False
         self.current_player_index = 0
+        self.num_cards_to_exchange = 0
 
     def initial_deal(self):
         for _ in range(self.NUM_OF_CARDS):
@@ -206,6 +207,9 @@ class Game:
         if action.name == "Coup":
             self.coup(user_id)
 
+        if action.name == "Assassinate":
+            self.assassinate(user_id)
+
     def player(self, user_id) -> Player:
         return self.players[user_id]
 
@@ -220,15 +224,20 @@ class Game:
         self.next_turn()
 
     def exchange(self, user_id):
-        inf = self.player(user_id).influence()
-        if inf == 0:
+        if not self.cards_to_exchange:
+            self.num_cards_to_exchange = self.player(user_id).influence()
+
+        if self.num_cards_to_exchange == 0 and self.exchange_in_progress:
             return
-        if inf <= 2:
-            for _ in range(inf):
+
+        if self.num_cards_to_exchange <= 2 and not self.cards_to_exchange:
+            for _ in range(self.num_cards_to_exchange):
                 self.player(user_id).draw(self.deck)
                 self.exchange_in_progress = True
 
         if self.cards_to_exchange:
+            if self.num_cards_to_exchange != len(self.cards_to_exchange):
+                return
             self.player(user_id).discard(self.cards_to_exchange, self.deck)
             self.cards_to_exchange = None
             self.exchange_in_progress = False
@@ -250,7 +259,6 @@ class Game:
 
     def set_status(self, game_status: str):
         self.game_status = game_status
-        pass
 
     def get_status(self):
         return self.game_status
@@ -258,6 +266,9 @@ class Game:
     def coup(self, user_id):
         # coup_player = self.player(user_id)
         # coup_player.hand[0].card_status = "up"
+        pass
+
+    def assassinate(self, user_id):
         pass
 
 
