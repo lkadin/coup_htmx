@@ -36,7 +36,7 @@ class Player:
 
     def get_index(self, cardname: str):
         for index, card in enumerate(self.hand):
-            if card.value == cardname:
+            if card.value == cardname and card.card_status == "down":
                 return index
         raise Exception("Card to discard not found in hand")
 
@@ -55,9 +55,16 @@ class Player:
     def add_remove_coins(self, num_of_coins: int):
         self.coins += num_of_coins
 
-    def lose_life(self, card):
+    def lose_influence(self, card):
         self.card = card
         self.card_status = "D"
+
+    def influence(self) -> bool:
+        cards = 0
+        for card in self.hand:
+            if card.card_status == "down":
+                cards += 1
+        return cards
 
     def __repr__(self) -> str:
         return f"{self.id}-{self.hand} {self.coins=}"
@@ -213,10 +220,13 @@ class Game:
         self.next_turn()
 
     def exchange(self, user_id):
-        if len(self.player(user_id).hand) == 2:
-            self.player(user_id).draw(self.deck)
-            self.player(user_id).draw(self.deck)
-            self.exchange_in_progress = True
+        inf = self.player(user_id).influence()
+        if inf == 0:
+            return
+        if inf <= 2:
+            for _ in range(inf):
+                self.player(user_id).draw(self.deck)
+                self.exchange_in_progress = True
 
         if self.cards_to_exchange:
             self.player(user_id).discard(self.cards_to_exchange, self.deck)
