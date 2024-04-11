@@ -265,7 +265,7 @@ class Game:
     def set_cards_to_exchange(self, cardnames: list[str]):
         self.cards_to_exchange = cardnames
 
-    def set_status(self, game_status: str):
+    def set_game_status(self, game_status: str):
         self.game_status = game_status
 
     def get_status(self):

@@ -35,15 +35,15 @@ class TestGame:
         assert isinstance(game_ready.whose_turn(), int)
 
     def test_add_all_actions(self, game_ready):
-        game_ready.set_status(None)
+        game_ready.set_game_status(None)
         game_ready.add_all_actions()
         assert len(game_ready.actions) == 9
 
-        game_ready.set_status("Waiting")
+        game_ready.set_game_status("Waiting")
         game_ready.add_all_actions()
         assert len(game_ready.actions) == 10
 
-        game_ready.set_status("In Progress")
+        game_ready.set_game_status("In Progress")
         game_ready.add_all_actions()
         assert len(game_ready.actions) == 9
 
@@ -100,7 +100,7 @@ class TestGame:
     def test_process_action_start(self, game_ready):
         action = Action("Start", 0, "enabled", False)
         user_id = game_ready.player_ids[game_ready.current_player_index][0]
-        game_ready.set_status("Waiting")
+        game_ready.set_game_status("Waiting")
         game_ready.process_action(action, user_id)
         assert game_ready.game_status == "In progress"
 
