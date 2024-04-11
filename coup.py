@@ -256,6 +256,9 @@ class Game:
             f"{self.player(user_id).name}- {self.current_action.name}<br>"
         )
 
+    def get_current_action(self):
+        return self.current_action
+
     def set_second_player(self, player_name: str):
         self.second_player = player_name
 
