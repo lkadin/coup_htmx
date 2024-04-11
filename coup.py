@@ -57,7 +57,7 @@ class Player:
 
     def lose_influence(self, card):
         self.card = card
-        self.card_status = "D"
+        self.card.card_status = "up"
 
     def influence(self) -> bool:
         cards = 0
