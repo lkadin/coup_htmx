@@ -25,6 +25,7 @@ game.wait()
 
 @app.get("/web/{user_id}/", response_class=HTMLResponse)
 async def read_item(request: Request, user_id: str):
+    history_split = game.action_history
     user_name = game.players[user_id].name
     return templates.TemplateResponse(
         "htmx_user_generic.html",
@@ -35,6 +36,7 @@ async def read_item(request: Request, user_id: str):
             "actions": game.actions,
             "game_status": game.game_status,
             "turn": game.whose_turn_name(),
+            "history": history_split,
         },
     )
 
@@ -62,9 +64,7 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
 async def process_message(websocket, user_id, message):
 
     if message.get("message_txt"):
-        game.set_current_action(
-            game.action_from_action_name(message.get("message_txt"))
-        )
+        game.set_current_action(message.get("message_txt"), user_id)
     else:
         message["message_txt"] = game.current_action
 

@@ -14,6 +14,4 @@ def test_show_turn(content):
 
 
 def test_show_history(content):
-    assert """<div hx-swap-oob="beforeend:#history">""" in content.show_notification(
-        "Test"
-    )
+    assert """<div hx-swap-oob="innerHTML:#history">""" in content.show_history("Test")

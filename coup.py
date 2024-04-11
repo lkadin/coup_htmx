@@ -99,6 +99,7 @@ class Game:
         self.exchange_in_progress = False
         self.current_player_index = 0
         self.num_cards_to_exchange = 0
+        self.action_history = ""
 
     def initial_deal(self):
         for _ in range(self.NUM_OF_CARDS):
@@ -164,6 +165,7 @@ class Game:
         self.add_all_actions()
         self.enable_all_actions()
         self.initial_deal()
+        self.clear_history()
 
     def your_turn(self, user_id: str) -> bool:
         whose_turn = self.whose_turn_name()
@@ -248,8 +250,11 @@ class Game:
             if action.name == action_name:
                 return action
 
-    def set_current_action(self, action_name: str):
-        self.current_action = action_name
+    def set_current_action(self, action_name: str, user_id: str):
+        self.current_action = self.action_from_action_name(action_name)
+        self.action_history += (
+            f"{self.player(user_id).name}- {self.current_action.name}<br>"
+        )
 
     def set_second_player(self, player_name: str):
         self.second_player = player_name
@@ -270,6 +275,9 @@ class Game:
 
     def assassinate(self, user_id):
         pass
+
+    def clear_history(self):
+        self.action_history = ""
 
 
 def main():

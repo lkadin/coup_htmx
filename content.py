@@ -88,16 +88,16 @@ class Content:
             """
         return self.game_status
 
-    def show_notification(self, message):
-        self.show_notification = f"""
+    def show_history(self, message):
+        self.show_history = f"""
         <br>
-        <div hx-swap-oob="beforeend:#history">
-        {message}
+        <div hx-swap-oob="innerHTML:#history">
+        {self.game.action_history}
         <br>
         </div>
 
         """
-        return self.show_notification
+        return self.show_history
 
     def delete_start_action(self):
         self.show_actions += f"""
