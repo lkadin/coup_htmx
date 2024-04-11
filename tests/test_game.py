@@ -149,3 +149,8 @@ class TestGame:
     def test_set_current_action(self, game_ready):
         game_ready.set_current_action("Steal", "1")
         assert game_ready.get_current_action().name == "Steal"
+
+    def test_set_game_status(self, game_ready):
+        assert game_ready.get_game_status() == "In progress"
+        game_ready.set_game_status("Waiting")
+        assert game_ready.get_game_status() == "Waiting"

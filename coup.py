@@ -268,7 +268,7 @@ class Game:
     def set_game_status(self, game_status: str):
         self.game_status = game_status
 
-    def get_status(self):
+    def get_game_status(self):
         return self.game_status
 
     def coup(self, user_id):
