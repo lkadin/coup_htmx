@@ -5,7 +5,7 @@ from coup import Game
 
 class ConnectionManager:
     def __init__(self, game: Game) -> None:
-        self.active_connections: list[str, WebSocket] = {}
+        self.active_connections = {}
         self.game = game
 
     async def connect(self, user_id: str, websocket: WebSocket):
@@ -43,6 +43,7 @@ class ConnectionManager:
                 await self.send_personal_message(
                     table, self.active_connections[user_id]
                 )
+
             if message_type in ("all", "turn"):
                 table = content.show_turn()
                 await self.send_personal_message(
