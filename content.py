@@ -134,7 +134,7 @@ class Content:
         self.actions += "<br>"
         if not start:
             self.actions += self.delete_start_action()
-        return self.show_actions
+        return self.actions
 
     def pick_second_player(self):
         self.show_other_players = """
