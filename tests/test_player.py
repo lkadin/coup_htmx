@@ -45,7 +45,9 @@ def test_add_remove_coins(player):
 
 
 def test_lose_influence(player):
-    pass
+    player.hand = [Card("contessa"), Card("duke")]
+    player.lose_influence(player.hand[0])
+    assert player.hand[0].card_status == "up"
 
 
 def test_repr(player):
