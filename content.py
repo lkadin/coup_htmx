@@ -3,6 +3,8 @@ class Content:
         self.game = game
         self.players = self.game.players
         self.user_id = user_id
+        self.history: str = ""
+        self.actions: str = ""
 
     def show_hand(self, player):
         def non_exchange(card):
@@ -88,8 +90,8 @@ class Content:
             """
         return self.game_status
 
-    def show_history(self, message):
-        self.show_history = f"""
+    def show_history(self, message: str) -> str:
+        self.history = f"""
         <br>
         <div hx-swap-oob="innerHTML:#history">
         {self.game.action_history}
@@ -97,10 +99,10 @@ class Content:
         </div>
 
         """
-        return self.show_history
+        return self.history
 
     def delete_start_action(self):
-        self.show_actions += f"""
+        self.actions += f"""
                 <div id="Start">
                 <form hx-ws="send" hx-target="#actions">
                 <input type="hidden" name="user_name" value={self.user_id}>
@@ -109,18 +111,18 @@ class Content:
                 </form>
                 </div>
                 """
-        return self.show_actions
+        return self.actions
 
     def show_actions(self):
         start = False
-        self.show_actions = ""
+        self.actions = ""
         for action in self.game.actions:
             if action.name == "Start":
                 start = True
             visible = ""
             if action.action_status == "disabled":
                 visible = "hidden"
-            self.show_actions += f"""
+            self.actions += f"""
                 <div id="{action}">
                 <form hx-ws="send" hx-target="#actions">
                 <input type="hidden" name="user_name" value={self.user_id}>
@@ -129,9 +131,9 @@ class Content:
                 </form>
                 </div>
             """
-        self.show_actions += "<br>"
+        self.actions += "<br>"
         if not start:
-            self.show_actions += self.delete_start_action()
+            self.actions += self.delete_start_action()
         return self.show_actions
 
     def pick_second_player(self):

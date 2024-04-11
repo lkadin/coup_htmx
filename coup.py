@@ -28,7 +28,7 @@ class Deck:
 
 
 class Player:
-    def __init__(self, id: str, name: str = None) -> None:
+    def __init__(self, id: str, name: str | None) -> None:
         self.id = id
         self.name = name
         self.hand = []
@@ -59,7 +59,7 @@ class Player:
         self.card = card
         self.card.card_status = "up"
 
-    def influence(self) -> bool:
+    def influence(self) -> int:
         cards = 0
         for card in self.hand:
             if card.card_status == "down":
@@ -93,7 +93,7 @@ class Game:
         self.NUM_OF_CARDS = 2
         self.game_status = "Not started"
         self.actions = []
-        self.current_action: Action = None
+        self.current_action: Action
         self.second_player = None
         self.cards_to_exchange = None
         self.exchange_in_progress = False
@@ -117,7 +117,7 @@ class Game:
         if self.current_player_index >= len(self.players):
             self.current_player_index = 0
         self.second_player = None
-        self.current_action = None
+        self.current_action = Action("No_action", 0, "disabled", False)
 
     def whose_turn(self):
         return self.current_player_index
@@ -175,6 +175,7 @@ class Game:
     def process_action(self, action: Action, user_id: str):
         if not isinstance(action, Action):
             action = self.action_from_action_name(action)
+
         if not self.your_turn(user_id):
             return
 
@@ -219,6 +220,7 @@ class Game:
         for player_id in self.player_ids:
             if player_id[1] == name:
                 return player_id[0]
+        return ""
 
     def steal(self, give_to, steal_from):
         self.player(give_to).add_remove_coins(2)
@@ -246,9 +248,11 @@ class Game:
             self.next_turn()
 
     def action_from_action_name(self, action_name: str) -> Action:
+        default_action = Action("No_action", 0, "disabled", False)
         for action in self.actions:
             if action.name == action_name:
                 return action
+        return default_action
 
     def set_current_action(self, action_name: str, user_id: str):
         self.current_action = self.action_from_action_name(action_name)
@@ -296,11 +300,11 @@ def main():
     print(game.player_id("Lee"))
     print(game.your_turn("1"))
     print(game.whose_turn_name())
-    game.process_action("Exchange", "1")
+    game.process_action(Action("Exchange", 0, "enabled", False), "1")
     print(game.players["1"])
     cards = ["contessa", "ambassador"]
     game.set_cards_to_exchange(cards)
-    game.process_action("Exchange", "1")
+    game.process_action(Action("Exchange", 0, "enabled", False), "1")
     print(game.players["1"])
 
 
