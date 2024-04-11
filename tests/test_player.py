@@ -20,10 +20,10 @@ def test_discard(player, deck):
 
 
 def test_play_card(player):
-    player.hand = ["contessa", "duke"]
+    player.hand = [Card("contessa"), Card("duke")]
     played_card = player.play_card()
-    assert played_card == "duke"
-    assert player.hand == ["contessa"]
+    assert played_card.value == "duke"
+    assert player.hand[0].value == "contessa"
 
 
 def test_get_index(player):
@@ -42,6 +42,10 @@ def test_add_remove_coins(player):
     assert player.coins == 5
     player.add_remove_coins(-2)
     assert player.coins == 3
+
+
+def test_lose_influence(player):
+    pass
 
 
 def test_repr(player):
