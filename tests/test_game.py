@@ -145,3 +145,7 @@ class TestGame:
         game_ready.cards_to_exchange = ["captain", "duke"]
         game_ready.exchange(user_id)
         assert len(game_ready.players["1"].hand) == 2
+
+    def test_set_current_action(self, game_ready):
+        game_ready.set_current_action("Steal", "1")
+        assert game_ready.get_current_action().name == "Steal"
