@@ -256,9 +256,9 @@ class Game:
 
     def set_current_action(self, action_name: str, user_id: str):
         self.current_action = self.action_from_action_name(action_name)
-        self.action_history += (
+        self.action_history = (
             f"{self.player(user_id).name}- {self.current_action.name}<br>"
-        )
+        ) + self.action_history
 
     def get_current_action(self):
         return self.current_action

@@ -25,7 +25,6 @@ game.wait()
 
 @app.get("/web/{user_id}/", response_class=HTMLResponse)
 async def read_item(request: Request, user_id: str):
-    history_split = game.action_history
     user_name = game.players[user_id].name
     return templates.TemplateResponse(
         "htmx_user_generic.html",
@@ -36,7 +35,7 @@ async def read_item(request: Request, user_id: str):
             "actions": game.actions,
             "game_status": game.game_status,
             "turn": game.whose_turn_name(),
-            "history": history_split,
+            "history": game.action_history,
         },
     )
 
