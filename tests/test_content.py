@@ -6,7 +6,7 @@ def test_show_hand(content, game_ready):
 
 def test_show_table(content):
     assert len(content.show_table()) >= 100
-    assert """<div hx-swap-oob="innerHTML:#photo">""" in content.show_table()
+    assert """<div hx-swap-oob="innerHTML:#cards">""" in content.show_table()
 
 
 def test_show_turn(content):

@@ -9,7 +9,7 @@ from content import Content
 
 @pytest.fixture
 def player():
-    return Player("1")
+    return Player("1", "Lee")
 
 
 @pytest.fixture

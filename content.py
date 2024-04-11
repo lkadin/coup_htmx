@@ -39,7 +39,7 @@ class Content:
             self.game.exchange_in_progress
             and player.name == self.players[self.user_id].name
         ):
-            self.display_hand = '<form hx-ws="send" hx-target="photo">'
+            self.display_hand = '<form hx-ws="send" hx-target="cards">'
         else:
             self.display_hand = ""
         for card in player.hand:
@@ -62,7 +62,7 @@ class Content:
 
     def show_table(self):
         self.table = """
-            <div hx-swap-oob="innerHTML:#photo">
+            <div hx-swap-oob="innerHTML:#cards">
             """
         for player in self.players.values():
             self.table += f"""

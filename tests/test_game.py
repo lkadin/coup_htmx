@@ -74,8 +74,8 @@ class TestGame:
     def test_action_from_action_name(self, game_ready):
         for action in game_ready.actions:
             assert isinstance(game_ready.action_from_action_name(action.name), Action)
-        assert game_ready.action_from_action_name(None) is None
-        assert game_ready.action_from_action_name("FRED") is None
+        assert game_ready.action_from_action_name(None).name == "No_action"
+        assert game_ready.action_from_action_name("FRED").name == "No_action"
         assert isinstance(game_ready.action_from_action_name("Assassinate"), Action)
 
     def test_process_action(self, game_ready):
