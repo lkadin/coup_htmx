@@ -104,6 +104,7 @@ class Game:
         self.num_cards_to_exchange = 0
         self.action_history = ""
         self.card_to_lose = None
+        self.player_to_coup = None
 
     def initial_deal(self):
         for _ in range(self.NUM_OF_CARDS):
@@ -290,6 +291,7 @@ class Game:
             and not self.coup_in_progress
         ):
             self.coup_in_progress = True
+            self.player_to_coup = self.second_player
             self.second_player = None
 
         if self.card_to_lose:
