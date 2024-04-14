@@ -181,7 +181,7 @@ class Game:
         if not isinstance(action, Action):
             action = self.action_from_action_name(action)
 
-        if not self.your_turn(user_id):
+        if not self.your_turn(user_id) and not self.coup_in_progress:
             return
 
         if action.name == "Start" and self.game_status == "Waiting":
