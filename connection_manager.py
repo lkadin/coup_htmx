@@ -29,41 +29,29 @@ class ConnectionManager:
             if message_type in ("all", "table"):
                 table = content.show_table()
                 await self.send_personal_message(
-                    table, self.active_connections[user_id]
+                    table,
+                    websocket,
                 )
 
             if message_type in ("all", "turn"):
                 table = content.show_turn()
                 await self.send_personal_message(
-                    table, self.active_connections[user_id]
+                    table,
+                    websocket,
                 )
 
             if message_type in ("all", "game_status"):
                 table = content.show_game_status()
-                await self.send_personal_message(
-                    table, self.active_connections[user_id]
-                )
-
-            if message_type in ("all", "turn"):
-                table = content.show_turn()
-                await self.send_personal_message(
-                    table, self.active_connections[user_id]
-                )
+                await self.send_personal_message(table, websocket)
 
             if message_type in ("all", "action"):
                 table = content.show_actions()
-                await self.send_personal_message(
-                    table, self.active_connections[user_id]
-                )
+                await self.send_personal_message(table, websocket)
 
             if message_type in ("pick") and self.game.your_turn(user_id):
                 table = content.pick_second_player()
-                await self.send_personal_message(
-                    table, self.active_connections[user_id]
-                )
+                await self.send_personal_message(table, websocket)
 
             if message_type in ("hide") and self.game.your_turn(user_id):
                 table = content.hide_second_player()
-                await self.send_personal_message(
-                    table, self.active_connections[user_id]
-                )
+                await self.send_personal_message(table, websocket)
