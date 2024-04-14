@@ -295,7 +295,7 @@ class Game:
             self.second_player = None
 
         if self.card_to_lose:
-            self.player(user_id).lose_influence(self.card_to_lose)
+            self.player(self.player_to_coup).lose_influence(self.card_to_lose)
             self.card_to_lose = None
             self.coup_in_progress = False
             self.next_turn()

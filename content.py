@@ -26,7 +26,10 @@ class Content:
                     """
 
         def coup(card):
-            if player.name == self.players[self.user_id].name:
+            if (
+                self.user_id == self.game.player_to_coup
+                and player.name == self.players[self.user_id].name
+            ):
                 self.display_hand += f"""
                 <input type="checkbox" name="cardnames" value="{card.value}" <td><img src="/static/jpg/{card.value}.jpg" height="350">
                 """
@@ -47,26 +50,39 @@ class Content:
 
         if (
             self.game.exchange_in_progress
-            or self.game.coup_in_progress
             and player.name == self.players[self.user_id].name
         ):
+            self.display_hand = '<form hx-ws="send" hx-target="cards">'
+        elif self.game.coup_in_progress and self.user_id == self.game.player_to_coup:
             self.display_hand = '<form hx-ws="send" hx-target="cards">'
         else:
             self.display_hand = ""
         for card in player.hand:
-            if (
-                self.game.exchange_in_progress or self.game.coup_in_progress
-            ) and self.game.your_turn(self.user_id):
+            if (self.game.exchange_in_progress) and self.game.your_turn(self.user_id):
                 exchange(card)
+            elif (
+                self.game.coup_in_progress and self.user_id == self.game.player_to_coup
+            ):
+                coup(card)
             else:
                 non_exchange(card)
         if (
-            (self.game.exchange_in_progress or self.game.coup_in_progress)
+            self.game.exchange_in_progress
             and player.name == self.players[self.user_id].name
             and self.game.your_turn(self.user_id)
         ):
             self.display_hand += """
-                <p> Which cards do you want to discard?</p>
+                <p> Which card(s) do you want to discard?</p>
+                <input type="submit" id="test" value="Submit">
+                </form>
+                """
+        elif (
+            self.game.coup_in_progress
+            and self.user_id == self.game.player_to_coup
+            and player.name == self.players[self.user_id].name
+        ):
+            self.display_hand += """
+                <p> Which card do you want to discard?</p>
                 <input type="submit" id="test" value="Submit">
                 </form>
                 """
