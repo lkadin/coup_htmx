@@ -55,9 +55,10 @@ class Player:
     def add_remove_coins(self, num_of_coins: int):
         self.coins += num_of_coins
 
-    def lose_influence(self, card):
-        self.card = card
-        self.card.card_status = "up"
+    def lose_influence(self, cardname):
+        self.cardname = cardname
+        index = self.get_index(cardname)
+        self.hand[index].card_status = "up"
 
     def influence(self) -> int:
         cards = 0
@@ -97,9 +98,12 @@ class Game:
         self.second_player = None
         self.cards_to_exchange = None
         self.exchange_in_progress = False
+        self.assassinate_in_progress = False
+        self.coup_in_progress = False
         self.current_player_index = 0
         self.num_cards_to_exchange = 0
         self.action_history = ""
+        self.card_to_lose = None
 
     def initial_deal(self):
         for _ in range(self.NUM_OF_CARDS):
@@ -264,7 +268,9 @@ class Game:
         return self.current_action
 
     def set_second_player(self, player_name: str):
-        self.second_player = player_name
+        self.second_player = None
+        if player_name != "":
+            self.second_player = player_name
 
     def set_cards_to_exchange(self, cardnames: list[str]):
         self.cards_to_exchange = cardnames
@@ -276,9 +282,21 @@ class Game:
         return self.game_status
 
     def coup(self, user_id):
-        # coup_player = self.player(user_id)
-        # coup_player.hand[0].card_status = "up"
-        pass
+        if not self.second_player and not self.coup_in_progress:
+            return
+        if (
+            not self.card_to_lose
+            and self.player(user_id).influence()
+            and not self.coup_in_progress
+        ):
+            self.coup_in_progress = True
+            self.second_player = None
+
+        if self.card_to_lose:
+            self.player(user_id).lose_influence(self.card_to_lose)
+            self.card_to_lose = None
+            self.coup_in_progress = False
+            self.next_turn()
 
     def assassinate(self, user_id):
         pass

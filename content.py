@@ -25,6 +25,16 @@ class Content:
                     <img src='/static/jpg/{card.value}.jpg' {card.value} style=opacity:.5;>
                     """
 
+        def coup(card):
+            if player.name == self.players[self.user_id].name:
+                self.display_hand += f"""
+                <input type="checkbox" name="cardnames" value="{card.value}" <td><img src="/static/jpg/{card.value}.jpg" height="350">
+                """
+            else:
+                self.display_hand += f"""
+                <img src='/static/jpg/down.png' {card.value} style=opacity:1.0;>
+                """
+
         def exchange(card):
             if player.name == self.players[self.user_id].name:
                 self.display_hand += f"""
@@ -37,18 +47,21 @@ class Content:
 
         if (
             self.game.exchange_in_progress
+            or self.game.coup_in_progress
             and player.name == self.players[self.user_id].name
         ):
             self.display_hand = '<form hx-ws="send" hx-target="cards">'
         else:
             self.display_hand = ""
         for card in player.hand:
-            if self.game.exchange_in_progress and self.game.your_turn(self.user_id):
+            if (
+                self.game.exchange_in_progress or self.game.coup_in_progress
+            ) and self.game.your_turn(self.user_id):
                 exchange(card)
             else:
                 non_exchange(card)
         if (
-            self.game.exchange_in_progress
+            (self.game.exchange_in_progress or self.game.coup_in_progress)
             and player.name == self.players[self.user_id].name
             and self.game.your_turn(self.user_id)
         ):
