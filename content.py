@@ -72,7 +72,7 @@ class Content:
             and self.game.your_turn(self.user_id)
         ):
             self.display_hand += """
-                <p> Which card(s) do you want to discard?</p>
+                <p> Which cards do you want to discard?</p>
                 <input type="submit" id="test" value="Submit">
                 </form>
                 """
