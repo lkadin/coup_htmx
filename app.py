@@ -44,7 +44,7 @@ async def read_item(request: Request, user_id: str):
 async def websocket_chat(websocket: WebSocket, user_id: str):
     await manager.connect(user_id, websocket)
     await manager.broadcast(
-        f" {game.players[user_id].name} has joined ", game, "notification"
+        f" {game.players[user_id].name} has joined ", game, "history"
     )
     try:
         while True:
