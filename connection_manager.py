@@ -22,9 +22,9 @@ class ConnectionManager:
         for user_id, websocket in self.active_connections.items():
             content = Content(game, user_id)
 
-            if message_type in ("all", "notification"):
-                notification = content.show_history(message)
-                await self.send_personal_message(notification, websocket)
+            if message_type in ("all", "history"):
+                history = content.show_history(message)
+                await self.send_personal_message(history, websocket)
 
             if message_type in ("all", "table"):
                 table = content.show_table()
