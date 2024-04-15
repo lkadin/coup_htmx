@@ -125,6 +125,16 @@ class TestGame:
         game_ready.process_action(action, user_id)
         assert game_ready.players[user_id].coins == coins + 2
 
+    def test_process_action_exchange(self, game_ready):
+        user_id = game_ready.player_ids[game_ready.current_player_index][0]
+        action = "Exchange"
+        game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
+        game_ready.process_action(action, user_id)
+        assert len(game_ready.players[user_id].hand) == 4
+        game_ready.cards_to_exchange = ["captain", "duke"]
+        game_ready.process_action(action, user_id)
+        assert len(game_ready.players[user_id].hand) == 2
+
     def test_steal(self, game_ready):
         coins1 = game_ready.players["1"].coins
         coins2 = game_ready.players["2"].coins
@@ -138,13 +148,13 @@ class TestGame:
         assert game_ready.player_id("Lee") == "1"
 
     def test_exchange(self, game_ready):
-        user_id = "1"
+        user_id = game_ready.player_ids[game_ready.current_player_index][0]
         game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
         game_ready.exchange(user_id)
         assert len(game_ready.players[user_id].hand) == 4
         game_ready.cards_to_exchange = ["captain", "duke"]
         game_ready.exchange(user_id)
-        assert len(game_ready.players["1"].hand) == 2
+        assert len(game_ready.players[user_id].hand) == 2
 
     def test_set_current_action(self, game_ready):
         game_ready.set_current_action("Steal", "1")
