@@ -128,6 +128,7 @@ class Game:
         if self.game_over():
             print("Game over")
             self.set_game_status("Waiting")
+            self.add_all_actions()
 
     def whose_turn(self):
         return self.current_player_index
