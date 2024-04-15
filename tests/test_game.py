@@ -131,7 +131,7 @@ class TestGame:
         game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
         game_ready.process_action(action, user_id)
         assert len(game_ready.players[user_id].hand) == 4
-        game_ready.cards_to_exchange = ["captain", "duke"]
+        game_ready.set_cards_to_exchange(["captain", "duke"])
         game_ready.process_action(action, user_id)
         assert len(game_ready.players[user_id].hand) == 2
 
@@ -164,3 +164,8 @@ class TestGame:
         assert game_ready.get_game_status() == "In progress"
         game_ready.set_game_status("Waiting")
         assert game_ready.get_game_status() == "Waiting"
+
+    def test_set_second_player(self, game_ready):
+        player_name = "Lee"
+        game_ready.set_second_player(player_name)
+        assert game_ready.second_player == player_name
