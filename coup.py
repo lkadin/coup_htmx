@@ -100,11 +100,13 @@ class Game:
         self.exchange_in_progress = False
         self.assassinate_in_progress = False
         self.coup_in_progress = False
+        self.assassinate_in_progress = False
         self.current_player_index = 0
         self.num_cards_to_exchange = 0
         self.action_history = ""
         self.card_to_lose = None
         self.player_to_coup = None
+        self.player_to_assassinate = None
 
     def initial_deal(self):
         for _ in range(self.NUM_OF_CARDS):
@@ -301,7 +303,22 @@ class Game:
             self.next_turn()
 
     def assassinate(self, user_id):
-        pass
+        if not self.second_player and not self.assassinate_in_progress:
+            return
+        if (
+            not self.card_to_lose
+            and self.player(user_id).influence()
+            and not self.assassinate_in_progress
+        ):
+            self.assassinate_in_progress = True
+            self.player_to_assassinate = self.second_player
+            self.second_player = None
+
+        if self.card_to_lose and isinstance(self.card_to_lose, str):
+            self.player(self.player_to_assassinate).lose_influence(self.card_to_lose)
+            self.card_to_lose = None
+            self.assassinate_in_progress = False
+            self.next_turn()
 
     def clear_history(self):
         self.action_history = ""

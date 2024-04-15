@@ -74,7 +74,7 @@ class Content:
         if (
             # exchange
             self.game.exchange_in_progress
-            and player.name == self.players[self.user_id].name
+            # and player.name == self.players[self.user_id].name
             and self.game.your_turn(self.user_id)
         ):
             self.display_hand += """
