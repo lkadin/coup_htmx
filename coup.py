@@ -248,7 +248,7 @@ class Game:
             if self.num_cards_to_exchange != len(self.cards_to_exchange):
                 return
             self.player(user_id).discard(self.cards_to_exchange, self.deck)
-            self.cards_to_exchange = None
+            self.cards_to_exchange = []
             self.exchange_in_progress = False
             self.next_turn()
 
