@@ -96,7 +96,7 @@ class Game:
         self.actions = []
         self.current_action: Action
         self.second_player = None
-        self.cards_to_exchange = None
+        self.cards_to_exchange: list = []
         self.exchange_in_progress = False
         self.assassinate_in_progress = False
         self.coup_in_progress = False
