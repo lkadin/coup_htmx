@@ -48,25 +48,31 @@ class Content:
                 <img src='/static/jpg/down.png' {card.value} style=opacity:1.0;>
                 """
 
-        if (
-            self.game.exchange_in_progress
-            and player.name == self.players[self.user_id].name
-        ):
+        # exchange
+        if self.game.exchange_in_progress and self.game.your_turn(self.user_id):
             self.display_hand = '<form hx-ws="send" hx-target="cards">'
+
+        # coup - select card to lose
         elif self.game.coup_in_progress and self.user_id == self.game.player_to_coup:
             self.display_hand = '<form hx-ws="send" hx-target="cards">'
+        # display regular hand
         else:
             self.display_hand = ""
+
         for card in player.hand:
-            if (self.game.exchange_in_progress) and self.game.your_turn(self.user_id):
+            # exchange
+            if self.game.exchange_in_progress and self.game.your_turn(self.user_id):
                 exchange(card)
+            # coup
             elif (
                 self.game.coup_in_progress and self.user_id == self.game.player_to_coup
             ):
                 coup(card)
+            # display regular hand
             else:
                 non_exchange(card)
         if (
+            # exchange
             self.game.exchange_in_progress
             and player.name == self.players[self.user_id].name
             and self.game.your_turn(self.user_id)
@@ -76,6 +82,7 @@ class Content:
                 <input type="submit" id="test" value="Submit">
                 </form>
                 """
+            # coup
         elif (
             self.game.coup_in_progress
             and self.user_id == self.game.player_to_coup
