@@ -125,6 +125,9 @@ class Game:
             self.current_player_index = 0
         self.second_player = None
         self.current_action = Action("No_action", 0, "disabled", False)
+        if self.game_over():
+            print("Game over")
+            self.set_game_status("Waiting")
 
     def whose_turn(self):
         return self.current_player_index
@@ -322,6 +325,16 @@ class Game:
 
     def clear_history(self):
         self.action_history = ""
+
+    def game_over(self):
+        self.over = False
+        self.players_with_influence = 0
+        for self.one_player in self.players.values():
+            if self.one_player.influence():
+                self.players_with_influence += 1
+        if self.players_with_influence == 1:
+            self.over = True
+        return self.over
 
 
 def main():
