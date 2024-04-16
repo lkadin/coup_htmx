@@ -127,7 +127,6 @@ class Game:
         self.second_player = None
         self.current_action = Action("No_action", 0, "disabled", False)
         if self.game_over():
-            print("Game over")
             self.alert = "Game Over"
             self.set_game_status("Game Over")
             self.add_all_actions()
