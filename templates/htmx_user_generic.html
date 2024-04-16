@@ -15,6 +15,7 @@
     <div class="container-fluid">
         <div hx-ws="connect:/ws/{{user_id}}">
             <div class="row">
+                {% include './alerts.html' %}
                 {% include './notifications.html' %}
                 {% include './second_player.html' %}
                 {% include './history.html' %}

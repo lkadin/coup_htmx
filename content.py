@@ -29,6 +29,25 @@ class Content:
             if (
                 self.user_id == self.game.player_to_coup
                 and player.name == self.players[self.user_id].name
+                and card.card_status == "down"
+            ):
+                self.display_hand += f"""
+                <input type="checkbox" name="cardnames" value="{card.value}" <td><img src="/static/jpg/{card.value}.jpg" height="350">
+                """
+            else:
+                if card.card_status == "down":
+                    self.display_hand += f"""
+                    <img src='/static/jpg/down.png' {card.value} style=opacity:1.0;>
+                    """
+                else:
+                    self.display_hand += f"""
+                    <img src='/static/jpg/{card.value}.jpg' {card.value} style=opacity:.5;>
+                    """
+
+        def assassinate(card):
+            if (
+                self.user_id == self.game.player_to_assassinate
+                and player.name == self.players[self.user_id].name
             ):
                 self.display_hand += f"""
                 <input type="checkbox" name="cardnames" value="{card.value}" <td><img src="/static/jpg/{card.value}.jpg" height="350">
@@ -51,48 +70,46 @@ class Content:
         # exchange
         if self.game.exchange_in_progress and self.game.your_turn(self.user_id):
             self.display_hand = '<form hx-ws="send" hx-target="cards">'
-
-        # coup - select card to lose
-        elif self.game.coup_in_progress and self.user_id == self.game.player_to_coup:
-            self.display_hand = '<form hx-ws="send" hx-target="cards">'
-        # display regular hand
-        else:
-            self.display_hand = ""
-
-        for card in player.hand:
-            # exchange
-            if self.game.exchange_in_progress and self.game.your_turn(self.user_id):
+            for card in player.hand:
                 exchange(card)
-            # coup
-            elif (
-                self.game.coup_in_progress and self.user_id == self.game.player_to_coup
-            ):
-                coup(card)
-            # display regular hand
-            else:
-                non_exchange(card)
-        if (
-            # exchange
-            self.game.exchange_in_progress
-            # and player.name == self.players[self.user_id].name
-            and self.game.your_turn(self.user_id)
-        ):
-            self.display_hand += """
+            if player.name == self.players[self.user_id].name:
+                self.display_hand += """
                 <p> Which cards do you want to discard?</p>
                 <input type="submit" id="test" value="Submit">
                 </form>
                 """
-            # coup
-        elif (
-            self.game.coup_in_progress
-            and self.user_id == self.game.player_to_coup
-            and player.name == self.players[self.user_id].name
-        ):
-            self.display_hand += """
+
+        # coup - select card to lose
+        elif self.game.coup_in_progress and self.user_id == self.game.player_to_coup:
+            self.display_hand = '<form hx-ws="send" hx-target="cards">'
+            for card in player.hand:
+                coup(card)
+            if player.name == self.players[self.user_id].name:
+                self.display_hand += """
                 <p> Which card do you want to discard?</p>
                 <input type="submit" id="test" value="Submit">
                 </form>
                 """
+        # assassinate - select card to lose
+        elif (
+            self.game.assassinate_in_progress
+            and self.user_id == self.game.player_to_assassinate
+        ):
+            self.display_hand = '<form hx-ws="send" hx-target="cards">'
+            for card in player.hand:
+                assassinate(card)
+            if player.name == self.players[self.user_id].name:
+                self.display_hand += """
+                <p> Which card do you want to discard?</p>
+                <input type="submit" id="test" value="Submit">
+                </form>
+                """
+        # display regular hand
+        else:
+            self.display_hand = ""
+            for card in player.hand:
+                non_exchange(card)
+
         self.display_hand += "</a>"
         return self.display_hand
 
@@ -199,3 +216,11 @@ class Content:
             <div id="second_player" hidden >
             """
         return self.hide_other_players
+
+    def show_alert(self):
+        self.alert = f"""
+        <div hx-swap-oob="innerHTML:#alerts" visible>
+        <h1 style="color: red;">{self.game.alert}</h1>
+        </div>
+        """
+        return self.alert

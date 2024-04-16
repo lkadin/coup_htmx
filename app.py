@@ -75,6 +75,9 @@ async def process_message(websocket, user_id, message):
     if game.coup_in_progress:
         game.card_to_lose = message.get("cardnames")
 
+    if game.assassinate_in_progress:
+        game.card_to_lose = message.get("cardnames")
+
     if game.current_action.second_player_required and not game.second_player:
         await manager.broadcast(
             f" {game.players[user_id].name}: {message['message_txt']}",
@@ -82,7 +85,7 @@ async def process_message(websocket, user_id, message):
             message_type="pick",
         )
 
-    if game.second_player or game.coup_in_progress:
+    if game.second_player or game.coup_in_progress or game.assassinate_in_progress:
         await manager.broadcast(
             f" {game.players[user_id].name}: {message['message_txt']}",
             game,
