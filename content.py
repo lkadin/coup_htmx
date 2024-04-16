@@ -48,14 +48,20 @@ class Content:
             if (
                 self.user_id == self.game.player_to_assassinate
                 and player.name == self.players[self.user_id].name
+                and card.card_status == "down"
             ):
                 self.display_hand += f"""
                 <input type="checkbox" name="cardnames" value="{card.value}" <td><img src="/static/jpg/{card.value}.jpg" height="350">
                 """
             else:
-                self.display_hand += f"""
-                <img src='/static/jpg/down.png' {card.value} style=opacity:1.0;>
-                """
+                if card.card_status == "down":
+                    self.display_hand += f"""
+                    <img src='/static/jpg/down.png' {card.value} style=opacity:1.0;>
+                    """
+                else:
+                    self.display_hand += f"""
+                    <img src='/static/jpg/{card.value}.jpg' {card.value} style=opacity:.5;>
+                    """
 
         def exchange(card):
             if player.name == self.players[self.user_id].name:
