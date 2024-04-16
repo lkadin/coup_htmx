@@ -107,6 +107,7 @@ class Game:
         self.card_to_lose = None
         self.player_to_coup = None
         self.player_to_assassinate = None
+        self.alert = ""
 
     def initial_deal(self):
         for _ in range(self.NUM_OF_CARDS):
@@ -127,7 +128,8 @@ class Game:
         self.current_action = Action("No_action", 0, "disabled", False)
         if self.game_over():
             print("Game over")
-            self.set_game_status("Waiting")
+            self.alert = "Game Over"
+            self.set_game_status("Game Over")
             self.add_all_actions()
 
     def whose_turn(self):
