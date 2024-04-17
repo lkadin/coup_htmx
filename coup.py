@@ -357,7 +357,7 @@ class Game:
             return 0
         self.user_id = user_id
         if self.player(self.user_id).coins >= COUP_REQUIRED:
-            return 2
+            return -1
         if self.player(self.user_id).coins >= self.current_action.coins_required:
             return 0
         if self.player(self.user_id).coins < self.current_action.coins_required:

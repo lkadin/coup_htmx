@@ -169,3 +169,20 @@ class TestGame:
         player_name = "Lee"
         game_ready.set_second_player(player_name)
         assert game_ready.second_player == player_name
+
+    def test_check_coins(self, game_ready):
+        self.user_id = "1"
+
+        game_ready.current_action = game_ready.action_from_action_name("Coup")
+        game_ready.players[self.user_id].coins = 2
+        assert game_ready.check_coins(game_ready.players[self.user_id].id) == 1
+
+        game_ready.current_action = game_ready.action_from_action_name("Coup")
+        assert game_ready.check_coins(game_ready.players[self.user_id].id) == 1
+
+        game_ready.current_action = game_ready.action_from_action_name("Assassinate")
+        game_ready.players[self.user_id].coins = 6
+        assert game_ready.check_coins(game_ready.players[self.user_id].id) == 0
+
+        game_ready.players[self.user_id].coins = 7
+        assert game_ready.check_coins(game_ready.players[self.user_id].id) == -1
