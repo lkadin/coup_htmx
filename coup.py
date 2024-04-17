@@ -96,7 +96,7 @@ class Game:
         self.NUM_OF_CARDS = 2
         self.game_status = "Not started"
         self.actions = []
-        self.current_action = None
+        self.current_action: Action | None = None
         self.second_player = None
         self.cards_to_exchange: list = []
         self.exchange_in_progress = False
