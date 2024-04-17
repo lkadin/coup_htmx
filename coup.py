@@ -314,6 +314,7 @@ class Game:
 
         if self.card_to_lose and isinstance(self.card_to_lose, str):
             self.player(self.player_to_coup).lose_influence(self.card_to_lose)
+            self.player(str(self.whose_turn() + 1)).add_remove_coins(-7)
             self.card_to_lose = None
             self.coup_in_progress = False
             self.next_turn()
@@ -332,6 +333,7 @@ class Game:
 
         if self.card_to_lose and isinstance(self.card_to_lose, str):
             self.player(self.player_to_assassinate).lose_influence(self.card_to_lose)
+            self.player(str(self.whose_turn() + 1)).add_remove_coins(-3)
             self.card_to_lose = None
             self.assassinate_in_progress = False
             self.next_turn()
