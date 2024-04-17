@@ -22,9 +22,6 @@ class ConnectionManager:
         for user_id, websocket in self.active_connections.items():
             content = Content(game, user_id)
 
-            if game.check_coins(user_id):
-                return
-
             if message_type in ("all", "history"):
                 history = content.show_history(message)
                 await self.send_personal_message(history, websocket)

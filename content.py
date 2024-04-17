@@ -196,6 +196,8 @@ class Content:
         return self.actions
 
     def pick_second_player(self):
+        if self.game.check_coins(self.user_id) == 1:
+            return ""
         self.show_other_players = """
             <div id="second_player" >
             <br>

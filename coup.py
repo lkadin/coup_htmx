@@ -130,6 +130,7 @@ class Game:
         self.current_action = Action("No_action", 0, "disabled", False)
         if self.game_over():
             self.alert = "Game Over"
+            print("Game Over")
             self.set_game_status("Game Over")
             self.add_all_actions()
 
@@ -197,7 +198,7 @@ class Game:
         ):
             return
 
-        if self.check_coins(user_id):
+        if self.check_coins(user_id) == 1 and self.your_turn:
             return
 
         if action.name == "Start" and self.game_status == "Waiting":
@@ -276,10 +277,11 @@ class Game:
         return default_action
 
     def set_current_action(self, action_name: str, user_id: str):
+        self.user_id = user_id
         self.current_action = self.action_from_action_name(action_name)
-        if self.check_coins(user_id):
+        if self.check_coins(user_id) == 1:
             return
-        self.add_history()
+        self.add_history(self.user_id)
 
     def get_current_action(self):
         return self.current_action
@@ -337,7 +339,9 @@ class Game:
     def clear_history(self):
         self.action_history = ""
 
-    def add_history(self):
+    def add_history(self, user_id):
+        if not self.current_action:
+            return
         self.action_history = (
             f"{self.player(self.user_id).name}- {self.current_action}<br>"
         ) + self.action_history
