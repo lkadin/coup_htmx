@@ -186,3 +186,25 @@ class TestGame:
 
         game_ready.players[self.user_id].coins = 7
         assert game_ready.check_coins(game_ready.players[self.user_id].id) == -1
+
+    def test_coup(self, game_ready):
+        self.user_id = "1"
+        game_ready.players["1"].coins = 8
+        game_ready.player_to_coup = "2"
+        game_ready.coup_in_progress = True
+        game_ready.players["2"].hand = [Card("captain"), Card("duke")]
+        game_ready.card_to_lose = "captain"
+        game_ready.coup(self.user_id)
+        assert game_ready.player("2").influence() == 1
+        assert game_ready.player("1").coins == 1
+
+    def test_assassinate(self, game_ready):
+        self.user_id = "1"
+        game_ready.players["1"].coins = 6
+        game_ready.player_to_assassinate = "2"
+        game_ready.assassinate_in_progress = True
+        game_ready.players["2"].hand = [Card("captain"), Card("duke")]
+        game_ready.card_to_lose = "captain"
+        game_ready.assassinate(self.user_id)
+        assert game_ready.player("2").influence() == 1
+        assert game_ready.player("1").coins == 3
