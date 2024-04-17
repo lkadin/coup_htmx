@@ -1,5 +1,7 @@
 import random
 
+COUP_REQUIRED = 7  # # of coins when you MUST Coup
+
 
 class Card:
     def __init__(self, value) -> None:
@@ -94,7 +96,7 @@ class Game:
         self.NUM_OF_CARDS = 2
         self.game_status = "Not started"
         self.actions = []
-        self.current_action: Action
+        self.current_action = None
         self.second_player = None
         self.cards_to_exchange: list = []
         self.exchange_in_progress = False
@@ -195,6 +197,9 @@ class Game:
         ):
             return
 
+        if self.check_coins(user_id):
+            return
+
         if action.name == "Start" and self.game_status == "Waiting":
             self.start()
             return
@@ -272,9 +277,9 @@ class Game:
 
     def set_current_action(self, action_name: str, user_id: str):
         self.current_action = self.action_from_action_name(action_name)
-        self.action_history = (
-            f"{self.player(user_id).name}- {self.current_action.name}<br>"
-        ) + self.action_history
+        if self.check_coins(user_id):
+            return
+        self.add_history()
 
     def get_current_action(self):
         return self.current_action
@@ -332,6 +337,11 @@ class Game:
     def clear_history(self):
         self.action_history = ""
 
+    def add_history(self):
+        self.action_history = (
+            f"{self.player(self.user_id).name}- {self.current_action}<br>"
+        ) + self.action_history
+
     def game_over(self):
         self.over = False
         self.players_with_influence = 0
@@ -341,6 +351,17 @@ class Game:
         if self.players_with_influence == 1:
             self.over = True
         return self.over
+
+    def check_coins(self, user_id: str):
+        if not self.current_action:  # Game has not started yet
+            return 0
+        self.user_id = user_id
+        if self.player(self.user_id).coins >= COUP_REQUIRED:
+            return 2
+        if self.player(self.user_id).coins >= self.current_action.coins_required:
+            return 0
+        if self.player(self.user_id).coins < self.current_action.coins_required:
+            return 1
 
 
 def main():
