@@ -198,8 +198,8 @@ class Game:
         ):
             return
 
-        if self.check_coins(user_id) == 1 and self.your_turn:
-            return
+        # if self.check_coins(user_id) == 1 and self.your_turn:
+        #     return
 
         if action.name == "Start" and self.game_status == "Waiting":
             self.start()
