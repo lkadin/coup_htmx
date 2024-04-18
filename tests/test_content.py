@@ -15,3 +15,23 @@ def test_show_turn(content):
 
 def test_show_history(content):
     assert """<div hx-swap-oob="innerHTML:#history">""" in content.show_history("Test")
+
+
+def test_show_game_status(content):
+    assert len(content.show_game_status()) > 10
+
+
+def test_show_alert(content):
+    assert len(content.show_alert()) > 10
+
+
+def test_hide_second_player(content):
+    assert len(content.hide_second_player()) > 10
+
+
+def test_pick_second_player(content):
+    assert len(content.pick_second_player()) > 10
+
+
+def test_show_actions(content):
+    assert len(content.show_actions()) > 10
