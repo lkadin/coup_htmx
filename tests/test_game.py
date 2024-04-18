@@ -189,6 +189,7 @@ class TestGame:
 
     def test_coup(self, game_ready):
         self.user_id = "1"
+        game_ready.couping_player = self.user_id
         game_ready.players["1"].coins = 8
         game_ready.player_to_coup = "2"
         game_ready.coup_in_progress = True
@@ -200,6 +201,7 @@ class TestGame:
 
     def test_assassinate(self, game_ready):
         self.user_id = "1"
+        game_ready.assassinating_player = self.user_id
         game_ready.players["1"].coins = 6
         game_ready.player_to_assassinate = "2"
         game_ready.assassinate_in_progress = True
