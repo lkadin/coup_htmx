@@ -80,11 +80,13 @@ class Action:
         coins_required: int,
         action_status: str,
         second_player_required: bool,
+        your_turn_only: bool = True,
     ) -> None:
         self.name = name
         self.coins_required = coins_required
         self.action_status = action_status
         self.second_player_required = second_player_required
+        self.your_turn_only = your_turn_only
 
     def __repr__(self) -> str:
         return self.name
@@ -144,20 +146,30 @@ class Game:
 
     def add_all_actions(self):
         self.actions = []
-        for name, number_of_coins, self.action_status, second_player_required in [
-            ("Assassinate", 3, "disabled", True),
-            ("Coup", 7, "disabled", True),
-            ("Steal", 0, "disabled", True),
-            ("Take_3_coins", 0, "disabled", False),
-            ("Foreign_aid", 0, "disabled", False),
-            ("Income", 0, "disabled", False),
-            ("Exchange", 0, "disabled", False),
-            ("Block", 0, "disabled", False),
-            ("Challenge", 0, "disabled", False),
+        for (
+            name,
+            number_of_coins,
+            self.action_status,
+            second_player_required,
+            your_turn_only,
+        ) in [
+            ("Assassinate", 3, "disabled", True, True),
+            ("Coup", 7, "disabled", True, True),
+            ("Steal", 0, "disabled", True, True),
+            ("Take_3_coins", 0, "disabled", False, True),
+            ("Foreign_aid", 0, "disabled", False, True),
+            ("Income", 0, "disabled", False, True),
+            ("Exchange", 0, "disabled", False, True),
+            ("Block", 0, "disabled", False, False),
+            ("Challenge", 0, "disabled", False, False),
         ]:
             self.actions.append(
                 Action(
-                    name, number_of_coins, self.action_status, second_player_required
+                    name,
+                    number_of_coins,
+                    self.action_status,
+                    second_player_required,
+                    your_turn_only,
                 )
             )
 
@@ -282,6 +294,8 @@ class Game:
         self.user_id = user_id
         self.current_action = self.action_from_action_name(action_name)
         if self.check_coins(user_id) == 1:
+            return
+        if self.current_action.your_turn_only and not self.your_turn(user_id):
             return
         self.add_history(self.user_id)
 
