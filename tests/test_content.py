@@ -22,7 +22,7 @@ def test_show_game_status(content):
 
 
 def test_show_alert(content):
-    assert len(content.show_alert()) > 10
+    assert len(content.show_game_alert()) > 10
 
 
 def test_hide_second_player(content):

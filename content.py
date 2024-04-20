@@ -225,10 +225,18 @@ class Content:
             """
         return self.hide_other_players
 
-    def show_alert(self):
-        self.alert = f"""
-        <div hx-swap-oob="innerHTML:#alerts" visible>
-        <h1 style="color: red;">{self.game.alert}</h1>
+    def show_game_alert(self):
+        self.game_alert = f"""
+        <div hx-swap-oob="innerHTML:#game_alerts" visible>
+        <h1 style="color: red;">{self.game.game_alert}</h1>
         </div>
         """
-        return self.alert
+        return self.game_alert
+
+    def show_player_alert(self, user_id):
+        self.player_alert = f"""
+        <div hx-swap-oob="innerHTML:#player_alerts" visible>
+        <h1 style="color: red;">{self.game.player(user_id).player_alert}</h1>
+        </div>
+        """
+        return self.player_alert

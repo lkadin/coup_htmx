@@ -22,6 +22,12 @@ class ConnectionManager:
         for user_id, websocket in self.active_connections.items():
             content = Content(game, user_id)
 
+            if message_type in ("all", "alert"):
+                table = content.show_game_alert()
+                await self.send_personal_message(table, websocket)
+                table = content.show_player_alert(user_id)
+                await self.send_personal_message(table, websocket)
+
             if message_type in ("all", "history"):
                 history = content.show_history(message)
                 await self.send_personal_message(history, websocket)
@@ -54,8 +60,4 @@ class ConnectionManager:
 
             if message_type in ("hide") and self.game.your_turn(user_id):
                 table = content.hide_second_player()
-                await self.send_personal_message(table, websocket)
-
-            if message_type in ("all", "alert"):
-                table = content.show_alert()
                 await self.send_personal_message(table, websocket)

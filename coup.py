@@ -35,6 +35,7 @@ class Player:
         self.name = name
         self.hand = []
         self.coins = 2
+        self.player_alert = ""
 
     def get_index(self, cardname: str):
         for index, card in enumerate(self.hand):
@@ -68,6 +69,12 @@ class Player:
             if card.card_status == "down":
                 cards += 1
         return cards
+
+    def set_player_alert(self, message):
+        self.player_alert = message
+
+    def clear_player_alert(self):
+        self.player_alert = ""
 
     def __repr__(self) -> str:
         return f"{self.id}-{self.hand} {self.coins=}"
@@ -111,7 +118,7 @@ class Game:
         self.card_to_lose = None
         self.player_to_coup = None
         self.player_to_assassinate = None
-        self.alert = ""
+        self.game_alert = ""
         self.couping_player = ""
         self.assassinating_player = ""
 
@@ -133,7 +140,7 @@ class Game:
         self.second_player = None
         self.current_action = Action("No_action", 0, "disabled", False)
         if self.game_over():
-            self.alert = "Game Over"
+            self.game_alert = "Game Over"
             print("Game Over")
             self.set_game_status("Game Over")
             self.add_all_actions()
@@ -211,9 +218,6 @@ class Game:
             and not self.assassinate_in_progress
         ):
             return
-
-        # if self.check_coins(user_id) == 1 and self.your_turn:
-        #     return
 
         if action.name == "Start" and self.game_status == "Waiting":
             self.start()
@@ -376,13 +380,16 @@ class Game:
                 self.players_with_influence += 1
         if self.players_with_influence == 1:
             self.over = True
+            self.game_alert = "Game Over"
         return self.over
 
     def check_coins(self, user_id: str):
+        self.player(self.user_id).set_player_alert("")
         if not self.current_action:  # Game has not started yet
             return 0
         self.user_id = user_id
         if self.player(self.user_id).coins >= COUP_REQUIRED:
+            self.player(self.user_id).set_player_alert("You must coup")
             return -1
         if self.player(self.user_id).coins >= self.current_action.coins_required:
             return 0
