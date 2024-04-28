@@ -139,6 +139,7 @@ class Game:
             self.current_player_index = 0
         self.second_player = None
         self.current_action = Action("No_action", 0, "disabled", False)
+        self.player(self.user_id).set_player_alert("")
         if self.game_over():
             self.game_alert = "Game Over"
             print("Game Over")
@@ -281,6 +282,9 @@ class Game:
 
         if self.cards_to_exchange:
             if self.num_cards_to_exchange != len(self.cards_to_exchange):
+                self.player(user_id).set_player_alert(
+                    "You didn't pick the correct amount of cards"
+                )
                 return
             self.player(user_id).discard(self.cards_to_exchange, self.deck)
             self.cards_to_exchange = []
@@ -384,7 +388,6 @@ class Game:
         return self.over
 
     def check_coins(self, user_id: str):
-        self.player(self.user_id).set_player_alert("")
         if not self.current_action:  # Game has not started yet
             return 0
         self.user_id = user_id
