@@ -139,7 +139,7 @@ class Game:
             self.current_player_index = 0
         self.second_player = None
         self.current_action = Action("No_action", 0, "disabled", False)
-        self.player(self.user_id).set_player_alert("")
+        self.player(self.user_id).clear_player_alert()
         if self.game_over():
             self.game_alert = "Game Over"
             print("Game Over")
