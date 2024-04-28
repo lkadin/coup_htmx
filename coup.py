@@ -273,6 +273,7 @@ class Game:
             self.required_discard_qty = self.player(user_id).influence() - 2
 
         if not self.cards_to_exchange and self.exchange_in_progress:
+            self.player(user_id).set_player_alert("You didn't pick any cards")
             return
 
         if self.required_discard_qty <= 2 and not self.cards_to_exchange:
