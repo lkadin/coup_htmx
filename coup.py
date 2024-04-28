@@ -366,6 +366,13 @@ class Game:
             self.assassinate_in_progress = False
             self.assassinating_player = ""
             self.next_turn()
+        else:
+            if (
+                not self.card_to_lose
+                and self.assassinate_in_progress
+                and self.player_to_assassinate == user_id
+            ):
+                self.player(user_id).set_player_alert("You must pick one card")
 
     def clear_history(self):
         self.action_history = ""
