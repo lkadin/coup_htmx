@@ -122,6 +122,7 @@ class Game:
         self.couping_player = ""
         self.assassinating_player = ""
         self.players_remaining = []
+        self.user_id = None
 
     def initial_deal(self):
         for _ in range(self.NUM_OF_CARDS):
@@ -134,7 +135,8 @@ class Game:
             self.players[player_id] = Player(player_id, player_name)
         random.shuffle(self.player_ids)
 
-    def next_turn(self):
+    def next_turn(self, user_id):
+        self.user_id = user_id
         self.current_player_index += 1
         if self.current_player_index >= len(self.players):
             self.current_player_index = 0
@@ -207,16 +209,18 @@ class Game:
         self.clear_history()
 
     def your_turn(self, user_id: str) -> bool:
+        self.user_id = user_id
         whose_turn = self.whose_turn_name()
-        name = self.players[user_id].name
+        name = self.players[self.user_id].name
         return whose_turn == name
 
     def process_action(self, action: Action, user_id: str):
+        self.user_id = user_id
         if not isinstance(action, Action):
             action = self.action_from_action_name(action)
 
         if (
-            not self.your_turn(user_id)
+            not self.your_turn(self.user_id)
             and not self.coup_in_progress
             and not self.assassinate_in_progress
         ):
@@ -230,34 +234,35 @@ class Game:
             return
 
         if action.name == "Take_3_coins":
-            self.player(user_id).add_remove_coins(3)
-            self.next_turn()
+            self.player(self.user_id).add_remove_coins(3)
+            self.next_turn(self.user_id)
 
         if action.name == "Income":
-            self.player(user_id).add_remove_coins(1)
-            self.next_turn()
+            self.player(self.user_id).add_remove_coins(1)
+            self.next_turn(self.user_id)
 
         if action.name == "Foreign_aid":
-            self.player(user_id).add_remove_coins(2)
-            self.next_turn()
+            self.player(self.user_id).add_remove_coins(2)
+            self.next_turn(self.user_id)
 
         if action.name == "Exchange":
-            self.exchange(user_id)
+            self.exchange(self.user_id)
 
         if action.second_player_required:
             self.current_action = action
 
         if action.name == "Steal" and self.second_player:
-            self.steal(give_to=user_id, steal_from=self.second_player)
+            self.steal(give_to=self.user_id, steal_from=self.second_player)
 
         if action.name == "Coup":
-            self.coup(user_id)
+            self.coup(self.user_id)
 
         if action.name == "Assassinate":
-            self.assassinate(user_id)
+            self.assassinate(self.user_id)
 
     def player(self, user_id) -> Player:
-        return self.players[user_id]
+        self.user_id = user_id
+        return self.players[self.user_id]
 
     def player_id(self, name) -> str:
         for player_id in self.player_ids:
@@ -268,31 +273,32 @@ class Game:
     def steal(self, give_to, steal_from):
         self.player(give_to).add_remove_coins(2)
         self.player(steal_from).add_remove_coins(-2)
-        self.next_turn()
+        self.next_turn(self.user_id)
 
     def exchange(self, user_id):
+        self.user_id = user_id
         if not self.cards_to_exchange:
-            self.required_discard_qty = self.player(user_id).influence() - 2
+            self.required_discard_qty = self.player(self.user_id).influence() - 2
 
         if not self.cards_to_exchange and self.exchange_in_progress:
-            self.player(user_id).set_player_alert("You didn't pick any cards")
+            self.player(self.user_id).set_player_alert("You didn't pick any cards")
             return
 
         if self.required_discard_qty <= 2 and not self.cards_to_exchange:
-            for _ in range(4 - self.player(user_id).influence()):
-                self.player(user_id).draw(self.deck)
+            for _ in range(4 - self.player(self.user_id).influence()):
+                self.player(self.user_id).draw(self.deck)
                 self.exchange_in_progress = True
 
         if self.cards_to_exchange:
             if self.required_discard_qty != len(self.cards_to_exchange):
-                self.player(user_id).set_player_alert(
+                self.player(self.user_id).set_player_alert(
                     "You didn't pick the correct amount of cards"
                 )
                 return
-            self.player(user_id).discard(self.cards_to_exchange, self.deck)
+            self.player(self.user_id).discard(self.cards_to_exchange, self.deck)
             self.cards_to_exchange = []
             self.exchange_in_progress = False
-            self.next_turn()
+            self.next_turn(self.user_id)
 
     def action_from_action_name(self, action_name: str) -> Action:
         default_action = Action("No_action", 0, "disabled", False)
@@ -304,9 +310,9 @@ class Game:
     def set_current_action(self, action_name: str, user_id: str):
         self.user_id = user_id
         self.current_action = self.action_from_action_name(action_name)
-        if self.check_coins(user_id) == 1:
+        if self.check_coins(self.user_id) == 1:
             return
-        if self.current_action.your_turn_only and not self.your_turn(user_id):
+        if self.current_action.your_turn_only and not self.your_turn(self.user_id):
             return
         self.add_history(self.user_id)
 
@@ -328,16 +334,17 @@ class Game:
         return self.game_status
 
     def coup(self, user_id):
+        self.user_id = user_id
         if not self.second_player and not self.coup_in_progress:
             return
         if (
             not self.card_to_lose
-            and self.player(user_id).influence()
+            and self.player(self.user_id).influence()
             and not self.coup_in_progress
         ):
             self.coup_in_progress = True
-            self.couping_player = self.player(user_id).id
             self.player_to_coup = self.second_player
+            self.couping_player = self.player(self.user_id).id
             self.second_player = None
 
         if self.card_to_lose and isinstance(self.card_to_lose, str):
@@ -346,19 +353,27 @@ class Game:
             self.card_to_lose = None
             self.coup_in_progress = False
             self.couping_player = ""
-            self.next_turn()
+            self.next_turn(self.user_id)
+        else:
+            if (
+                not self.card_to_lose
+                and self.coup_in_progress
+                and self.player_to_coup == user_id
+            ):
+                self.player(user_id).set_player_alert("You must pick one card")
 
     def assassinate(self, user_id):
+        self.user_id = user_id
         if not self.second_player and not self.assassinate_in_progress:
             return
         if (
             not self.card_to_lose
-            and self.player(user_id).influence()
+            and self.player(self.user_id).influence()
             and not self.assassinate_in_progress
         ):
             self.assassinate_in_progress = True
             self.player_to_assassinate = self.second_player
-            self.assassinating_player = self.player(user_id).id
+            self.assassinating_player = self.player(self.user_id).id
             self.second_player = None
 
         if self.card_to_lose and isinstance(self.card_to_lose, str):
@@ -367,19 +382,20 @@ class Game:
             self.card_to_lose = None
             self.assassinate_in_progress = False
             self.assassinating_player = ""
-            self.next_turn()
+            self.next_turn(self.user_id)
         else:
             if (
                 not self.card_to_lose
                 and self.assassinate_in_progress
-                and self.player_to_assassinate == user_id
+                and self.player_to_assassinate == self.user_id
             ):
-                self.player(user_id).set_player_alert("You must pick one card")
+                self.player(self.user_id).set_player_alert("You must pick one card")
 
     def clear_history(self):
         self.action_history = ""
 
     def add_history(self, user_id):
+        self.user_id = user_id
         if not self.current_action:
             return
         self.action_history = (

@@ -20,9 +20,9 @@ class TestGame:
     def test_next_turn(self, game, ids):
         game.add_all_players(ids)
         assert game.whose_turn() == 0
-        game.next_turn()
+        game.next_turn("1")
         assert game.whose_turn() == 1
-        game.next_turn()
+        game.next_turn("1")
         assert game.whose_turn() == 0
 
     def test_whose_turn_name(self, game_ready, ids):
@@ -132,6 +132,7 @@ class TestGame:
         game_ready.process_action(action, user_id)
         assert len(game_ready.players[user_id].hand) == 4
         game_ready.set_cards_to_exchange(["captain", "duke"])
+        game_ready.required_discard_qty = 2
         game_ready.process_action(action, user_id)
         assert len(game_ready.players[user_id].hand) == 2
 
@@ -153,6 +154,7 @@ class TestGame:
         game_ready.exchange(user_id)
         assert len(game_ready.players[user_id].hand) == 4
         game_ready.cards_to_exchange = ["captain", "duke"]
+        game_ready.required_discard_qty = 2
         game_ready.exchange(user_id)
         assert len(game_ready.players[user_id].hand) == 2
 
