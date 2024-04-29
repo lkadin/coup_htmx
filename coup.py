@@ -121,6 +121,7 @@ class Game:
         self.game_alert = ""
         self.couping_player = ""
         self.assassinating_player = ""
+        self.players_remaining = []
 
     def initial_deal(self):
         for _ in range(self.NUM_OF_CARDS):
@@ -143,8 +144,7 @@ class Game:
         self.second_player = None
         self.current_action = Action("No_action", 0, "disabled", False)
         if self.game_over():
-            self.game_alert = "Game Over"
-            print("Game Over")
+            self.game_alert = f"Game Over - Winner - {self.players_remaining[0].name} "
             self.set_game_status("Game Over")
             self.add_all_actions()
 
@@ -387,14 +387,15 @@ class Game:
         ) + self.action_history
 
     def game_over(self):
+        self.players_remaining = []
         self.over = False
         self.players_with_influence = 0
         for self.one_player in self.players.values():
             if self.one_player.influence():
                 self.players_with_influence += 1
+                self.players_remaining.append(self.one_player)
         if self.players_with_influence == 1:
             self.over = True
-            self.game_alert = "Game Over"
         return self.over
 
     def check_coins(self, user_id: str):
