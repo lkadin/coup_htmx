@@ -137,9 +137,11 @@ class Game:
         self.current_player_index += 1
         if self.current_player_index >= len(self.players):
             self.current_player_index = 0
+        self.player(self.user_id).clear_player_alert()
+        if self.second_player:
+            self.player(self.second_player).clear_player_alert()
         self.second_player = None
         self.current_action = Action("No_action", 0, "disabled", False)
-        self.player(self.user_id).clear_player_alert()
         if self.game_over():
             self.game_alert = "Game Over"
             print("Game Over")
