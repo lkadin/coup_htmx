@@ -335,12 +335,14 @@ class Game:
 
     def coup(self, user_id):
         self.user_id = user_id
-        if not self.second_player and not self.coup_in_progress:
+        if (
+            not self.second_player and not self.coup_in_progress
+        ):  # Need to pick second player
             return
         if (
             not self.card_to_lose
-            and self.player(self.user_id).influence()
             and not self.coup_in_progress
+            and self.player(self.user_id).influence()
         ):
             self.coup_in_progress = True
             self.player_to_coup = self.second_player
@@ -358,13 +360,15 @@ class Game:
             if (
                 not self.card_to_lose
                 and self.coup_in_progress
-                and self.player_to_coup == user_id
+                and self.player_to_coup == self.user_id
             ):
-                self.player(user_id).set_player_alert("You must pick one card")
+                self.player(self.user_id).set_player_alert("You must pick one card")
 
     def assassinate(self, user_id):
         self.user_id = user_id
-        if not self.second_player and not self.assassinate_in_progress:
+        if (
+            not self.second_player and not self.assassinate_in_progress
+        ):  # need to pick second player
             return
         if (
             not self.card_to_lose
