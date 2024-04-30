@@ -1,6 +1,6 @@
 import random
 
-COUP_REQUIRED = 7  # # of coins when you MUST Coup
+COUP_REQUIRED = 10  # # of coins when you MUST Coup
 
 
 class Card:
