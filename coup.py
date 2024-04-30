@@ -314,7 +314,9 @@ class Game:
         self.user_id = user_id
         self.current_action = self.action_from_action_name(action_name)
         self.must_coup = False
-        if self.check_coins(self.user_id) == -1:  # must coup
+        if (
+            self.check_coins(self.user_id) == -1 and self.current_action.name != "Coup"
+        ):  # must coup
             self.must_coup = True
             return
         if self.check_coins(self.user_id) == 1:
