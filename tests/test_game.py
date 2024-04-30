@@ -186,7 +186,7 @@ class TestGame:
         game_ready.players[self.user_id].coins = 6
         assert game_ready.check_coins(game_ready.players[self.user_id].id) == 0
 
-        game_ready.players[self.user_id].coins = 7
+        game_ready.players[self.user_id].coins = 10
         assert game_ready.check_coins(game_ready.players[self.user_id].id) == -1
 
     def test_coup(self, game_ready):
