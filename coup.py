@@ -123,6 +123,7 @@ class Game:
         self.assassinating_player = ""
         self.players_remaining = []
         self.user_id = None
+        self.must_coup = False
 
     def initial_deal(self):
         for _ in range(self.NUM_OF_CARDS):
@@ -140,9 +141,7 @@ class Game:
         self.current_player_index += 1
         if self.current_player_index >= len(self.players):
             self.current_player_index = 0
-        self.player(self.user_id).clear_player_alert()
-        if self.second_player:
-            self.player(self.second_player).clear_player_alert()
+        self.clear_all_player_alerts()
         self.second_player = None
         self.current_action = Action("No_action", 0, "disabled", False)
         if self.game_over():
@@ -224,6 +223,10 @@ class Game:
             and not self.coup_in_progress
             and not self.assassinate_in_progress
         ):
+            return
+
+        if self.must_coup and action.name != "Coup":
+            # set player alert
             return
 
         if action.name == "Start" and self.game_status == "Waiting":
@@ -310,6 +313,10 @@ class Game:
     def set_current_action(self, action_name: str, user_id: str):
         self.user_id = user_id
         self.current_action = self.action_from_action_name(action_name)
+        self.must_coup = False
+        if self.check_coins(self.user_id) == -1:  # must coup
+            self.must_coup = True
+            return
         if self.check_coins(self.user_id) == 1:
             return
         if self.current_action.your_turn_only and not self.your_turn(self.user_id):
@@ -355,6 +362,7 @@ class Game:
             self.card_to_lose = None
             self.coup_in_progress = False
             self.couping_player = ""
+            self.must_coup = False
             self.next_turn(self.user_id)
         else:
             if (
@@ -429,6 +437,10 @@ class Game:
             return 0
         if self.player(self.user_id).coins < self.current_action.coins_required:
             return 1
+
+    def clear_all_player_alerts(self):
+        for player in self.players.values():
+            player.clear_player_alert()
 
 
 def main():

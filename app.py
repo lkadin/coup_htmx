@@ -92,8 +92,8 @@ async def process_message(websocket, user_id, message):
             message_type="hide",
         )
 
-    game.process_action(message["message_txt"], user_id)
     game.check_coins(user_id)  # set player alert if necessary
+    game.process_action(message["message_txt"], user_id)
     await manager.broadcast(
         f" {game.players[user_id].name}: {message['message_txt']}",
         game,
