@@ -226,7 +226,6 @@ class Game:
             return
 
         if self.must_coup and action.name != "Coup":
-            # set player alert
             return
 
         if action.name == "Start" and self.game_status == "Waiting":
@@ -318,6 +317,7 @@ class Game:
             self.check_coins(self.user_id) == -1 and self.current_action.name != "Coup"
         ):  # must coup
             self.must_coup = True
+            self.current_action = Action("No_action", 0, "disabled", False)
             return
         if self.check_coins(self.user_id) == 1:
             return
