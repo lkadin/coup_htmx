@@ -281,8 +281,8 @@ class Game:
 
     def exchange(self, user_id):
         self.user_id = user_id
-        if not self.cards_to_exchange:
-            self.required_discard_qty = self.player(self.user_id).influence() - 2
+        # if not self.cards_to_exchange:
+        self.required_discard_qty = self.player(self.user_id).influence() - 2
 
         if not self.cards_to_exchange and self.exchange_in_progress:
             self.player(self.user_id).set_player_alert("You didn't pick any cards")
