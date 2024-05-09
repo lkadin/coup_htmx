@@ -1,4 +1,5 @@
 import random
+from datetime import datetime
 
 COUP_REQUIRED = 10  # # of coins when you MUST Coup
 
@@ -114,7 +115,7 @@ class Game:
         self.assassinate_in_progress = False
         self.current_player_index = 0
         self.required_discard_qty = 0
-        self.action_history = ""
+        self.action_history = []
         self.card_to_lose = None
         self.player_to_coup = None
         self.player_to_assassinate = None
@@ -407,15 +408,16 @@ class Game:
                 self.player(self.user_id).set_player_alert("You must pick one card")
 
     def clear_history(self):
-        self.action_history = ""
+        self.action_history = []
 
     def add_history(self, user_id):
         self.user_id = user_id
         if not self.current_action:
             return
-        self.action_history = (
-            f"{self.player(self.user_id).name}- {self.current_action}<br>"
-        ) + self.action_history
+        h1 = History_action(
+            self.player(self.user_id).name, self.second_player, self.current_action
+        )
+        self.action_history.append(h1)
 
     def game_over(self):
         self.players_remaining = []
@@ -444,6 +446,16 @@ class Game:
     def clear_all_player_alerts(self):
         for player in self.players.values():
             player.clear_player_alert()
+
+
+class History_action:
+    def __init__(self, player1, player2, action):
+        self.player1 = player1
+        self.player2 = player2
+        self.action = action
+        self.time_added = datetime.now()
+        if not self.player2:
+            self.player2 = ""
 
 
 def main():

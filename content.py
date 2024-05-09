@@ -150,13 +150,16 @@ class Content:
         return self.game_status
 
     def show_history(self, message: str) -> str:
-        self.history = f"""
+        self.history = """
         <br>
         <div hx-swap-oob="innerHTML:#history">
-        {self.game.action_history}
-        <br>
+        """
+        for history_action in self.game.action_history[::-1]:
+            self.history += f"""
+            {history_action.player1}-{history_action.action}-{history_action.player2}
+            """
+        self.history += """
         </div>
-
         """
         return self.history
 
