@@ -138,8 +138,8 @@ class Game:
         random.shuffle(self.player_ids)
 
     def next_turn(self, user_id):
-        self.add_history(self.user_id)
         self.user_id = user_id
+        self.add_history(self.user_id)
         self.current_player_index += 1
         if self.current_player_index >= len(self.players):
             self.current_player_index = 0
