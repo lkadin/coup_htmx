@@ -138,6 +138,7 @@ class Game:
         random.shuffle(self.player_ids)
 
     def next_turn(self, user_id):
+        self.add_history(self.user_id)
         self.user_id = user_id
         self.current_player_index += 1
         if self.current_player_index >= len(self.players):
@@ -325,7 +326,6 @@ class Game:
         self.current_action = self.action_from_action_name(action_name)
         if self.current_action.your_turn_only and not self.your_turn(self.user_id):
             return
-        self.add_history(self.user_id)
 
     def get_current_action(self):
         return self.current_action
