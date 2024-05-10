@@ -414,8 +414,16 @@ class Game:
         self.user_id = user_id
         if not self.current_action:
             return
+        if self.current_action.name == "Coup":
+            self.player2 = self.player_to_coup
+        elif self.current_action.name == "Assassinate":
+            self.player2 = self.player_to_assassinate
+        else:
+            self.player2 = self.second_player
         h1 = History_action(
-            self.player(self.user_id).name, self.second_player, self.current_action
+            self.player_ids[self.current_player_index][0],
+            self.player2,
+            self.current_action,
         )
         self.action_history.append(h1)
 
