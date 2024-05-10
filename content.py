@@ -156,7 +156,7 @@ class Content:
         """
         for history_action in self.game.action_history[::-1]:
             self.history += f"""
-            {history_action.player1}-{history_action.action}-{history_action.player2}
+            {history_action.player1} {history_action.action} {history_action.player2}
             """
         self.history += """
         </div>
