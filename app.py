@@ -16,16 +16,82 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # ids = [("1", "Lee"), ("2", "Adina"), ("3", "Joey"), ("9", "Jamie")]
-ids = [("1", "Lee"), ("2", "Adina")]
+# ids = [("1", "Lee"), ("2", "Adina")]
+MAXPLAYERS = 4
 game = Game()
 manager = ConnectionManager(game)
-game.add_all_players(ids)
+# game.add_all_players(ids)
 game.wait()
 
 
+@app.get("/", response_class=HTMLResponse)
+async def login(request: Request):
+    if len(game.players) >= MAXPLAYERS:
+        return templates.TemplateResponse("no_more_players.html", {"request": request})
+    if game.game_status != "Waiting":
+        return templates.TemplateResponse("game_started.html", {"request": request})
+
+    user_id = len(game.players) + 1
+    return templates.TemplateResponse(
+        "login.html", {"request": request, "user_id": user_id}
+    )
+
+
 @app.get("/web/{user_id}/", response_class=HTMLResponse)
-async def read_item(request: Request, user_id: str):
-    user_name = game.players[user_id].name
+async def read_item(request: Request, user_id: str, user_name: str):
+    def refresh():
+        if already_logged_in(user_id) and already_in_game(user_name):
+            return True
+
+    def already_in_game(user_name):
+        for player in game.player_ids:
+            if player[1] == user_name:
+                return True
+
+    def already_logged_in(user_id):  # websocket (user_id) already in use
+        if manager.active_connections.get(user_id):
+            return True
+
+    def game_started():
+        if game.game_status != "Waiting":
+            return True
+
+    if refresh():
+        return templates.TemplateResponse(
+            "htmx_user_generic.html",
+            {
+                "request": request,
+                "user_id": user_id,
+                "user_name": user_name,
+                "actions": game.actions,
+                "game_status": game.game_status,
+                "turn": game.whose_turn_name(),
+                "history": game.action_history,
+            },
+        )
+
+    if already_logged_in(user_id):
+        return templates.TemplateResponse(
+            "id_already_in_game.html",
+            {
+                "request": request,
+            },
+        )
+
+    if already_in_game(user_name):
+        return templates.TemplateResponse(
+            "player_already_in_game.html", {"request": request}
+        )
+
+    if game_started():
+        return templates.TemplateResponse(
+            "game_started.html",
+            {
+                "request": request,
+            },
+        )
+
+    game.add_player(user_id, user_name)  # Try to add the player to the game
     return templates.TemplateResponse(
         "htmx_user_generic.html",
         {
@@ -44,7 +110,10 @@ async def read_item(request: Request, user_id: str):
 async def websocket_chat(websocket: WebSocket, user_id: str):
     await manager.connect(user_id, websocket)
     await manager.broadcast(
-        f" {game.players[user_id].name} has joined ", game, "history"
+        # f" {game.players[user_id].name} has joined ", game, "history"
+        f" {user_id} has joined ",
+        game,
+        "history",
     )
     try:
         while True:

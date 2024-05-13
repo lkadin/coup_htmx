@@ -125,11 +125,21 @@ class Game:
         self.players_remaining = []
         self.user_id = None
         self.must_coup = False
+        self.player_ids = []
+        self.ids = []
 
     def initial_deal(self):
         for _ in range(self.NUM_OF_CARDS):
             for player in self.players.values():
                 player.draw(self.deck)
+
+    def add_player(self, player_id: str, player_name: str):
+        if player_name in [player.name for player in self.players.values()]:
+            return False
+        self.players[player_id] = Player(player_id, player_name)
+        self.ids.append((player_id, player_name))
+        self.add_all_players(self.ids)
+        return True
 
     def add_all_players(self, player_ids: list[str]):
         self.player_ids = player_ids
@@ -266,7 +276,10 @@ class Game:
 
     def player(self, user_id) -> Player:
         self.user_id = user_id
-        return self.players[self.user_id]
+        try:
+            return self.players[self.user_id]
+        except KeyError:
+            return None
 
     def player_id(self, name) -> str:
         for player_id in self.player_ids:
