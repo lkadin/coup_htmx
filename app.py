@@ -15,12 +15,9 @@ templates = Jinja2Templates(directory="templates")
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# ids = [("1", "Lee"), ("2", "Adina"), ("3", "Joey"), ("9", "Jamie")]
-# ids = [("1", "Lee"), ("2", "Adina")]
 MAXPLAYERS = 4
 game = Game()
 manager = ConnectionManager(game)
-# game.add_all_players(ids)
 game.wait()
 
 
@@ -57,6 +54,7 @@ async def read_item(request: Request, user_id: str, user_name: str):
             return True
 
     if refresh():
+        print("refresh")
         return templates.TemplateResponse(
             "htmx_user_generic.html",
             {
