@@ -37,7 +37,11 @@ async def login(request: Request):
 @app.get("/web/{user_id}/", response_class=HTMLResponse)
 async def read_item(request: Request, user_id: str, user_name: str):
     def refresh():
-        if already_logged_in(user_id) and already_in_game(user_name):
+        if (
+            already_logged_in(user_id)
+            and already_in_game(user_name)
+            and game.game_status != "Waiting"
+        ):
             return True
 
     def already_in_game(user_name):
@@ -55,20 +59,8 @@ async def read_item(request: Request, user_id: str, user_name: str):
 
     if refresh():
         print("refresh")
-        return templates.TemplateResponse(
-            "htmx_user_generic.html",
-            {
-                "request": request,
-                "user_id": user_id,
-                "user_name": user_name,
-                "actions": game.actions,
-                "game_status": game.game_status,
-                "turn": game.whose_turn_name(),
-                "history": game.action_history,
-            },
-        )
 
-    if already_logged_in(user_id):
+    elif already_logged_in(user_id):
         return templates.TemplateResponse(
             "id_already_in_game.html",
             {
@@ -76,12 +68,12 @@ async def read_item(request: Request, user_id: str, user_name: str):
             },
         )
 
-    if already_in_game(user_name):
+    elif already_in_game(user_name):
         return templates.TemplateResponse(
             "player_already_in_game.html", {"request": request}
         )
 
-    if game_started():
+    elif game_started():
         return templates.TemplateResponse(
             "game_started.html",
             {
@@ -111,7 +103,7 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
         # f" {game.players[user_id].name} has joined ", game, "history"
         f" {user_id} has joined ",
         game,
-        "history",
+        "all",
     )
     try:
         while True:
