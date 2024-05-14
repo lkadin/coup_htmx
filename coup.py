@@ -145,12 +145,15 @@ class Game:
         self.player_ids = player_ids
         for player_id, player_name in self.player_ids:
             self.players[player_id] = Player(player_id, player_name)
-        random.shuffle(self.player_ids)
 
     def next_turn(self, user_id):
         self.user_id = user_id
         self.add_history(self.user_id)
         self.current_player_index += 1
+        if self.current_player_index >= len(self.players):
+            self.current_player_index = 0
+        if not self.players[str(self.current_player_index + 1)].influence():
+            self.current_player_index += 1
         if self.current_player_index >= len(self.players):
             self.current_player_index = 0
         self.clear_all_player_alerts()
@@ -165,7 +168,10 @@ class Game:
         return self.current_player_index
 
     def whose_turn_name(self):
-        return self.player_ids[self.current_player_index][1]
+        if self.game_status == "In progress":
+            return self.player_ids[self.current_player_index][1]
+        else:
+            return None
 
     def add_all_actions(self):
         self.actions = []
@@ -218,6 +224,7 @@ class Game:
         self.enable_all_actions()
         self.initial_deal()
         self.clear_history()
+        self.current_player_index = random.randint(0, len(self.players) - 1)
 
     def your_turn(self, user_id: str) -> bool:
         self.user_id = user_id
@@ -230,6 +237,10 @@ class Game:
         if not isinstance(action, Action):
             action = self.action_from_action_name(action)
 
+        if action.name == "Start" and self.game_status == "Waiting":
+            self.start()
+            return
+
         if (
             not self.your_turn(self.user_id)
             and not self.coup_in_progress
@@ -238,10 +249,6 @@ class Game:
             return
 
         if self.must_coup and action.name != "Coup":
-            return
-
-        if action.name == "Start" and self.game_status == "Waiting":
-            self.start()
             return
 
         if self.game_status == "Waiting":
