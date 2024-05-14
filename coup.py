@@ -152,7 +152,10 @@ class Game:
         self.current_player_index += 1
         if self.current_player_index >= len(self.players):
             self.current_player_index = 0
-        if not self.players[str(self.current_player_index + 1)].influence():
+        self.current_player_id = str(
+            self.player_id_from_index(self.current_player_index)
+        )
+        if not self.player(self.current_player_id).influence():
             self.current_player_index += 1
         if self.current_player_index >= len(self.players):
             self.current_player_index = 0
@@ -474,6 +477,9 @@ class Game:
     def clear_all_player_alerts(self):
         for player in self.players.values():
             player.clear_player_alert()
+
+    def player_id_from_index(self, index: int):
+        return self.player_ids[index][0]
 
 
 class History_action:
