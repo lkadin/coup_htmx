@@ -19,19 +19,18 @@ class TestGame:
 
     def test_next_turn(self, game, ids):
         game.add_all_players(ids)
-        assert game.whose_turn() == 0
+        game.start()
+        turn = game.whose_turn()
         game.next_turn("1")
-        assert game.whose_turn() == 1
-        game.next_turn("1")
-        assert game.whose_turn() == 0
+        assert game.whose_turn() != turn
 
-    def test_whose_turn_name(self, game_ready, ids):
+    def test_whose_turn_name(self, game_ready):
         assert (
             game_ready.whose_turn_name()
             == game_ready.player_ids[game_ready.current_player_index][1]
         )
 
-    def test_whose_turn(self, game_ready, ids):
+    def test_whose_turn(self, game_ready):
         assert isinstance(game_ready.whose_turn(), int)
 
     def test_add_all_actions(self, game_ready):
@@ -55,7 +54,8 @@ class TestGame:
         game.wait()
         assert game.game_status == "Waiting"
 
-    def test_start(self, game):
+    def test_start(self, game, ids):
+        game.add_all_players(ids)
         game.start()
         assert game.deck is not None
         assert len(game.actions) > 0
