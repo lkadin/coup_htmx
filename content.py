@@ -217,6 +217,8 @@ class Content:
         for player in self.players.values():
             if player.id == self.user_id:
                 continue
+            if not player.influence():
+                continue
             self.show_other_players += f"""
                 <option value="{player.name}">{player.name}</option>
                 """
