@@ -89,12 +89,16 @@ class Action:
         action_status: str,
         second_player_required: bool,
         your_turn_only: bool = True,
+        can_be_blocked: bool = False,
+        can_be_challenged: bool = False,
     ) -> None:
         self.name = name
         self.coins_required = coins_required
         self.action_status = action_status
         self.second_player_required = second_player_required
         self.your_turn_only = your_turn_only
+        self.can_be_blocked = can_be_blocked
+        self.can_be_challenged = can_be_challenged
 
     def __repr__(self) -> str:
         return self.name
@@ -184,16 +188,18 @@ class Game:
             self.action_status,
             second_player_required,
             your_turn_only,
+            can_be_blocked,
+            can_be_challenged,
         ) in [
-            ("Assassinate", 3, "disabled", True, True),
-            ("Coup", 7, "disabled", True, True),
-            ("Steal", 0, "disabled", True, True),
-            ("Take_3_coins", 0, "disabled", False, True),
-            ("Foreign_aid", 0, "disabled", False, True),
-            ("Income", 0, "disabled", False, True),
-            ("Exchange", 0, "disabled", False, True),
-            ("Block", 0, "disabled", False, False),
-            ("Challenge", 0, "disabled", False, False),
+            ("Assassinate", 3, "disabled", True, True, True, True),
+            ("Coup", 7, "disabled", True, True, False, False),
+            ("Steal", 0, "disabled", True, True, True, True),
+            ("Take_3_coins", 0, "disabled", False, True, True, False),
+            ("Foreign_aid", 0, "disabled", False, True, True, False),
+            ("Income", 0, "disabled", False, True, False, False),
+            ("Exchange", 0, "disabled", False, True, False, True),
+            ("Block", 0, "disabled", False, False, False, False),
+            ("Challenge", 0, "disabled", False, False, False, False),
         ]:
             self.actions.append(
                 Action(
