@@ -113,7 +113,7 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
                 await process_message(websocket, user_id, message)
 
     except Exception as e:
-        message = f"{game.players[user_id].name} has disconnected"
+        message = f"{user_id} has disconnected"
         await manager.disconnect(user_id, websocket)
         await manager.broadcast(message, game)
         print(f"Exception = {e}")

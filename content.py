@@ -142,12 +142,15 @@ class Content:
         return self.turn
 
     def show_game_status(self):
-        self.game_status = f"""
-            <div hx-swap-oob="innerHTML:#game_status">
-            <h4>{self.game.players[self.user_id].name} - {self.game.game_status}</h4>
-            </div>
-            """
-        return self.game_status
+        try:
+            self.game_status = f"""
+                <div hx-swap-oob="innerHTML:#game_status">
+                <h4>{self.game.players[self.user_id].name} - {self.game.game_status}</h4>
+                </div>
+                """
+            return self.game_status
+        except KeyError:
+            return ""
 
     def show_history(self, message: str) -> str:
         self.history = """
@@ -245,9 +248,12 @@ class Content:
         return self.game_alert
 
     def show_player_alert(self, user_id):
-        self.player_alert = f"""
-        <div hx-swap-oob="innerHTML:#player_alerts" visible>
-        <h1 style="color: red;">{self.game.player(user_id).player_alert}</h1>
-        </div>
-        """
-        return self.player_alert
+        try:
+            self.player_alert = f"""
+            <div hx-swap-oob="innerHTML:#player_alerts" visible>
+            <h1 style="color: red;">{self.game.player(user_id).player_alert}</h1>
+            </div>
+            """
+            return self.player_alert
+        except AttributeError:
+            return ""
