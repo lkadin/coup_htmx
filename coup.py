@@ -132,7 +132,7 @@ class Game:
         self.player_ids = []
         self.ids = []
         self.block_in_progress = False
-        self.challemge_in_progress = False
+        self.challenge_in_progress = False
 
     def initial_deal(self):
         for _ in range(self.NUM_OF_CARDS):
@@ -166,6 +166,7 @@ class Game:
         if self.current_player_index >= len(self.players):
             self.current_player_index = 0
         self.clear_all_player_alerts()
+        self.clear_game_alerts()
         self.second_player = None
         self.current_action = Action("No_action", 0, "disabled", False)
         if self.game_over():
@@ -250,6 +251,16 @@ class Game:
         if not isinstance(action, Action):
             action = self.action_from_action_name(action)
 
+        if action.name == "Block":
+            if self.action_history[-1].action.can_be_blocked:
+                self.block_in_progress = True
+                self.game_alert = f"{self.player(self.user_id).name} is blocking"
+
+        if action.name == "Challenge":
+            if self.action_history[-1].action.can_be_challenged:
+                self.challenge_in_progress = True
+                self.game_alert = f"{self.player(self.user_id).name} is challenging"
+
         if action.name == "Start" and self.game_status == "Waiting":
             self.start()
             return
@@ -258,6 +269,8 @@ class Game:
             not self.your_turn(self.user_id)
             and not self.coup_in_progress
             and not self.assassinate_in_progress
+            and not self.block_in_progress
+            and not self.challenge_in_progress
         ):
             return
 
@@ -293,16 +306,6 @@ class Game:
 
         if action.name == "Assassinate":
             self.assassinate(self.user_id)
-
-        if action.name == "Block":
-            if self.action_history[-1].action.can_be_blocked:
-                self.block_in_progress = True
-                self.game_alert = f"Block in progress"
-
-        if action.name == "Challenge":
-            if self.action_history[-1].action.can_be_challenged:
-                self.challenge_in_progress = True
-                self.game_alert = f"Challenge in progress"
 
     def player(self, user_id) -> Player:
         self.user_id = user_id
@@ -497,6 +500,9 @@ class Game:
     def clear_all_player_alerts(self):
         for player in self.players.values():
             player.clear_player_alert()
+
+    def clear_game_alerts(self):
+        self.game_alert = ""
 
     def player_id_from_index(self, index: int):
         return self.player_ids[index][0]
