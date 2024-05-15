@@ -8,8 +8,6 @@ from connection_manager import ConnectionManager
 from coup import Game
 
 
-app = FastAPI()
-
 templates = Jinja2Templates(directory="templates")
 
 app = FastAPI()
