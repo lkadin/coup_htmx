@@ -297,10 +297,12 @@ class Game:
         if action.name == "Block":
             if self.action_history[-1].action.can_be_blocked:
                 self.block_in_progress = True
+                self.game_alert = f"Block in progress"
 
         if action.name == "Challenge":
             if self.action_history[-1].action.can_be_challenged:
                 self.challenge_in_progress = True
+                self.game_alert = f"Challenge in progress"
 
     def player(self, user_id) -> Player:
         self.user_id = user_id
