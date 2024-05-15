@@ -131,6 +131,8 @@ class Game:
         self.must_coup = False
         self.player_ids = []
         self.ids = []
+        self.block_in_progress = False
+        self.challemge_in_progress = False
 
     def initial_deal(self):
         for _ in range(self.NUM_OF_CARDS):
@@ -194,11 +196,11 @@ class Game:
             ("Assassinate", 3, "disabled", True, True, True, True),
             ("Coup", 7, "disabled", True, True, False, False),
             ("Steal", 0, "disabled", True, True, True, True),
-            ("Take_3_coins", 0, "disabled", False, True, True, False),
+            ("Take_3_coins", 0, "disabled", False, True, False, True),
             ("Foreign_aid", 0, "disabled", False, True, True, False),
             ("Income", 0, "disabled", False, True, False, False),
             ("Exchange", 0, "disabled", False, True, False, True),
-            ("Block", 0, "disabled", False, False, False, False),
+            ("Block", 0, "disabled", False, False, False, True),
             ("Challenge", 0, "disabled", False, False, False, False),
         ]:
             self.actions.append(
@@ -208,6 +210,8 @@ class Game:
                     self.action_status,
                     second_player_required,
                     your_turn_only,
+                    can_be_blocked,
+                    can_be_challenged,
                 )
             )
 
@@ -289,6 +293,14 @@ class Game:
 
         if action.name == "Assassinate":
             self.assassinate(self.user_id)
+
+        if action.name == "Block":
+            if self.action_history[-1].action.can_be_blocked:
+                self.block_in_progress = True
+
+        if action.name == "Challenge":
+            if self.action_history[-1].action.can_be_challenged:
+                self.challenge_in_progress = True
 
     def player(self, user_id) -> Player:
         self.user_id = user_id
