@@ -85,7 +85,7 @@ class TestGame:
         # Take_3_coins
         coins1 = game_ready.players[user_id].coins
         game_ready.process_action("Take_3_coins", user_id)
-        assert game_ready.players[user_id].coins == coins1
+        assert game_ready.players[user_id].coins == coins1 + 3
 
         # Steal
         coins1 = game_ready.players[user_id].coins
