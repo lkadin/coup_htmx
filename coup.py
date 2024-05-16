@@ -312,7 +312,7 @@ class Game:
         try:
             return self.players[self.user_id]
         except KeyError:
-            return None
+            return None  # type: ignore
 
     def player_id(self, name) -> str:
         for player_id in self.player_ids:
