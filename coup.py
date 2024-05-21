@@ -255,6 +255,11 @@ class Game:
             if self.action_history[-1].action.can_be_blocked:
                 self.block_in_progress = True
                 self.game_alert = f"{self.player(self.user_id).name} is blocking"
+                self.actions.append(Action("Accept_Block", 0, "enabled", False))
+
+        if action.name == "Accept_Block":
+            self.reverse_last_action()
+            self.block_in_progress = False
 
         if action.name == "Challenge":
             if self.action_history[-1].action.can_be_challenged:
@@ -506,6 +511,16 @@ class Game:
 
     def player_id_from_index(self, index: int):
         return self.player_ids[index][0]
+
+    def reverse_last_action(self):  # block accepted
+        prior_action = self.action_history[-1].action.name
+        player1 = self.action_history[-1].player1
+        player2 = self.action_history[-1].player2
+
+        self.coins = self.player(player1).coins
+
+        if prior_action == "Foreign_aid":
+            self.player(player1).add_remove_coins(-2)
 
 
 class History_action:

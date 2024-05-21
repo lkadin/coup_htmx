@@ -142,7 +142,12 @@ async def process_message(websocket, user_id, message):
             message_type="pick",
         )
 
-    if game.second_player or game.coup_in_progress or game.assassinate_in_progress:
+    if (
+        game.block_in_progress
+        or game.second_player
+        or game.coup_in_progress
+        or game.assassinate_in_progress
+    ):
         await manager.broadcast(
             f" {game.players[user_id].name}: {message['message_txt']}",
             game,
