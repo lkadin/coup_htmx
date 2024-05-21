@@ -154,7 +154,7 @@ class Game:
 
     def next_turn(self, user_id):
         self.user_id = user_id
-        self.add_history(self.user_id)
+        self.add_history()
         self.current_player_index += 1
         if self.current_player_index >= len(self.players):
             self.current_player_index = 0
@@ -203,6 +203,7 @@ class Game:
             ("Exchange", 0, "disabled", False, True, False, True),
             ("Block", 0, "disabled", False, False, False, True),
             ("Challenge", 0, "disabled", False, False, False, False),
+            ("Accept_Block", 0, "disabled", False, False, False, False),
         ]:
             self.actions.append(
                 Action(
@@ -256,10 +257,12 @@ class Game:
                 self.block_in_progress = True
                 self.game_alert = f"{self.player(self.user_id).name} is blocking"
                 self.actions.append(Action("Accept_Block", 0, "enabled", False))
+                self.add_history()
 
         if action.name == "Accept_Block":
             self.reverse_last_action()
             self.block_in_progress = False
+            self.next_turn(self.user_id)
 
         if action.name == "Challenge":
             if self.action_history[-1].action.can_be_challenged:
@@ -461,8 +464,7 @@ class Game:
     def clear_history(self):
         self.action_history = []
 
-    def add_history(self, user_id):
-        self.user_id = user_id
+    def add_history(self):
         if not self.current_action:
             return
         if self.current_action.name == "Coup":

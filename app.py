@@ -159,6 +159,7 @@ async def process_message(websocket, user_id, message):
     await manager.broadcast(
         f" {game.players[user_id].name}: {message['message_txt']}",
         game,
+        message_type="all",
     )
 
 
