@@ -262,7 +262,7 @@ class Game:
         if action.name == "Accept_Block":
             self.reverse_last_action()
             self.block_in_progress = False
-            self.next_turn(self.user_id)
+            self.add_history()
 
         if action.name == "Challenge":
             if self.action_history[-1].action.can_be_challenged:
@@ -515,9 +515,8 @@ class Game:
         return self.player_ids[index][0]
 
     def reverse_last_action(self):  # block accepted
-        prior_action = self.action_history[-1].action.name
-        player1 = self.action_history[-1].player1
-        player2 = self.action_history[-1].player2
+        prior_action = self.action_history[-2].action.name
+        player1 = self.action_history[-2].player1
 
         self.coins = self.player(player1).coins
 
