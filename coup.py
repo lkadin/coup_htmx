@@ -116,7 +116,6 @@ class Game:
         self.exchange_in_progress = False
         self.assassinate_in_progress = False
         self.coup_in_progress = False
-        self.assassinate_in_progress = False
         self.current_player_index = 0
         self.required_discard_qty = 0
         self.action_history = []
@@ -152,8 +151,7 @@ class Game:
         for player_id, player_name in self.player_ids:
             self.players[player_id] = Player(player_id, player_name)
 
-    def next_turn(self, user_id):
-        self.user_id = user_id
+    def next_turn(self):
         self.add_history()
         self.current_player_index += 1
         if self.current_player_index >= len(self.players):
@@ -257,12 +255,18 @@ class Game:
                 self.block_in_progress = True
                 self.game_alert = f"{self.player(self.user_id).name} is blocking"
                 self.actions.append(Action("Accept_Block", 0, "enabled", False))
-                self.add_history()
+                if (
+                    not self.action_history[-1].action.second_player_required
+                    or self.action_history[-1].action.second_player_required
+                    and self.second_player
+                ):
+                    self.add_history()
 
         if action.name == "Accept_Block":
             self.reverse_last_action()
             self.block_in_progress = False
             self.add_history()
+            self.clear_game_alerts()
 
         if action.name == "Challenge":
             if self.action_history[-1].action.can_be_challenged:
@@ -290,15 +294,15 @@ class Game:
 
         if action.name == "Take_3_coins":
             self.player(self.user_id).add_remove_coins(3)
-            self.next_turn(self.user_id)
+            self.next_turn()
 
         if action.name == "Income":
             self.player(self.user_id).add_remove_coins(1)
-            self.next_turn(self.user_id)
+            self.next_turn()
 
         if action.name == "Foreign_aid":
             self.player(self.user_id).add_remove_coins(2)
-            self.next_turn(self.user_id)
+            self.next_turn()
 
         if action.name == "Exchange":
             self.exchange(self.user_id)
@@ -331,7 +335,7 @@ class Game:
     def steal(self, give_to, steal_from):
         self.player(give_to).add_remove_coins(2)
         self.player(steal_from).add_remove_coins(-2)
-        self.next_turn(self.user_id)
+        self.next_turn()
 
     def exchange(self, user_id):
         self.user_id = user_id
@@ -356,7 +360,7 @@ class Game:
             self.player(self.user_id).discard(self.cards_to_exchange, self.deck)
             self.cards_to_exchange = []
             self.exchange_in_progress = False
-            self.next_turn(self.user_id)
+            self.next_turn()
 
     def action_from_action_name(self, action_name: str) -> Action:
         default_action = Action("No_action", 0, "disabled", False)
@@ -421,7 +425,7 @@ class Game:
             self.coup_in_progress = False
             self.couping_player = ""
             self.must_coup = False
-            self.next_turn(self.user_id)
+            self.next_turn()
         else:
             if (
                 not self.card_to_lose
@@ -444,6 +448,7 @@ class Game:
             self.assassinate_in_progress = True
             self.player_to_assassinate = self.second_player
             self.assassinating_player = self.player(self.user_id).id
+            self.add_history()
             self.second_player = None
 
         if self.card_to_lose and isinstance(self.card_to_lose, str):
@@ -452,7 +457,7 @@ class Game:
             self.card_to_lose = None
             self.assassinate_in_progress = False
             self.assassinating_player = ""
-            self.next_turn(self.user_id)
+            self.next_turn()
         else:
             if (
                 not self.card_to_lose
@@ -515,13 +520,15 @@ class Game:
         return self.player_ids[index][0]
 
     def reverse_last_action(self):  # block accepted
-        prior_action = self.action_history[-2].action.name
-        player1 = self.action_history[-2].player1
+        prior_action = self.action_history[-1].action.name
+        player1 = self.action_history[-1].player1
 
         self.coins = self.player(player1).coins
 
         if prior_action == "Foreign_aid":
             self.player(player1).add_remove_coins(-2)
+        if prior_action == "Assassinate":
+            self.assassinate_in_progress = False
 
 
 class History_action:

@@ -21,7 +21,7 @@ class TestGame:
         game.add_all_players(ids)
         game.start()
         turn = game.whose_turn()
-        game.next_turn("1")
+        game.next_turn()
         assert game.whose_turn() != turn
 
     def test_whose_turn_name(self, game_ready):
