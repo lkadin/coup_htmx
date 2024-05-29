@@ -158,11 +158,11 @@ class Content:
         <div hx-swap-oob="innerHTML:#history">
         """
         for history_action in self.game.action_history[::-1]:
-            player1_name = self.game.player(history_action.player1).name
+            player1_name = history_action.player1
             if not history_action.player2:
                 player2_name = ""
             else:
-                player2_name = self.game.player(history_action.player2).name
+                player2_name = self.game.player(history_action.player2)
             self.history += f"""
             {player1_name} {history_action.action} {player2_name}
             <br>

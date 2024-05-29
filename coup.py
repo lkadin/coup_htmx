@@ -111,6 +111,7 @@ class Game:
         self.game_status = "Not started"
         self.actions = []
         self.current_action = Action("No_action", 0, "disabled", False)
+        self.current_action_player_id = ""
         self.second_player = None
         self.cards_to_exchange: list = []
         self.exchange_in_progress = False
@@ -239,8 +240,7 @@ class Game:
         self.clear_history()
         self.current_player_index = random.randint(0, len(self.players) - 1)
 
-    def your_turn(self, user_id: str) -> bool:
-        self.user_id = user_id
+    def your_turn(self) -> bool:
         whose_turn = self.whose_turn_name()
         name = self.players[self.user_id].name
         return whose_turn == name
@@ -251,6 +251,8 @@ class Game:
             action = self.action_from_action_name(action)
 
         if action.name == "Block":
+            if not self.action_history:
+                return
             if self.action_history[-1].action.can_be_blocked:
                 self.block_in_progress = True
                 self.game_alert = f"{self.player(self.user_id).name} is blocking"
@@ -269,6 +271,8 @@ class Game:
             self.clear_game_alerts()
 
         if action.name == "Challenge":
+            if not self.action_history:
+                return
             if self.action_history[-1].action.can_be_challenged:
                 self.challenge_in_progress = True
                 self.game_alert = f"{self.player(self.user_id).name} is challenging"
@@ -278,7 +282,7 @@ class Game:
             return
 
         if (
-            not self.your_turn(self.user_id)
+            not self.your_turn()
             and not self.coup_in_progress
             and not self.assassinate_in_progress
             and not self.block_in_progress
@@ -320,9 +324,8 @@ class Game:
             self.assassinate(self.user_id)
 
     def player(self, user_id) -> Player:
-        self.user_id = user_id
         try:
-            return self.players[self.user_id]
+            return self.players[user_id]
         except KeyError:
             return None  # type: ignore
 
@@ -372,6 +375,7 @@ class Game:
     def set_current_action(self, action_name: str, user_id: str):
         self.user_id = user_id
         self.current_action = self.action_from_action_name(action_name)
+        self.current_action_player_id = user_id
         self.must_coup = False
         if (
             self.check_coins(self.user_id) == -1 and self.current_action.name != "Coup"
@@ -382,7 +386,7 @@ class Game:
         if self.check_coins(self.user_id) == 1:
             return
         self.current_action = self.action_from_action_name(action_name)
-        if self.current_action.your_turn_only and not self.your_turn(self.user_id):
+        if self.current_action.your_turn_only and not self.your_turn():
             return
 
     def get_current_action(self):
@@ -479,7 +483,7 @@ class Game:
         else:
             self.player2 = self.second_player
         h1 = History_action(
-            self.player_ids[self.current_player_index][0],
+            self.player(self.current_action_player_id),
             self.player2,
             self.current_action,
         )
@@ -520,13 +524,15 @@ class Game:
         return self.player_ids[index][0]
 
     def reverse_last_action(self):  # block accepted
+        if not self.action_history:
+            return
         prior_action = self.action_history[-1].action.name
-        player1 = self.action_history[-1].player1
-
-        self.coins = self.player(player1).coins
 
         if prior_action == "Foreign_aid":
+            player1 = self.action_history[-1].player1
             self.player(player1).add_remove_coins(-2)
+            self.coins = self.player(player1).coins
+
         if prior_action == "Assassinate":
             self.assassinate_in_progress = False
 
@@ -552,7 +558,7 @@ def main():
     print(game.players)
     print(type(game.whose_turn()))
     print(game.player_id("Lee"))
-    print(game.your_turn("1"))
+    print(game.your_turn())
     print(game.whose_turn_name())
     game.process_action(Action("Exchange", 0, "enabled", False), "1")
     print(game.players["1"])

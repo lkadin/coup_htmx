@@ -44,6 +44,7 @@ def game_ready(game, ids):
     game.deck = Deck()
     game.add_all_players(ids)
     game.start()
+    game.user_id = "1"
     return game
 
 

@@ -61,8 +61,7 @@ class TestGame:
         assert len(game.actions) > 0
 
     def test_your_turn(self, game_ready):
-        user_id = "1"
-        assert isinstance(game_ready.your_turn(user_id), bool)
+        assert isinstance(game_ready.your_turn(), bool)
 
     def test_player(self, game_ready, ids):
         assert isinstance(game_ready.player("1"), Player)
@@ -79,9 +78,8 @@ class TestGame:
         assert isinstance(game_ready.action_from_action_name("Assassinate"), Action)
 
     def test_process_action(self, game_ready):
-        user_id = str(int(game_ready.whose_turn()) + 1)
         for action in game_ready.actions:
-            assert game_ready.process_action(action, user_id) is None
+            assert game_ready.process_action(action, game_ready.user_id) is None
 
     def test_process_action_steal(self, game_ready):
         user_id = str(int(game_ready.whose_turn()) + 1)
