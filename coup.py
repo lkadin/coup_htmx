@@ -58,6 +58,7 @@ class Player:
 
     def add_remove_coins(self, num_of_coins: int):
         self.coins += num_of_coins
+        pass
 
     def lose_influence(self, cardname):
         self.cardname = cardname
@@ -526,12 +527,11 @@ class Game:
     def reverse_last_action(self):  # block accepted
         if not self.action_history:
             return
-        prior_action = self.action_history[-1].action.name
+        prior_action = self.action_history[-2].action.name
 
         if prior_action == "Foreign_aid":
-            player1 = self.action_history[-1].player1
-            self.player(player1).add_remove_coins(-2)
-            self.coins = self.player(player1).coins
+            player1 = self.action_history[-2].player1
+            player1.add_remove_coins(-2)
 
         if prior_action == "Assassinate":
             self.assassinate_in_progress = False

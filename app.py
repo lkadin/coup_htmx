@@ -6,7 +6,7 @@ from fastapi.responses import HTMLResponse
 import uvicorn
 from connection_manager import ConnectionManager
 from coup import Game
-
+import traceback
 
 templates = Jinja2Templates(directory="templates")
 
@@ -115,6 +115,7 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
         await manager.disconnect(user_id, websocket)
         await manager.broadcast(message, game)
         print(f"Exception = {e}")
+        print(traceback.format_exc())
 
 
 async def process_message(websocket, user_id, message):
