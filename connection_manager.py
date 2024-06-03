@@ -20,6 +20,7 @@ class ConnectionManager:
 
     async def broadcast(self, message: str, game: Game, message_type: str = "all"):
         for user_id, websocket in self.active_connections.items():
+            game.user_id = user_id
             content = Content(game, user_id)
 
             if message_type in ("all", "alert"):
@@ -54,10 +55,10 @@ class ConnectionManager:
                 table = content.show_actions()
                 await self.send_personal_message(table, websocket)
 
-            if message_type in ("pick") and self.game.your_turn(user_id):
+            if message_type in ("pick") and self.game.your_turn():
                 table = content.pick_second_player()
                 await self.send_personal_message(table, websocket)
 
-            if message_type in ("hide") and self.game.your_turn(user_id):
+            if message_type in ("hide") and self.game.your_turn():
                 table = content.hide_second_player()
                 await self.send_personal_message(table, websocket)

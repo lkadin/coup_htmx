@@ -170,7 +170,7 @@ class TestGame:
     def test_set_second_player(self, game_ready):
         player_name = "Lee"
         game_ready.set_second_player(player_name)
-        assert game_ready.second_player == player_name
+        assert game_ready.second_player_name == player_name
 
     def test_check_coins(self, game_ready):
         self.user_id = "1"
@@ -191,24 +191,26 @@ class TestGame:
 
     def test_coup(self, game_ready):
         self.user_id = "1"
-        game_ready.couping_player = self.user_id
+        game_ready.current_action = game_ready.action_from_action_name("Coup")
+        game_ready.couping_assassinating_player = game_ready.player(self.user_id)
         game_ready.players["1"].coins = 8
-        game_ready.player_to_coup = "2"
-        game_ready.coup_in_progress = True
+        game_ready.player_id_to_coup_assassinate = "2"
+        game_ready.coup_assassinate_in_progress = True
         game_ready.players["2"].hand = [Card("captain"), Card("duke")]
-        game_ready.card_to_lose = "captain"
-        game_ready.coup(self.user_id)
+        game_ready.card_name_to_lose = "captain"
+        game_ready.coup_assassinate(self.user_id)
         assert game_ready.player("2").influence() == 1
         assert game_ready.player("1").coins == 1
 
     def test_assassinate(self, game_ready):
         self.user_id = "1"
-        game_ready.assassinating_player = self.user_id
+        game_ready.current_action = game_ready.action_from_action_name("Assassinate")
+        game_ready.couping_assassinating_player = game_ready.player(self.user_id)
         game_ready.players["1"].coins = 6
-        game_ready.player_to_assassinate = "2"
-        game_ready.assassinate_in_progress = True
+        game_ready.player_id_to_coup_assassinate = "2"
+        game_ready.coup_assassinate_in_progress = True
         game_ready.players["2"].hand = [Card("captain"), Card("duke")]
-        game_ready.card_to_lose = "captain"
-        game_ready.assassinate(self.user_id)
+        game_ready.card_name_to_lose = "captain"
+        game_ready.coup_assassinate(self.user_id)
         assert game_ready.player("2").influence() == 1
         assert game_ready.player("1").coins == 3

@@ -25,28 +25,9 @@ class Content:
                     <img src='/static/jpg/{card.value}.jpg' {card.value} style=opacity:.5;>
                     """
 
-        def coup(card):
+        def coup_assassinate(card):
             if (
-                self.user_id == self.game.player_to_coup
-                and player.name == self.players[self.user_id].name
-                and card.card_status == "down"
-            ):
-                self.display_hand += f"""
-                <input type="checkbox" name="cardnames" value="{card.value}" <td><img src="/static/jpg/{card.value}.jpg" height="350">
-                """
-            else:
-                if card.card_status == "down":
-                    self.display_hand += f"""
-                    <img src='/static/jpg/down.png' {card.value} style=opacity:1.0;>
-                    """
-                else:
-                    self.display_hand += f"""
-                    <img src='/static/jpg/{card.value}.jpg' {card.value} style=opacity:.5;>
-                    """
-
-        def assassinate(card):
-            if (
-                self.user_id == self.game.player_to_assassinate
+                self.user_id == self.game.player_id_to_coup_assassinate
                 and player.name == self.players[self.user_id].name
                 and card.card_status == "down"
             ):
@@ -86,10 +67,13 @@ class Content:
                 """
 
         # coup - select card to lose
-        elif self.game.coup_in_progress and self.user_id == self.game.player_to_coup:
+        elif (
+            self.game.coup_assassinate_in_progress
+            and self.user_id == self.game.player_id_to_coup_assassinate
+        ):
             self.display_hand = '<form hx-ws="send" hx-target="cards">'
             for card in player.hand:
-                coup(card)
+                coup_assassinate(card)
             if player.name == self.players[self.user_id].name:
                 self.display_hand += """
                 <p> Which card do you want to discard?</p>
@@ -98,12 +82,12 @@ class Content:
                 """
         # assassinate - select card to lose
         elif (
-            self.game.assassinate_in_progress
-            and self.user_id == self.game.player_to_assassinate
+            self.game.coup_assassinate_in_progress
+            and self.user_id == self.game.player_id_to_coup_assassinate
         ):
             self.display_hand = '<form hx-ws="send" hx-target="cards">'
             for card in player.hand:
-                assassinate(card)
+                coup_assassinate(card)
             if player.name == self.players[self.user_id].name:
                 self.display_hand += """
                 <p> Which card do you want to discard?</p>
@@ -162,7 +146,7 @@ class Content:
             if not history_action.player2:
                 player2_name = ""
             else:
-                player2_name = self.game.player(history_action.player2)
+                player2_name = history_action.player2.name
             self.history += f"""
             {player1_name} {history_action.action} {player2_name}
             <br>
