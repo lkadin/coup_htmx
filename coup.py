@@ -129,6 +129,7 @@ class Game:
         self.player_ids = []
         self.ids = []
         self.block_in_progress: bool = False
+        self.blocking_player: Player | None = None
         self.challenge_in_progress: bool = False
 
     def initial_deal(self) -> None:
@@ -252,6 +253,7 @@ class Game:
                 return
             if self.action_history[-1].action.can_be_blocked:
                 self.block_in_progress = True
+                self.blocking_player = self.player(self.user_id)
                 self.game_alert = f"{self.player(self.user_id).name} is blocking"
                 self.actions.append(Action("Accept_Block", 0, "enabled", False))
                 if (
@@ -264,6 +266,7 @@ class Game:
         if action.name == "Accept_Block":
             self.reverse_last_action()
             self.block_in_progress = False
+            self.blocking_player = None
             self.add_history()
             self.clear_game_alerts()
 
@@ -422,7 +425,7 @@ class Game:
             self.player(self.player_id_to_coup_assassinate).lose_influence(
                 self.card_name_to_lose
             )
-            self.couping_assassinating_player.add_remove_coins(
+            self.couping_assassinating_player.add_remove_coins(  # type: ignore
                 (self.current_action.coins_required * -1)
             )
             self.card_name_to_lose = ""
@@ -444,17 +447,23 @@ class Game:
     def add_history(self):
         if not self.current_action:
             return
-        if self.current_action.name == "Coup":
+        self.player2 = self.second_player_name
+        if self.current_action.name in ("Coup", "Assassinate"):
             self.player2 = self.player(self.player_id_to_coup_assassinate)
-        elif self.current_action.name == "Assassinate":
-            self.player2 = self.player(self.player_id_to_coup_assassinate)
+
+        if self.current_action.name == "Accept_block":
+            h1 = History_action(
+                self.player(self.blocking_player),
+                self.player2,
+                self.current_action,
+            )
         else:
-            self.player2 = self.second_player_name
-        h1 = History_action(
-            self.player(self.current_action_player_id),
-            self.player2,
-            self.current_action,
-        )
+            h1 = History_action(
+                self.player(self.current_action_player_id),
+                self.player2,
+                self.current_action,
+            )
+
         self.action_history.append(h1)
 
     def game_over(self):
