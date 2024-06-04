@@ -267,8 +267,8 @@ class Game:
             self.reverse_last_action()
             self.block_in_progress = False
             self.blocking_player = None
-            self.add_history()
             self.clear_game_alerts()
+            self.next_turn()
 
         if action.name == "Challenge":
             if not self.action_history:
