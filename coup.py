@@ -266,6 +266,7 @@ class Game:
         if action.name == "Accept_Block":
             self.reverse_last_action()
             self.block_in_progress = False
+            self.coup_assassinate_in_progress = False
             self.blocking_player = None
             self.clear_game_alerts()
             self.next_turn()
