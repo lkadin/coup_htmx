@@ -251,6 +251,8 @@ class Game:
         if action.name == "Block":
             if not self.action_history:
                 return
+            if self.user_id == self.action_history[-1].player1.id:
+                return  # can't block yourself
             if self.action_history[-1].action.can_be_blocked:
                 self.block_in_progress = True
                 self.blocking_player = self.player(self.user_id)
@@ -264,6 +266,9 @@ class Game:
                     self.add_history()
 
         if action.name == "Accept_Block":
+            if not self.block_in_progress:
+                return  # Can't accept block if no block is in progressLw
+
             self.reverse_last_action()
             self.block_in_progress = False
             self.coup_assassinate_in_progress = False
