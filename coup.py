@@ -247,7 +247,8 @@ class Game:
         self.user_id = user_id
         if not isinstance(action, Action):
             action = self.action_from_action_name(action)
-
+        if self.block_in_progress and action.name != "Accept_Block":
+            return  # Can't do anything if block in progress
         if action.name == "Block":
             if not self.action_history:
                 return
