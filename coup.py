@@ -287,7 +287,11 @@ class Game:
                 self.challenge_in_progress = True
                 self.game_alert = f"{self.player(self.user_id).name} is challenging"
 
-        if action.name == "Start" and self.game_status == "Waiting":
+        if (
+            action.name == "Start"
+            and self.game_status == "Waiting"
+            and len(self.players) > 1
+        ):
             self.start()
             return
 
