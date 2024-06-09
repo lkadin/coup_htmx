@@ -244,6 +244,7 @@ class Game:
         return whose_turn == name
 
     def process_action(self, action: Action, user_id: str):
+        print(f"processing {action=} {user_id=}")
         self.user_id = user_id
         if not isinstance(action, Action):
             action = self.action_from_action_name(action)
@@ -259,25 +260,24 @@ class Game:
                 self.blocking_player = self.player(self.user_id)
                 self.game_alert = f"{self.player(self.user_id).name} is blocking"
                 self.actions.append(Action("Accept_Block", 0, "enabled", False))
-                if (
-                    not self.action_history[-1].action.second_player_required
-                    or self.action_history[-1].action.second_player_required
-                    and self.second_player_name
-                ):
-                    self.add_history()
+                self.add_history()
 
         if action.name == "Accept_Block":
             if not self.block_in_progress:
+                action = None
                 return  # Can't accept block if no block is in progressLw
             if self.user_id == self.action_history[-1].player1.id:
                 return  # can't accept your own block
 
             self.reverse_last_action()
+            if self.coup_assassinate_in_progress:
+                self.next_turn()
+            else:
+                self.add_history()
             self.block_in_progress = False
             self.coup_assassinate_in_progress = False
             self.blocking_player = None
             self.clear_game_alerts()
-            self.next_turn()
 
         if action.name == "Challenge":
             if not self.action_history:
