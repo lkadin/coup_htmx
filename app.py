@@ -43,8 +43,8 @@ async def read_item(request: Request, user_id: str, user_name: str):
             return True
 
     def already_in_game(user_name):
-        for player in game.player_ids:
-            if player[1] == user_name:
+        for player in game.players:
+            if (game.players[player].name) == user_name:
                 return True
 
     def already_logged_in(user_id):  # websocket (user_id) already in use
