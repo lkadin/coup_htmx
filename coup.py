@@ -264,7 +264,7 @@ class Game:
 
         if action.name == "Accept_Block":
             if not self.block_in_progress:
-                action = None
+                action = None  # type: ignore
                 return  # Can't accept block if no block is in progressLw
             if self.user_id == self.action_history[-1].player1.id:
                 return  # can't accept your own block
