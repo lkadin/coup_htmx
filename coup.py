@@ -126,8 +126,6 @@ class Game:
         self.players_remaining = []
         self.user_id: str = ""
         self.must_coup_assassinate: bool = False
-        self.player_ids = []
-        self.ids = []
         self.block_in_progress: bool = False
         self.blocking_player: Player | None = None
         self.challenge_in_progress: bool = False
@@ -141,8 +139,6 @@ class Game:
         if player_name in [player.name for player in self.players.values()]:
             return False
         self.players[player_id] = Player(player_id, player_name)
-        self.ids.append((player_id, player_name))
-        self.add_all_players(self.ids)
         return True
 
     def add_all_players(self, player_ids: list[str]) -> None:
@@ -176,7 +172,9 @@ class Game:
 
     def whose_turn_name(self) -> str | None:
         if self.game_status == "In progress":
-            return self.player_ids[self.current_player_index][1]
+            for i, player in enumerate(self.players):
+                if i == self.current_player_index:
+                    return self.players[player].name
         else:
             return None
 
@@ -253,8 +251,13 @@ class Game:
         if action.name == "Block":
             if not self.action_history:
                 return
-            if self.user_id == self.action_history[-1].player1.id:
-                return  # can't block yourself
+            try:
+                if self.user_id == self.action_history[-1].player1.id:
+                    return  # can't block yourself
+            except AttributeError as e:
+                print(e)
+                print(self.action_history)
+
             if self.action_history[-1].action.can_be_blocked:
                 self.block_in_progress = True
                 self.blocking_player = self.player(self.user_id)
@@ -344,9 +347,9 @@ class Game:
             return None  # type: ignore
 
     def player_id(self, name) -> str:
-        for player_id in self.player_ids:
-            if player_id[1] == name:
-                return player_id[0]
+        for i, player in enumerate(self.players):
+            if self.players[player].name == name:
+                return self.players[player].id
         return ""
 
     def steal(self, give_to, steal_from):
@@ -512,8 +515,11 @@ class Game:
     def clear_game_alerts(self):
         self.game_alert = ""
 
-    def player_id_from_index(self, index: int):
-        return self.player_ids[index][0]
+    def player_id_from_index(self, index: int) -> str:
+        for i, player in enumerate(self.players):
+            if i == index:
+                return self.players[player].id
+        return ""
 
     def reverse_last_action(self):
         if not self.action_history:
@@ -547,7 +553,7 @@ def main():
     game.start()
     print(game.actions)
     print(game.players)
-    print(type(game.whose_turn()))
+    print(game.whose_turn())
     print(game.player_id("Lee"))
     print(game.your_turn())
     print(game.whose_turn_name())
