@@ -11,23 +11,18 @@ class TestGame:
         assert game.game_status == "Not started"
         assert game.actions == []
 
-    def test_add_all_players(self, game, ids):
-        game.add_all_players(ids)
-        assert len(game.players) == 2
-        assert "1" in game.players
-        assert "2" in game.players
-
-    def test_next_turn(self, game, ids):
-        game.add_all_players(ids)
-        game.start()
-        turn = game.whose_turn()
-        game.next_turn()
-        assert game.whose_turn() != turn
+    def test_next_turn(self, game_ready):
+        game_ready.start()
+        turn = game_ready.whose_turn()
+        game_ready.next_turn()
+        assert game_ready.whose_turn() != turn
 
     def test_whose_turn_name(self, game_ready):
         assert (
             game_ready.whose_turn_name()
-            == game_ready.player_ids[game_ready.current_player_index][1]
+            == game_ready.players[
+                game_ready.player_index_to_id(game_ready.current_player_index)
+            ].name
         )
 
     def test_whose_turn(self, game_ready):
@@ -54,11 +49,10 @@ class TestGame:
         game.wait()
         assert game.game_status == "Waiting"
 
-    def test_start(self, game, ids):
-        game.add_all_players(ids)
-        game.start()
-        assert game.deck is not None
-        assert len(game.actions) > 0
+    def test_start(self, game_ready):
+        game_ready.start()
+        assert game_ready.deck is not None
+        assert len(game_ready.actions) > 0
 
     def test_your_turn(self, game_ready):
         assert isinstance(game_ready.your_turn(), bool)
@@ -92,41 +86,41 @@ class TestGame:
 
     def test_process_action_start(self, game_ready):
         action = Action("Start", 0, "enabled", False)
-        user_id = game_ready.player_ids[game_ready.current_player_index][0]
+        user_id = game_ready.player_index_to_id(game_ready.current_player_index)
         game_ready.set_game_status("Waiting")
         game_ready.process_action(action, user_id)
         assert game_ready.game_status == "In progress"
 
     def test_process_action_take_3_coins(self, game_ready):
         action = "Take_3_coins"
-        user_id = game_ready.player_ids[game_ready.current_player_index][0]
+        user_id = game_ready.player_index_to_id(game_ready.current_player_index)
         coins = game_ready.players[user_id].coins
         game_ready.process_action(action, user_id)
         assert game_ready.players[user_id].coins == coins + 3
 
     def test_process_action_income(self, game_ready):
         action = "Income"
-        user_id = game_ready.player_ids[game_ready.current_player_index][0]
+        user_id = game_ready.player_index_to_id(game_ready.current_player_index)
         coins = game_ready.players[user_id].coins
         game_ready.process_action(action, user_id)
         assert game_ready.players[user_id].coins == coins + 1
 
     def test_process_action_foreign_aid(self, game_ready):
         action = "Foreign_aid"
-        user_id = game_ready.player_ids[game_ready.current_player_index][0]
+        user_id = game_ready.player_index_to_id(game_ready.current_player_index)
         coins = game_ready.players[user_id].coins
         game_ready.process_action(action, user_id)
         assert game_ready.players[user_id].coins == coins + 2
 
     def test_block_foreign_aid(self, game_ready):
         action = "Foreign_aid"
-        user_id = game_ready.player_ids[game_ready.current_player_index][0]
+        user_id = game_ready.player_index_to_id(game_ready.current_player_index)
         coins = game_ready.players[user_id].coins
         game_ready.process_action(action, user_id)
         assert game_ready.players[user_id].coins == coins + 2
 
     def test_process_action_exchange(self, game_ready):
-        user_id = game_ready.player_ids[game_ready.current_player_index][0]
+        user_id = game_ready.player_index_to_id(game_ready.current_player_index)
         action = "Exchange"
         game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
         game_ready.process_action(action, user_id)
@@ -149,7 +143,7 @@ class TestGame:
         assert game_ready.player_id("Lee") == "1"
 
     def test_exchange(self, game_ready):
-        user_id = game_ready.player_ids[game_ready.current_player_index][0]
+        user_id = game_ready.player_index_to_id(game_ready.current_player_index)
         game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
         game_ready.exchange(user_id)
         assert len(game_ready.players[user_id].hand) == 4

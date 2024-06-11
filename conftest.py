@@ -42,7 +42,8 @@ def ids():
 @pytest.fixture
 def game_ready(game, ids):
     game.deck = Deck()
-    game.add_all_players(ids)
+    for player_id, player_name in ids:
+        game.players[player_id] = Player(player_id, player_name)
     game.start()
     game.user_id = "1"
     return game

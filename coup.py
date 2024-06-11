@@ -141,11 +141,6 @@ class Game:
         self.players[player_id] = Player(player_id, player_name)
         return True
 
-    def add_all_players(self, player_ids: list[str]) -> None:
-        self.player_ids = player_ids
-        for player_id, player_name in self.player_ids:
-            self.players[player_id] = Player(player_id, player_name)
-
     def next_turn(self) -> None:
         self.add_history()
         self.current_player_index += 1
@@ -177,6 +172,13 @@ class Game:
                     return self.players[player].name
         else:
             return None
+
+    def player_index_to_id(self, index: int) -> str:
+        for i, player in enumerate(self.players):
+            if i == self.current_player_index:
+                return self.players[player].id
+        else:
+            return ""
 
     def add_all_actions(self):
         self.actions = []
@@ -428,6 +430,9 @@ class Game:
             not self.second_player_name and not self.coup_assassinate_in_progress
         ):  # Need to pick second player
             return
+        self.couping_assassinating_player.add_remove_coins(  # type: ignore
+            (self.current_action.coins_required * -1)
+        )
         if (
             not self.card_name_to_lose
             and not self.coup_assassinate_in_progress
@@ -438,9 +443,6 @@ class Game:
             self.couping_assassinating_player = self.player(self.user_id)
             self.add_history()
             self.second_player_name = ""
-            self.couping_assassinating_player.add_remove_coins(  # type: ignore
-                (self.current_action.coins_required * -1)
-            )
 
         if self.card_name_to_lose and isinstance(self.card_name_to_lose, str):
             self.player(self.player_id_to_coup_assassinate).lose_influence(
@@ -547,7 +549,8 @@ class History_action:
 def main():
     ids = [("1", "Lee"), ("2", "Adina")]
     game = Game()
-    game.add_all_players(ids)
+    for player_id, player_name in ids:
+        game.players[player_id] = Player(player_id, player_name)
     game.wait()
     print(game.actions)
     game.start()
