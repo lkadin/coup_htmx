@@ -438,13 +438,13 @@ class Game:
             self.couping_assassinating_player = self.player(self.user_id)
             self.add_history()
             self.second_player_name = ""
+            self.couping_assassinating_player.add_remove_coins(  # type: ignore
+                (self.current_action.coins_required * -1)
+            )
 
         if self.card_name_to_lose and isinstance(self.card_name_to_lose, str):
             self.player(self.player_id_to_coup_assassinate).lose_influence(
                 self.card_name_to_lose
-            )
-            self.couping_assassinating_player.add_remove_coins(  # type: ignore
-                (self.current_action.coins_required * -1)
             )
             self.card_name_to_lose = ""
             self.coup_assassinate_in_progress = False
