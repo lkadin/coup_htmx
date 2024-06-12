@@ -141,11 +141,6 @@ class Game:
         self.players[player_id] = Player(player_id, player_name)
         return True
 
-    # def add_all_players(self, player_ids: list[str]) -> None:
-    #     self.player_ids = player_ids
-    #     for player_id, player_name in self.player_ids:
-    #         self.players[player_id] = Player(player_id, player_name)
-
     def next_turn(self) -> None:
         self.add_history()
         self.current_player_index += 1
