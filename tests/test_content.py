@@ -29,7 +29,10 @@ def test_hide_second_player(content):
     assert len(content.hide_second_player()) > 10
 
 
-def test_pick_second_player(content):
+def test_pick_second_player(content, game_ready):
+    game_ready.players[game_ready.user_id].id = game_ready.player_index_to_id(
+        game_ready.whose_turn()
+    )
     assert len(content.pick_second_player()) > 10
 
 
