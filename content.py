@@ -196,7 +196,7 @@ class Content:
             return ""
         if (
             self.game.player_index_to_id(self.game.whose_turn())
-            != self.players[self.user_id]
+            != self.players[self.user_id].id
         ):
             return ""
         self.show_other_players = """

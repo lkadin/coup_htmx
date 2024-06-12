@@ -344,6 +344,11 @@ class Game:
             self.coup_assassinate(self.user_id)
 
         if action.name == "Assassinate":
+            if (
+                self.player_index_to_id(self.whose_turn())
+                != self.players[self.user_id].id
+            ):
+                return ""
             self.coup_assassinate(self.user_id)
 
     def player(self, user_id) -> Player:

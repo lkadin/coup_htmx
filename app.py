@@ -136,7 +136,11 @@ async def process_message(websocket, user_id, message):
     if game.coup_assassinate_in_progress and not game.current_action.name == "Block":
         game.card_name_to_lose = message.get("cardnames")
 
-    if game.current_action.second_player_required and not game.second_player_name:
+    if (
+        game.current_action.second_player_required
+        and not game.second_player_name
+        and game.player_index_to_id(game.whose_turn()) == game.players[game.user_id].id
+    ):
         await manager.broadcast(
             f" {game.players[user_id].name}: {message['message_txt']}",
             game,
