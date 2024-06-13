@@ -248,7 +248,7 @@ class Game:
         self.user_id = user_id
         if not isinstance(action, Action):
             action = self.action_from_action_name(action)
-        if self.block_in_progress and action.name != "Accept_Block":
+        if self.block_in_progress and self.current_action.name != "Accept_Block":
             return  # Can't do anything if block in progress
         if action.name == "Block":
             if not self.action_history:
@@ -289,6 +289,7 @@ class Game:
             self.clear_game_alerts()
 
         if action.name == "Challenge":
+            return  ######################################################## Not implemented yet
             if not self.action_history:
                 return
             if self.user_id == self.action_history[-1].player1.id:
@@ -340,10 +341,9 @@ class Game:
         if action.name == "Steal" and self.second_player_name:
             self.steal(give_to=self.user_id, steal_from=self.second_player_name)
 
-        if action.name == "Coup":
-            self.coup_assassinate(self.user_id)
-
-        if action.name == "Assassinate":
+        if action.name in ("Assassinate", "Coup"):
+            if self.block_in_progress:
+                return  # must finish block
             if (
                 self.player_index_to_id(self.whose_turn())
                 != self.players[self.user_id].id

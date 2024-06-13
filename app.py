@@ -140,6 +140,7 @@ async def process_message(websocket, user_id, message):
         game.current_action.second_player_required
         and not game.second_player_name
         and game.player_index_to_id(game.whose_turn()) == game.players[game.user_id].id
+        and not game.block_in_progress
     ):
         await manager.broadcast(
             f" {game.players[user_id].name}: {message['message_txt']}",
