@@ -344,11 +344,12 @@ class Game:
         if action.name in ("Assassinate", "Coup"):
             if self.block_in_progress:
                 return  # must finish block
-            if (
-                self.player_index_to_id(self.whose_turn())
-                != self.players[self.user_id].id
-            ):
-                return ""
+            # if (
+            #     self.player_index_to_id(self.whose_turn())
+            #     != self.players[self.user_id].id
+            #     and not self.card_name_to_lose
+            # ):
+            #     return ""
             self.coup_assassinate(self.user_id)
 
     def player(self, user_id) -> Player:
@@ -457,11 +458,11 @@ class Game:
             self.player(self.player_id_to_coup_assassinate).lose_influence(
                 self.card_name_to_lose
             )
-            self.card_name_to_lose = ""
             self.coup_assassinate_in_progress = False
             self.couping_assassinating_player = None
             self.must_coup_assassinate = False
             self.next_turn()
+            self.card_name_to_lose = ""
         else:
             if (
                 not self.card_name_to_lose
@@ -477,8 +478,12 @@ class Game:
         if not self.current_action:
             return
         self.player2 = self.second_player_name
+
         if self.current_action.name in ("Coup", "Assassinate"):
-            self.player2 = self.player(self.player_id_to_coup_assassinate)
+            if self.card_name_to_lose:
+                return
+            else:
+                self.player2 = self.player(self.player_id_to_coup_assassinate)
 
         if self.current_action.name == "Accept_block":
             h1 = History_action(
