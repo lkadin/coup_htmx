@@ -1,3 +1,2 @@
-First attempt at FastAPI with websockets
-
-Issues - 
+# coup_htmx
+Coup Game implemented with HTMX and FastApi
