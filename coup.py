@@ -264,7 +264,7 @@ class Game:
                 self.block_in_progress = True
                 self.blocking_player = self.player(self.user_id)
                 self.game_alert = f"{self.player(self.user_id).name} is blocking"
-                self.actions.append(Action("Accept_Block", 0, "enabled", False))
+                # self.actions.append(Action("Accept_Block", 0, "enabled", False))
                 self.add_history()
 
         if action.name == "Accept_Block":
