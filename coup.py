@@ -112,7 +112,7 @@ class Game:
         self.actions: list[Action] = []
         self.current_action: Action = Action("No_action", 0, "disabled", False)
         self.current_action_player_id: str = ""
-        self.second_player_name: str = ""
+        self.second_player_id: str = ""
         self.cards_to_exchange: list[str] = []
         self.exchange_in_progress: bool = False
         self.coup_assassinate_in_progress: bool = False
@@ -155,7 +155,7 @@ class Game:
             self.current_player_index = 0
         self.clear_all_player_alerts()
         self.clear_game_alerts()
-        self.second_player_name = ""
+        self.second_player_id = ""
         self.current_action = Action("No_action", 0, "disabled", False)
         if self.game_over():
             self.game_alert = f"Game Over - Winner - {self.players_remaining[0].name} "
@@ -338,8 +338,8 @@ class Game:
         if action.second_player_required:
             self.current_action = action
 
-        if action.name == "Steal" and self.second_player_name:
-            self.steal(give_to=self.user_id, steal_from=self.second_player_name)
+        if action.name == "Steal" and self.second_player_id:
+            self.steal(give_to=self.user_id, steal_from=self.second_player_id)
 
         if action.name in ("Assassinate", "Coup"):
             if self.block_in_progress:
@@ -420,10 +420,10 @@ class Game:
     def get_current_action(self):
         return self.current_action
 
-    def set_second_player(self, player_name: str):
-        self.second_player_name = ""
-        if player_name != "":
-            self.second_player_name = player_name
+    def set_second_player_id(self, player_id: str):
+        self.second_player_id = ""
+        if player_id != "":
+            self.second_player_id = player_id
 
     def set_cards_to_exchange(self, cardnames: list[str]):
         self.cards_to_exchange = cardnames
@@ -437,7 +437,7 @@ class Game:
     def coup_assassinate(self, user_id):
         self.user_id = user_id
         if (
-            not self.second_player_name and not self.coup_assassinate_in_progress
+            not self.second_player_id and not self.coup_assassinate_in_progress
         ):  # Need to pick second player
             return
         if (
@@ -446,10 +446,10 @@ class Game:
             and self.player(self.user_id).influence()
         ):
             self.coup_assassinate_in_progress = True
-            self.player_id_to_coup_assassinate = self.second_player_name
+            self.player_id_to_coup_assassinate = self.second_player_id
             self.couping_assassinating_player = self.player(self.user_id)
             self.add_history()
-            self.second_player_name = ""
+            self.second_player_id = ""
             self.couping_assassinating_player.add_remove_coins(  # type: ignore
                 (self.current_action.coins_required * -1)
             )
@@ -477,7 +477,7 @@ class Game:
     def add_history(self):
         if not self.current_action:
             return
-        self.player2 = self.second_player_name
+        self.player2 = self.player(self.second_player_id)
 
         if self.current_action.name in ("Coup", "Assassinate"):
             if self.card_name_to_lose:

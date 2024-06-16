@@ -125,7 +125,7 @@ async def process_message(websocket, user_id, message):
     else:
         message["message_txt"] = game.current_action
 
-    game.set_second_player(game.player_id(message.get("player")))
+    game.set_second_player_id(game.player_id(message.get("player")))
 
     if game.exchange_in_progress:
         game.cards_to_exchange = message.get("cardnames")
@@ -135,7 +135,7 @@ async def process_message(websocket, user_id, message):
 
     if (
         game.current_action.second_player_required
-        and not game.second_player_name
+        and not game.second_player_id
         and game.player_index_to_id(game.whose_turn()) == game.players[game.user_id].id
         and not game.block_in_progress
     ):
@@ -145,7 +145,7 @@ async def process_message(websocket, user_id, message):
             message_type="pick",
         )
 
-    if game.second_player_name or game.coup_assassinate_in_progress:
+    if game.second_player_id or game.coup_assassinate_in_progress:
         await manager.broadcast(
             f" {game.players[user_id].name}: {message['message_txt']}",
             game,
