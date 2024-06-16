@@ -289,7 +289,6 @@ class Game:
             self.clear_game_alerts()
 
         if action.name == "Challenge":
-            return  ######################################################## Not implemented yet
             if not self.action_history:
                 return
             if self.user_id == self.action_history[-1].player1.id:
