@@ -55,7 +55,7 @@ class Content:
                 """
 
         # exchange
-        if self.game.exchange_in_progress and self.game.your_turn(self.user_id):
+        if self.game.exchange_in_progress and self.game.your_turn():
             self.display_hand = '<form hx-ws="send" hx-target="cards">'
             for card in player.hand:
                 exchange(card)
