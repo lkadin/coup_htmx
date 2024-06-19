@@ -77,6 +77,12 @@ class Player:
     def clear_player_alert(self) -> None:
         self.player_alert = ""
 
+    def check_card_in_hand(self, cards_to_check) -> bool:
+        for card in self.hand:
+            if card.value in cards_to_check and card.card_status == "down":
+                return True
+        return False
+
     def __repr__(self) -> str:
         return f"{self.id}-{self.hand} {self.coins=}"
 
@@ -129,6 +135,7 @@ class Game:
         self.block_in_progress: bool = False
         self.blocking_player: Player | None = None
         self.challenge_in_progress: bool = False
+        self.last_challenge_successful = False
 
     def initial_deal(self) -> None:
         for _ in range(self.NUM_OF_CARDS):
@@ -248,7 +255,10 @@ class Game:
         self.user_id = user_id
         if not isinstance(action, Action):
             action = self.action_from_action_name(action)
-        if self.block_in_progress and self.current_action.name != "Accept_Block":
+        if self.block_in_progress and self.current_action.name not in (
+            "Accept_Block",
+            "Challenge",
+        ):
             return  # Can't do anything if block in progress
         if action.name == "Block":
             if not self.action_history:
@@ -264,7 +274,6 @@ class Game:
                 self.block_in_progress = True
                 self.blocking_player = self.player(self.user_id)
                 self.game_alert = f"{self.player(self.user_id).name} is blocking"
-                # self.actions.append(Action("Accept_Block", 0, "enabled", False))
                 self.add_history()
 
         if action.name == "Accept_Block":
@@ -296,6 +305,24 @@ class Game:
             if self.action_history[-1].action.can_be_challenged:
                 self.challenge_in_progress = True
                 self.game_alert = f"{self.player(self.user_id).name} is challenging"
+            if self.challenge_successful():
+                self.game_alert = (
+                    f"{self.player(self.user_id).name} challenge is successful"
+                )
+                self.last_challenge_successful = True
+                # reverse action
+                self.challenge_in_progress = False
+                self.block_in_progress = False
+            else:
+                self.game_alert = (
+                    f"{self.player(self.user_id).name} challenge is unsuccessful"
+                )
+                # lose_influence
+                self.last_challenge_successful = False
+                pass
+                self.challenge_in_progress = False
+                self.block_in_progress = False
+            # self.next_turn()
 
         if (
             action.name == "Start"
@@ -515,7 +542,10 @@ class Game:
         if not self.current_action:  # Game has not started yet
             return 0
         self.user_id = user_id
-        if self.player(self.user_id).coins >= COUP_REQUIRED:
+        if (
+            self.player(self.user_id).coins >= COUP_REQUIRED
+            and "Block" not in self.current_action.name
+        ):
             self.player(self.user_id).set_player_alert("You must coup")
             return -1
         if self.player(self.user_id).coins >= self.current_action.coins_required:
@@ -548,6 +578,34 @@ class Game:
         if prior_action == "Assassinate":
             self.assassinate_in_progress = False
 
+    def challenge_successful(self) -> bool:
+        requried_card = {
+            "Assassinate": ["assassin"],
+            "Steal": ["captain"],
+            "Exchange": ["ambassador"],
+            "Take_3_coins": ["duke"],
+            # block the following:
+            "Block_Foreign_aid": ["duke"],
+            "Block_Steal": ["ambassador", "captain"],
+            "Block_Assassinate": ["assassin"],
+        }
+        if not self.action_history:
+            return True
+        prior_action = self.action_history[-1].action
+        prior_action_player1 = self.action_history[-1].player1
+        if prior_action.name == "Block":
+            blocked_action_name = "Block_" + self.action_history[-2].action.name
+            # prior_action_player1 = self.action_history[-2].player1
+            if prior_action_player1.check_card_in_hand(
+                requried_card[blocked_action_name]
+            ):
+                return False
+            else:
+                return True
+        if prior_action_player1.check_card_in_hand(requried_card[prior_action.name]):
+            return False
+        return True
+
 
 class History_action:
     def __init__(self, player1, player2, action):
@@ -568,17 +626,17 @@ def main():
     print(game.actions)
     game.start()
     print(game.actions)
-    print(game.players)
+    game.user_id = "1"
     print(game.whose_turn())
-    print(game.player_id("Lee"))
+    print(game.player_id("1"))
+    game.current_player_index = 1
     print(game.your_turn())
     print(game.whose_turn_name())
     game.process_action(Action("Exchange", 0, "enabled", False), "1")
-    print(game.players["1"])
     cards = ["contessa", "ambassador"]
     game.set_cards_to_exchange(cards)
     game.process_action(Action("Exchange", 0, "enabled", False), "1")
-    print(game.players["1"])
+    print(game.action_history)
 
 
 if __name__ == "__main__":

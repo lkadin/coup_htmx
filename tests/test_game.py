@@ -84,6 +84,15 @@ class TestGame:
         assert game_ready.players[user_id].coins == coins1
         assert game_ready.players["1"].coins == coins2
 
+    def test_process_action_challenge_steal(self, game_ready):
+        user_id = str(int(game_ready.whose_turn()) + 1)
+        # coins1 = game_ready.players[user_id].coins
+        # coins2 = game_ready.players["1"].coins
+        game_ready.second_player = user_id
+        game_ready.process_action("Steal", user_id)
+        game_ready.process_action("Challenge", game_ready.second_player)
+        assert game_ready.last_challenge_successful is False
+
     def test_process_action_start(self, game_ready):
         action = Action("Start", 0, "enabled", False)
         user_id = game_ready.player_index_to_id(game_ready.current_player_index)
@@ -97,6 +106,25 @@ class TestGame:
         coins = game_ready.players[user_id].coins
         game_ready.process_action(action, user_id)
         assert game_ready.players[user_id].coins == coins + 3
+        game_ready.add_history()
+
+    def test_process_action_challenge_take_3_coins(self, game_ready):
+        action = "Take_3_coins"
+        user_id = "1"
+        coins = game_ready.players[user_id].coins
+        game_ready.process_action(action, user_id)
+        game_ready.current_action = Action(
+            "Take_3_coins", 0, "enabled", False, True, False, True
+        )
+        game_ready.add_history()
+        user_id = "1"
+        game_ready.current_action_player_id = "1"
+        action = "Challenge"
+        user_id = game_ready.player_index_to_id(game_ready.current_player_index)
+        game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
+        coins = game_ready.players[user_id].coins
+        game_ready.process_action(action, user_id)
+        assert game_ready.last_challenge_successful is True
 
     def test_process_action_income(self, game_ready):
         action = "Income"
