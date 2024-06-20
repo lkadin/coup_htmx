@@ -76,20 +76,23 @@ class TestGame:
             assert game_ready.process_action(action, game_ready.user_id) is None
 
     def test_process_action_steal(self, game_ready):
-        user_id = str(int(game_ready.whose_turn()) + 1)
-        coins1 = game_ready.players[user_id].coins
-        coins2 = game_ready.players["1"].coins
-        game_ready.second_player = user_id
-        game_ready.process_action("Steal", user_id)
-        assert game_ready.players[user_id].coins == coins1
-        assert game_ready.players["1"].coins == coins2
+        game_ready.current_player_index = 0
+        game_ready.current_action_player_id = "1"
+        game_ready.user_id = "1"
+        coins1 = game_ready.players["1"].coins
+        coins2 = game_ready.players["2"].coins
+        game_ready.second_player_id = "2"
+        game_ready.process_action("Steal", "1")
+        assert game_ready.players["1"].coins == coins1 + 2
+        assert game_ready.players["2"].coins == coins2 - 2
 
     def test_process_action_challenge_steal(self, game_ready):
-        user_id = str(int(game_ready.whose_turn()) + 1)
-        # coins1 = game_ready.players[user_id].coins
-        # coins2 = game_ready.players["1"].coins
-        game_ready.second_player = user_id
+        game_ready.current_action_player_id = "1"
+        user_id = "1"
+        game_ready.second_player = "2"
+        game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
         game_ready.process_action("Steal", user_id)
+        game_ready.add_history()
         game_ready.process_action("Challenge", game_ready.second_player)
         assert game_ready.last_challenge_successful is False
 
