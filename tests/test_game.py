@@ -87,13 +87,22 @@ class TestGame:
         assert game_ready.players["2"].coins == coins2 - 2
 
     def test_process_action_challenge_steal(self, game_ready):
+        game_ready.current_player_index = 0
         game_ready.current_action_player_id = "1"
-        user_id = "1"
-        game_ready.second_player = "2"
-        game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
-        game_ready.process_action("Steal", user_id)
-        game_ready.add_history()
-        game_ready.process_action("Challenge", game_ready.second_player)
+        game_ready.user_id = "1"
+        game_ready.second_player_id = "2"
+        game_ready.players[game_ready.user_id].hand = [Card("duke"), Card("duke")]
+        game_ready.process_action("Steal", "1")
+        game_ready.process_action("Challenge", "2")
+        assert game_ready.last_challenge_successful is True
+
+        game_ready.current_player_index = 0
+        game_ready.current_action_player_id = "1"
+        game_ready.user_id = "1"
+        game_ready.second_player_id = "2"
+        game_ready.players[game_ready.user_id].hand = [Card("duke"), Card("captain")]
+        game_ready.process_action("Steal", "1")
+        game_ready.process_action("Challenge", "2")
         assert game_ready.last_challenge_successful is False
 
     def test_process_action_start(self, game_ready):
