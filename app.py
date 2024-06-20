@@ -108,7 +108,7 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
             data = await websocket.receive_text()
             if data:
                 message = json.loads(data)
-                await process_message(websocket, user_id, message)
+                await process_message(websocket, user_id, message)  # type: ignore
 
     except Exception as e:
         message = f"{user_id} has disconnected"
