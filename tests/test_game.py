@@ -111,22 +111,34 @@ class TestGame:
     def test_process_action_challenge_take_3_coins(self, game_ready):
         action = "Take_3_coins"
         user_id = "1"
-        coins = game_ready.players[user_id].coins
+        game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
         game_ready.process_action(action, user_id)
         game_ready.current_action = Action(
             "Take_3_coins", 0, "enabled", False, True, False, True
         )
-        game_ready.add_history()
-        user_id = "1"
         game_ready.current_action_player_id = "1"
+        game_ready.add_history()
+        user_id = "2"
         action = "Challenge"
-        user_id = game_ready.player_index_to_id(game_ready.current_player_index)
-        game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
-        # coins = game_ready.players[user_id].coins
+        game_ready.process_action(action, user_id)
+        assert game_ready.last_challenge_successful is False
+
+        action = "Take_3_coins"
+        user_id = "1"
+        game_ready.players[user_id].hand = [Card("captain"), Card("assassin")]
+        game_ready.process_action(action, user_id)
+        game_ready.current_action = Action(
+            "Take_3_coins", 0, "enabled", False, True, False, True
+        )
+        game_ready.current_action_player_id = "1"
+        game_ready.add_history()
+        user_id = "2"
+        action = "Challenge"
         game_ready.process_action(action, user_id)
         assert game_ready.last_challenge_successful is True
 
     def test_process_action_income(self, game_ready):
+        game_ready.current_action_player_id = "1"
         action = "Income"
         user_id = game_ready.player_index_to_id(game_ready.current_player_index)
         coins = game_ready.players[user_id].coins
@@ -134,6 +146,7 @@ class TestGame:
         assert game_ready.players[user_id].coins == coins + 1
 
     def test_process_action_foreign_aid(self, game_ready):
+        game_ready.current_action_player_id = "1"
         action = "Foreign_aid"
         user_id = game_ready.player_index_to_id(game_ready.current_player_index)
         coins = game_ready.players[user_id].coins
@@ -141,6 +154,7 @@ class TestGame:
         assert game_ready.players[user_id].coins == coins + 2
 
     def test_block_foreign_aid(self, game_ready):
+        game_ready.current_action_player_id = "1"
         action = "Foreign_aid"
         user_id = game_ready.player_index_to_id(game_ready.current_player_index)
         coins = game_ready.players[user_id].coins
@@ -149,6 +163,7 @@ class TestGame:
 
     def test_process_action_exchange(self, game_ready):
         user_id = game_ready.player_index_to_id(game_ready.current_player_index)
+        game_ready.current_action_player_id = "1"
         action = "Exchange"
         game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
         game_ready.process_action(action, user_id)
@@ -159,6 +174,7 @@ class TestGame:
         assert len(game_ready.players[user_id].hand) == 2
 
     def test_steal(self, game_ready):
+        game_ready.current_action_player_id = "1"
         coins1 = game_ready.players["1"].coins
         coins2 = game_ready.players["2"].coins
         game_ready.steal(
@@ -171,6 +187,7 @@ class TestGame:
         assert game_ready.player_id("Lee") == "1"
 
     def test_exchange(self, game_ready):
+        game_ready.current_action_player_id = "1"
         user_id = game_ready.player_index_to_id(game_ready.current_player_index)
         game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
         game_ready.exchange(user_id)
