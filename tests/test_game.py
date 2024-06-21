@@ -322,3 +322,19 @@ class TestGame:
         game_ready.current_action_player_id = "1"
         game_ready.current_action_name = "Challenge"
         assert game_ready.last_challenge_successful is True
+
+        self.user_id = "1"
+        game_ready.current_action = game_ready.action_from_action_name("Assassinate")
+        game_ready.couping_assassinating_player = game_ready.player(self.user_id)
+        game_ready.players["1"].coins = 6
+        game_ready.second_player_id = "1"
+        game_ready.current_action_player_id = "1"
+        game_ready.coup_assassinate(self.user_id)
+        game_ready.card_name_to_lose = "captain"
+        game_ready.coup_assassinate_in_progress = True
+        game_ready.players["2"].hand = [Card("assassin"), Card("duke")]
+        game_ready.player_id_to_coup_assassinate = "2"
+        game_ready.process_action("Challenge", "2")
+        game_ready.current_action_player_id = "1"
+        game_ready.current_action_name = "Challenge"
+        # assert game_ready.last_challenge_successful is False
