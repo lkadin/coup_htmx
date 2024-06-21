@@ -476,7 +476,7 @@ class Game:
             not self.second_player_id and not self.coup_assassinate_in_progress
         ):  # Need to pick second player
             return
-        if (
+        if (  ###no card was picked
             not self.card_name_to_lose
             and not self.coup_assassinate_in_progress
             and self.player(self.user_id).influence()
@@ -490,7 +490,9 @@ class Game:
                 (self.current_action.coins_required * -1)
             )
 
-        if self.card_name_to_lose and isinstance(self.card_name_to_lose, str):
+        if self.card_name_to_lose and isinstance(
+            self.card_name_to_lose, str
+        ):  # card was picked need to lose influence
             self.player(self.player_id_to_coup_assassinate).lose_influence(
                 self.card_name_to_lose
             )
