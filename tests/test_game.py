@@ -185,7 +185,7 @@ class TestGame:
         game_ready.process_action(action, user_id)
         assert len(game_ready.players[user_id].hand) == 2
 
-    def test_process_challenge_action_exchange(self, game_ready):
+    def test_process_action_challenge_exchange(self, game_ready):
         user_id = "1"
         game_ready.current_action_player_id = user_id
         action = "Exchange"
