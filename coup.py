@@ -37,6 +37,7 @@ class Player:
         self.hand: list[Card] = []
         self.coins = 2
         self.player_alert = ""
+        self.cards_prior_to_exchange: list[Card] = []
 
     def get_index(self, cardname: str) -> int:
         for index, card in enumerate(self.hand):
@@ -77,11 +78,19 @@ class Player:
     def clear_player_alert(self) -> None:
         self.player_alert = ""
 
-    def check_card_in_hand(self, cards_to_check) -> bool:
-        for card in self.hand:
+    def check_card_in_hand(self, cards_to_check: list[str], check_prior: bool) -> bool:
+        if check_prior:
+            hand = self.cards_prior_to_exchange
+        else:
+            hand = self.hand
+        for card in hand:
             if card.value in cards_to_check and card.card_status == "down":
                 return True
         return False
+
+    def save_cards(self):
+        self.cards_prior_to_exchange = self.hand
+        pass
 
     def __repr__(self) -> str:
         return f"{self.id}-{self.hand} {self.coins=}"
@@ -404,6 +413,7 @@ class Game:
             return
 
         if self.required_discard_qty <= 2 and not self.cards_to_exchange:
+            self.player(self.user_id).save_cards()
             for _ in range(4 - self.player(self.user_id).influence()):
                 self.player(self.user_id).draw(self.deck)
                 self.exchange_in_progress = True
@@ -579,7 +589,7 @@ class Game:
             self.assassinate_in_progress = False
 
     def challenge_successful(self) -> bool:
-        requried_card = {
+        required_card = {
             "Assassinate": ["assassin"],
             "Steal": ["captain"],
             "Exchange": ["ambassador"],
@@ -595,14 +605,19 @@ class Game:
         prior_action_player1 = self.action_history[-1].player1
         if prior_action.name == "Block":
             blocked_action_name = "Block_" + self.action_history[-2].action.name
-            # prior_action_player1 = self.action_history[-2].player1
             if prior_action_player1.check_card_in_hand(
-                requried_card[blocked_action_name]
+                required_card[blocked_action_name], check_prior=False
             ):
                 return False
             else:
                 return True
-        if prior_action_player1.check_card_in_hand(requried_card[prior_action.name]):
+        if prior_action.name == "Exchange":
+            check_prior = True
+        else:
+            check_prior = False
+        if prior_action_player1.check_card_in_hand(
+            required_card[prior_action.name], check_prior
+        ):
             return False
         return True
 

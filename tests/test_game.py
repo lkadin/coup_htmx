@@ -185,6 +185,41 @@ class TestGame:
         game_ready.process_action(action, user_id)
         assert len(game_ready.players[user_id].hand) == 2
 
+    def test_process_challenge_action_exchange(self, game_ready):
+        user_id = "1"
+        game_ready.current_action_player_id = user_id
+        action = "Exchange"
+        game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
+        game_ready.set_cards_to_exchange(["captain", "duke"])
+        game_ready.players[user_id].save_cards()
+        game_ready.process_action(action, user_id)
+        game_ready.required_discard_qty = 2
+        game_ready.process_action(action, user_id)
+        game_ready.current_action = Action(
+            "Exchange", 0, "enabled", False, True, False, True
+        )
+        game_ready.add_history()
+        action = "Challenge"
+        game_ready.process_action(action, "2")
+        assert game_ready.last_challenge_successful is True
+
+        user_id = "1"
+        game_ready.current_action_player_id = user_id
+        action = "Exchange"
+        game_ready.players[user_id].hand = [Card("ambassador"), Card("duke")]
+        game_ready.players[user_id].save_cards()
+        game_ready.set_cards_to_exchange(["ambassador", "duke"])
+        game_ready.process_action(action, user_id)
+        game_ready.required_discard_qty = 2
+        game_ready.process_action(action, user_id)
+        game_ready.current_action = Action(
+            "Exchange", 0, "enabled", False, True, False, True
+        )
+        game_ready.add_history()
+        action = "Challenge"
+        game_ready.process_action(action, "2")
+        assert game_ready.last_challenge_successful is False
+
     def test_steal(self, game_ready):
         game_ready.current_action_player_id = "1"
         coins1 = game_ready.players["1"].coins
