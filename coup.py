@@ -607,6 +607,7 @@ class Game:
         prior_action_player1 = self.action_history[-1].player1
         if prior_action.name == "Block":
             blocked_action_name = "Block_" + self.action_history[-2].action.name
+            prior_action_player1 = self.action_history[-2].player1
             if prior_action_player1.check_card_in_hand(
                 required_card[blocked_action_name], check_prior=False
             ):
