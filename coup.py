@@ -449,7 +449,7 @@ class Game:
             return
         if self.check_coins(self.user_id) == 1:
             return
-        self.current_action = self.action_from_action_name(action_name)
+        # self.current_action = self.action_from_action_name(action_name)
         if self.current_action.your_turn_only and not self.your_turn():
             return
 
