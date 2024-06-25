@@ -314,6 +314,8 @@ class Game:
             if self.action_history[-1].action.can_be_challenged:
                 self.challenge_in_progress = True
                 self.game_alert = f"{self.player(self.user_id).name} is challenging"
+            else:
+                return
             if self.challenge_successful():
                 self.game_alert = (
                     f"{self.player(self.user_id).name} challenge is successful"
