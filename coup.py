@@ -379,12 +379,6 @@ class Game:
         if action.name in ("Assassinate", "Coup"):
             if self.block_in_progress:
                 return  # must finish block
-            # if (
-            #     self.player_index_to_id(self.whose_turn())
-            #     != self.players[self.user_id].id
-            #     and not self.card_name_to_lose
-            # ):
-            #     return ""
             self.coup_assassinate(self.user_id)
 
     def player(self, user_id) -> Player:
@@ -611,7 +605,6 @@ class Game:
             self.player2 = self.action_history[-1].player2
             self.player1.add_remove_coins(-2)
             self.player2.add_remove_coins(2)  # type: ignore
-            pass
 
     def challenge_successful(self) -> bool:
         required_card = {
