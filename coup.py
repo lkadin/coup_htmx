@@ -606,6 +606,13 @@ class Game:
             player1 = self.action_history[-1].player1
             player1.add_remove_coins(-3)
 
+        if prior_action == "Steal":
+            self.player1 = self.action_history[-1].player1
+            self.player2 = self.action_history[-1].player2
+            self.player1.add_remove_coins(-2)
+            self.player2.add_remove_coins(2)  # type: ignore
+            pass
+
     def challenge_successful(self) -> bool:
         required_card = {
             "Assassinate": ["assassin"],

@@ -90,20 +90,32 @@ class TestGame:
         game_ready.current_player_index = 0
         game_ready.current_action_player_id = "1"
         game_ready.user_id = "1"
+        coins1 = game_ready.players["1"].coins
         game_ready.second_player_id = "2"
+        coins2 = game_ready.players["2"].coins
         game_ready.players[game_ready.user_id].hand = [Card("duke"), Card("duke")]
         game_ready.process_action("Steal", "1")
+        assert game_ready.players["1"].coins == coins1 + 2
+        assert game_ready.players["2"].coins == coins2 - 2
         game_ready.process_action("Challenge", "2")
         assert game_ready.last_challenge_successful is True
+        assert game_ready.players["1"].coins == coins1
+        assert game_ready.players["2"].coins == coins2
 
         game_ready.current_player_index = 0
         game_ready.current_action_player_id = "1"
         game_ready.user_id = "1"
+        coins1 = game_ready.players["1"].coins
+        coins2 = game_ready.players["2"].coins
         game_ready.second_player_id = "2"
         game_ready.players[game_ready.user_id].hand = [Card("duke"), Card("captain")]
         game_ready.process_action("Steal", "1")
+        assert game_ready.players["1"].coins == coins1 + 2
+        assert game_ready.players["2"].coins == coins2 - 2
         game_ready.process_action("Challenge", "2")
         assert game_ready.last_challenge_successful is False
+        assert game_ready.players["1"].coins == coins1 + 2
+        assert game_ready.players["2"].coins == coins2 - 2
 
     def test_process_action_start(self, game_ready):
         action = Action("Start", 0, "enabled", False)
