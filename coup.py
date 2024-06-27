@@ -317,20 +317,18 @@ class Game:
             else:
                 return
             if self.challenge_successful():
-                self.game_alert = (
-                    f"{self.player(self.user_id).name} challenge is successful"
-                )
+                self.game_alert = f"{self.player(self.user_id).name} challenge is successful"  #### attacker doesn't have the correct card
                 self.last_challenge_successful = True
                 # reverse action
+                self.reverse_last_action_challenge()
+                # attacker(other player) loses influence
                 self.challenge_in_progress = False
                 self.block_in_progress = False
             else:
-                self.game_alert = (
-                    f"{self.player(self.user_id).name} challenge is unsuccessful"
-                )
-                # lose_influence
+                self.game_alert = f"{self.player(self.user_id).name} challenge is unsuccessful"  #### attacker has the correct card
+                # must show and swap correct card
+                # challenger loses influence
                 self.last_challenge_successful = False
-                pass
                 self.challenge_in_progress = False
                 self.block_in_progress = False
             # self.next_turn()
@@ -591,6 +589,22 @@ class Game:
 
         if prior_action == "Assassinate":
             self.assassinate_in_progress = False
+
+    def reverse_last_action_challenge(self):
+        if not self.action_history:
+            return
+        prior_action = self.action_history[-1].action.name
+
+        if prior_action == "Foreign_aid":
+            player1 = self.action_history[-1].player1
+            player1.add_remove_coins(-1)
+
+        if prior_action == "Assassinate":
+            self.assassinate_in_progress = False
+
+        if prior_action == "Take_3_coins":
+            player1 = self.action_history[-1].player1
+            player1.add_remove_coins(-3)
 
     def challenge_successful(self) -> bool:
         required_card = {

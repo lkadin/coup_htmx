@@ -123,8 +123,11 @@ class TestGame:
     def test_process_action_challenge_take_3_coins(self, game_ready):
         action = "Take_3_coins"
         user_id = "1"
+        game_ready.current_player_index = 0
+        coins = game_ready.players[user_id].coins = 2
         game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
         game_ready.process_action(action, user_id)
+        assert game_ready.players[user_id].coins == coins + 3
         game_ready.current_action = Action(
             "Take_3_coins", 0, "enabled", False, True, False, True
         )
@@ -137,6 +140,8 @@ class TestGame:
 
         action = "Take_3_coins"
         user_id = "1"
+        game_ready.current_player_index = 0
+        coins = game_ready.players[user_id].coins = 2
         game_ready.players[user_id].hand = [Card("captain"), Card("assassin")]
         game_ready.process_action(action, user_id)
         game_ready.current_action = Action(
@@ -148,6 +153,7 @@ class TestGame:
         action = "Challenge"
         game_ready.process_action(action, user_id)
         assert game_ready.last_challenge_successful is True
+        assert game_ready.players["1"].coins == coins
 
     def test_process_action_income(self, game_ready):
         game_ready.current_action_player_id = "1"
