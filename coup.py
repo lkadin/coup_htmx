@@ -595,6 +595,8 @@ class Game:
 
         if prior_action == "Assassinate":
             self.assassinate_in_progress = False
+            player1 = self.action_history[-1].player1
+            player1.add_remove_coins(3)
 
         if prior_action == "Take_3_coins":
             player1 = self.action_history[-1].player1
