@@ -9,6 +9,11 @@ class Card:
         self.value = value
         self.card_status = "down"
 
+    def __eq__(self, other):
+        if not isinstance(other, Card):
+            return False
+        return self.value == other.value and self.card_status == other.card_status
+
 
 class Deck:
     def __init__(self) -> None:
@@ -80,16 +85,16 @@ class Player:
 
     def check_card_in_hand(self, cards_to_check: list[str], check_prior: bool) -> bool:
         if check_prior:
-            hand = self.cards_prior_to_exchange
+            hand = self.cards_prior_to_exchange.copy()
         else:
-            hand = self.hand
+            hand = self.hand.copy()
         for card in hand:
             if card.value in cards_to_check and card.card_status == "down":
                 return True
         return False
 
     def save_cards(self):
-        self.cards_prior_to_exchange = self.hand
+        self.cards_prior_to_exchange = self.hand.copy()
         pass
 
     def __repr__(self) -> str:
@@ -607,6 +612,15 @@ class Game:
             self.player2 = self.action_history[-1].player2
             self.player1.add_remove_coins(-2)
             self.player2.add_remove_coins(2)  # type: ignore
+
+        if prior_action == "Exchange":
+            player1 = self.action_history[-1].player1
+            cards_to_discard = player1.hand.copy()
+            for card in cards_to_discard:
+                if card.card_status == "down":
+                    player1.discard([card.value], self.deck)
+            player1.hand = player1.cards_prior_to_exchange
+            self.exchange_in_progress = False
 
     def challenge_successful(self) -> bool:
         required_card = {

@@ -280,6 +280,10 @@ class TestGame:
         action = "Challenge"
         game_ready.process_action(action, "2")
         assert game_ready.last_challenge_successful is True
+        assert game_ready.players[user_id].hand == [
+            Card("captain"),
+            Card("duke"),
+        ]
 
         user_id = "1"
         game_ready.current_action_player_id = user_id
