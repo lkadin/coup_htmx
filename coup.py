@@ -70,6 +70,10 @@ class Player:
         index = self.get_index(cardname)
         self.hand[index].card_status = "up"
 
+    def lose_all_influence(self):
+        for card in self.hand:
+            card.card_status = "up"
+
     def influence(self) -> int:
         cards = 0
         for card in self.hand:
@@ -326,6 +330,8 @@ class Game:
                 self.last_challenge_successful = True
                 # reverse action
                 self.reverse_last_action_challenge()
+                if not self.coup_assassinate_in_progress:
+                    self.next_turn()
                 # attacker(other player) loses influence
                 self.challenge_in_progress = False
                 self.block_in_progress = False
@@ -448,7 +454,6 @@ class Game:
             return
         if self.check_coins(self.user_id) == 1:
             return
-        # self.current_action = self.action_from_action_name(action_name)
         if self.current_action.your_turn_only and not self.your_turn():
             return
 
@@ -560,9 +565,11 @@ class Game:
             self.player(self.user_id).set_player_alert("You must coup")
             return -1
         if self.player(self.user_id).coins >= self.current_action.coins_required:
-            return 0
+            return 0  # not enough coins
         if self.player(self.user_id).coins < self.current_action.coins_required:
-            return 1
+            return 1  # enough coins
+
+        return 0
 
     def clear_all_player_alerts(self):
         for player in self.players.values():
@@ -602,6 +609,7 @@ class Game:
             self.assassinate_in_progress = False
             player1 = self.action_history[-1].player1
             player1.add_remove_coins(3)
+            player1.lose_all_influence()
 
         if prior_action == "Take_3_coins":
             player1 = self.action_history[-1].player1
