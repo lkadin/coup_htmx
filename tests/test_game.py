@@ -387,7 +387,7 @@ class TestGame:
         game_ready.coup_assassinate(self.user_id)
         assert game_ready.player("2").influence() == 1
 
-    def test_challenge_assassinate_true(self, game_ready):
+    def test_challenge_assassinate_true(self, game_ready):  # challenge is successful
         user_id = "1"
         game_ready.current_player_index = 0
         game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
@@ -407,10 +407,10 @@ class TestGame:
         assert game_ready.last_challenge_successful is True
         assert game_ready.player("1").coins == 6
 
-    def test_challenge_assassinate_false(self, game_ready):
+    def test_challenge_assassinate_false(self, game_ready):  # challenge is unsuccessful
         user_id = "1"
         game_ready.current_player_index = 0
-        game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
+        game_ready.players["1"].hand = [Card("captain"), Card("assassin")]
         game_ready.current_action = game_ready.action_from_action_name("Assassinate")
         game_ready.couping_assassinating_player = game_ready.player(user_id)
         game_ready.players["1"].coins = 6
@@ -424,8 +424,9 @@ class TestGame:
         game_ready.set_current_action(action, user_id)
         game_ready.player_id_to_coup_assassinate = "2"
         game_ready.process_action(action, user_id)
-        assert game_ready.last_challenge_successful is True
-        assert game_ready.player("1").coins == 6
+        assert game_ready.last_challenge_successful is False
+        assert game_ready.player("2").influence() == 0
+        assert game_ready.player("1").coins == 3
 
     def test_challenge_block_assassinate(self, game_ready):
         action = "Assassinate"

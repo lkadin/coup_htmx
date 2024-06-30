@@ -328,13 +328,13 @@ class Game:
             if self.challenge_successful():
                 self.game_alert = f"{self.player(self.user_id).name} challenge is successful"  #### attacker doesn't have the correct card
                 self.last_challenge_successful = True
-                # reverse action
                 self.reverse_last_action_challenge()
                 if not self.coup_assassinate_in_progress:
                     self.next_turn()
                 # attacker(other player) loses influence
                 self.challenge_in_progress = False
                 self.block_in_progress = False
+                self.coup_assassinate_in_progress = False
             else:
                 self.game_alert = f"{self.player(self.user_id).name} challenge is unsuccessful"  #### attacker has the correct card
                 # must show and swap correct card
@@ -342,7 +342,9 @@ class Game:
                 self.last_challenge_successful = False
                 self.challenge_in_progress = False
                 self.block_in_progress = False
-            # self.next_turn()
+                if self.action_history[-1].action.name == "Assassinate":
+                    self.players[self.user_id].lose_all_influence()
+                    self.next_turn()
 
         if (
             action.name == "Start"
@@ -609,7 +611,6 @@ class Game:
             self.assassinate_in_progress = False
             player1 = self.action_history[-1].player1
             player1.add_remove_coins(3)
-            player1.lose_all_influence()
             self.next_turn()
 
         if prior_action == "Take_3_coins":
