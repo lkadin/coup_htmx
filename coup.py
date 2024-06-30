@@ -610,6 +610,7 @@ class Game:
             player1 = self.action_history[-1].player1
             player1.add_remove_coins(3)
             player1.lose_all_influence()
+            self.next_turn()
 
         if prior_action == "Take_3_coins":
             player1 = self.action_history[-1].player1
