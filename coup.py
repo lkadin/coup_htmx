@@ -26,7 +26,7 @@ class Deck:
         random.shuffle(self.cards)
 
     def draw(self) -> Card:
-        return self.cards.pop()
+        return self.cards.pop(0)
 
     def return_to_deck(self, cardname):
         self.cards.append(cardname)
@@ -329,8 +329,6 @@ class Game:
                 self.game_alert = f"{self.player(self.user_id).name} challenge is successful"  #### attacker doesn't have the correct card
                 self.last_challenge_successful = True
                 self.reverse_last_action_challenge()
-                # if not self.coup_assassinate_in_progress:
-                # self.next_turn()
                 # attacker(other player) loses influence
                 self.challenge_in_progress = False
                 self.block_in_progress = False

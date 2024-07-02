@@ -10,7 +10,7 @@ def test_init(player):
 
 def test_draw(player, deck):
     player.draw(deck)
-    assert player.hand[0].value == "contessa"
+    assert player.hand[0].value == "duke"
 
 
 def test_discard(player, deck):
