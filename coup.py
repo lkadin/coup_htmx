@@ -320,6 +320,8 @@ class Game:
                 return
             if self.user_id == self.action_history[-1].player1.id:
                 return  # can't challenge yourself
+            if self.exchange_in_progress:
+                return  # can't challenge in the middle of exchnage
             if self.action_history[-1].action.can_be_challenged:
                 self.challenge_in_progress = True
                 self.game_alert = f"{self.player(self.user_id).name} is challenging"
