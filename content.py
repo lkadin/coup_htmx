@@ -25,7 +25,7 @@ class Content:
                     <img src='/static/jpg/{card.value}.jpg' {card.value} style=opacity:.5;>
                     """
 
-        def coup_assassinate(card):
+        def lose_influence(card):
             if (
                 self.user_id == self.game.player_id_to_coup_assassinate
                 and player.name == self.players[self.user_id].name
@@ -73,28 +73,13 @@ class Content:
         ):
             self.display_hand = '<form hx-ws="send" hx-target="cards">'
             for card in player.hand:
-                coup_assassinate(card)
+                lose_influence(card)
             if player.name == self.players[self.user_id].name:
                 self.display_hand += """
                 <p> Which card do you want to discard?</p>
                 <input type="submit" id="test" value="Submit">
                 </form>
                 """
-        # assassinate - select card to lose
-        elif (
-            self.game.coup_assassinate_in_progress
-            and self.user_id == self.game.player_id_to_coup_assassinate
-        ):
-            self.display_hand = '<form hx-ws="send" hx-target="cards">'
-            for card in player.hand:
-                coup_assassinate(card)
-            if player.name == self.players[self.user_id].name:
-                self.display_hand += """
-                <p> Which card do you want to discard?</p>
-                <input type="submit" id="test" value="Submit">
-                </form>
-                """
-        # display regular hand
         else:
             self.display_hand = ""
             for card in player.hand:
