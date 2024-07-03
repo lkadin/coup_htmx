@@ -154,6 +154,7 @@ class Game:
         self.blocking_player: Player | None = None
         self.challenge_in_progress: bool = False
         self.last_challenge_successful = False
+        self.lose_influence_in_progress = False
 
     def initial_deal(self) -> None:
         for _ in range(self.NUM_OF_CARDS):
@@ -318,7 +319,10 @@ class Game:
         if action.name == "Challenge":
             if not self.action_history:
                 return
-            if self.user_id == self.action_history[-1].player1.id:
+            if (
+                self.user_id == self.action_history[-1].player1.id
+                and not self.lose_influence_in_progress
+            ):
                 return  # can't challenge yourself
             if self.exchange_in_progress:
                 return  # can't challenge in the middle of exchnage
@@ -331,7 +335,8 @@ class Game:
                 self.game_alert = f"{self.player(self.user_id).name} challenge is successful"  #### attacker doesn't have the correct card
                 self.last_challenge_successful = True
                 self.reverse_last_action_challenge()
-                # attacker(other player) loses influence
+                self.lose_influence_in_progress = True
+                self.player_id_to_lose_influence = self.action_history[-1].player1.id
                 self.challenge_in_progress = False
                 self.block_in_progress = False
                 self.coup_assassinate_in_progress = False
@@ -339,6 +344,7 @@ class Game:
                 self.game_alert = f"{self.player(self.user_id).name} challenge is unsuccessful"  #### attacker has the correct card
                 # must show and swap correct card
                 # challenger loses influence
+                self.lose_influence_in_progress = True
                 self.last_challenge_successful = False
                 self.challenge_in_progress = False
                 self.block_in_progress = False
@@ -359,6 +365,7 @@ class Game:
             and not self.coup_assassinate_in_progress
             and not self.block_in_progress
             and not self.challenge_in_progress
+            # and not self.lose_influence_in_progress
         ):
             return
 
@@ -488,6 +495,7 @@ class Game:
             and self.player(self.user_id).influence()
         ):
             self.coup_assassinate_in_progress = True
+            self.lose_influence_in_progress = True
             self.player_id_to_lose_influence = self.second_player_id
             self.couping_assassinating_player = self.player(self.user_id)
             self.add_history()
@@ -496,6 +504,9 @@ class Game:
                 (self.current_action.coins_required * -1)
             )
 
+        self.process_lose_influence()
+
+    def process_lose_influence(self):
         if self.card_name_to_lose and isinstance(
             self.card_name_to_lose, str
         ):  # card was picked need to lose influence

@@ -69,8 +69,8 @@ class Content:
         # lose influence - select card to lose
         elif (
             self.game.coup_assassinate_in_progress
-            and self.user_id == self.game.player_id_to_lose_influence
-        ):
+            or self.game.lose_influence_in_progress
+        ) and self.user_id == self.game.player_id_to_lose_influence:
             self.display_hand = '<form hx-ws="send" hx-target="cards">'
             for card in player.hand:
                 lose_influence(card)
