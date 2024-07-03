@@ -279,6 +279,10 @@ class Game:
             "Challenge",
         ):
             return  # Can't do anything if block in progress
+
+        if self.lose_influence_in_progress and self.card_name_to_lose:
+            self.process_lose_influence()
+
         if action.name == "Block":
             if not self.action_history:
                 return
@@ -325,7 +329,7 @@ class Game:
             ):
                 return  # can't challenge yourself
             if self.exchange_in_progress:
-                return  # can't challenge in the middle of exchnage
+                return  # can't challenge in the middle of exchange
             if self.action_history[-1].action.can_be_challenged:
                 self.challenge_in_progress = True
                 self.game_alert = f"{self.player(self.user_id).name} is challenging"
@@ -517,6 +521,7 @@ class Game:
             self.couping_assassinating_player = None
             self.must_coup_assassinate = False
             self.next_turn()
+            self.lose_influence_in_progress = False
             self.card_name_to_lose = ""
         else:
             if (
