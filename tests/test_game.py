@@ -368,7 +368,7 @@ class TestGame:
         game_ready.coup_assassinate_in_progress = True
         assert game_ready.player("1").coins == 1
         game_ready.players["2"].hand = [Card("captain"), Card("duke")]
-        game_ready.player_id_to_coup_assassinate = "2"
+        game_ready.player_id_to_lose_influence = "2"
         game_ready.coup_assassinate(self.user_id)
         assert game_ready.player("2").influence() == 1
 
@@ -383,7 +383,7 @@ class TestGame:
         game_ready.coup_assassinate_in_progress = True
         assert game_ready.player("1").coins == 3
         game_ready.players["2"].hand = [Card("captain"), Card("duke")]
-        game_ready.player_id_to_coup_assassinate = "2"
+        game_ready.player_id_to_lose_influence = "2"
         game_ready.coup_assassinate(self.user_id)
         assert game_ready.player("2").influence() == 1
 
@@ -402,7 +402,7 @@ class TestGame:
         action = "Challenge"
         user_id = "2"
         game_ready.set_current_action(action, user_id)
-        game_ready.player_id_to_coup_assassinate = "2"
+        game_ready.player_id_to_lose_influence = "2"
         game_ready.process_action(action, user_id)
         assert game_ready.last_challenge_successful is True
         assert game_ready.player("1").coins == 6
@@ -422,7 +422,7 @@ class TestGame:
         action = "Challenge"
         user_id = "2"
         game_ready.set_current_action(action, user_id)
-        game_ready.player_id_to_coup_assassinate = "2"
+        game_ready.player_id_to_lose_influence = "2"
         game_ready.process_action(action, user_id)
         assert game_ready.last_challenge_successful is False
         assert game_ready.player("2").influence() == 0

@@ -144,7 +144,7 @@ class Game:
         self.required_discard_qty: int = 0
         self.action_history: list[History_action] = []
         self.card_name_to_lose: str = ""
-        self.player_id_to_coup_assassinate: str = ""
+        self.player_id_to_lose_influence: str = ""
         self.game_alert: str = ""
         self.couping_assassinating_player: Player | None = None
         self.players_remaining = []
@@ -488,7 +488,7 @@ class Game:
             and self.player(self.user_id).influence()
         ):
             self.coup_assassinate_in_progress = True
-            self.player_id_to_coup_assassinate = self.second_player_id
+            self.player_id_to_lose_influence = self.second_player_id
             self.couping_assassinating_player = self.player(self.user_id)
             self.add_history()
             self.second_player_id = ""
@@ -499,7 +499,7 @@ class Game:
         if self.card_name_to_lose and isinstance(
             self.card_name_to_lose, str
         ):  # card was picked need to lose influence
-            self.player(self.player_id_to_coup_assassinate).lose_influence(
+            self.player(self.player_id_to_lose_influence).lose_influence(
                 self.card_name_to_lose
             )
             self.coup_assassinate_in_progress = False
@@ -511,7 +511,7 @@ class Game:
             if (
                 not self.card_name_to_lose
                 and self.coup_assassinate_in_progress
-                and self.player_id_to_coup_assassinate == self.user_id
+                and self.player_id_to_lose_influence == self.user_id
             ):
                 self.player(self.user_id).set_player_alert("You must pick one card")
 
@@ -527,7 +527,7 @@ class Game:
             if self.card_name_to_lose:
                 return
             else:
-                self.player2 = self.player(self.player_id_to_coup_assassinate)
+                self.player2 = self.player(self.player_id_to_lose_influence)
 
         if self.current_action.name == "Accept_block":
             h1 = History_action(

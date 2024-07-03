@@ -27,7 +27,7 @@ class Content:
 
         def lose_influence(card):
             if (
-                self.user_id == self.game.player_id_to_coup_assassinate
+                self.user_id == self.game.player_id_to_lose_influence
                 and player.name == self.players[self.user_id].name
                 and card.card_status == "down"
             ):
@@ -66,10 +66,10 @@ class Content:
                 </form>
                 """
 
-        # coup - select card to lose
+        # lose influence - select card to lose
         elif (
             self.game.coup_assassinate_in_progress
-            and self.user_id == self.game.player_id_to_coup_assassinate
+            and self.user_id == self.game.player_id_to_lose_influence
         ):
             self.display_hand = '<form hx-ws="send" hx-target="cards">'
             for card in player.hand:
