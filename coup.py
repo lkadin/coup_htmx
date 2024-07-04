@@ -520,7 +520,7 @@ class Game:
             self.coup_assassinate_in_progress = False
             self.couping_assassinating_player = None
             self.must_coup_assassinate = False
-            self.next_turn()
+            # self.next_turn()
             self.lose_influence_in_progress = False
             self.card_name_to_lose = ""
         else:
