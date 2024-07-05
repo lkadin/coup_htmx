@@ -44,6 +44,12 @@ class Player:
         self.player_alert = ""
         self.cards_prior_to_exchange: list[Card] = []
 
+    def reset(self):
+        self.hand: list[Card] = []
+        self.coins = 2
+        self.player_alert = ""
+        self.cards_prior_to_exchange: list[Card] = []
+
     def get_index(self, cardname: str) -> int:
         for index, card in enumerate(self.hand):
             if card.value == cardname and card.card_status == "down":
@@ -188,6 +194,7 @@ class Game:
             self.game_alert = f"Game Over - Winner - {self.players_remaining[0].name} "
             self.set_game_status("Game Over")
             self.add_all_actions()
+            self.actions.append(Action("Restart", 0, "enabled", False))
 
     def whose_turn(self) -> int:
         return self.current_player_index
@@ -265,6 +272,20 @@ class Game:
         self.clear_history()
         self.current_player_index = random.randint(0, len(self.players) - 1)
 
+    def restart(self):
+        for player in self.players.values():
+            player.reset()
+            self.clear_all_player_alerts
+            self.clear_game_alerts()
+            self.challenge_in_progress = False
+            self.coup_assassinate_in_progress = False
+            self.couping_assassinating_player = None
+            self.over = False
+            self.exchange_in_progress = False
+            self.lose_influence_in_progress = False
+            self.actions.pop()  # remove restart action
+        self.start()
+
     def your_turn(self) -> bool:
         whose_turn = self.whose_turn_name()
         name = self.players[self.user_id].name
@@ -275,6 +296,8 @@ class Game:
         self.user_id = user_id
         if not isinstance(action, Action):
             action = self.action_from_action_name(action)
+        if action.name == "Restart":
+            self.restart()
         if self.block_in_progress and self.current_action.name not in (
             "Accept_Block",
             "Challenge",
