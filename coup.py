@@ -155,6 +155,7 @@ class Game:
         self.challenge_in_progress: bool = False
         self.last_challenge_successful = False
         self.lose_influence_in_progress = False
+        self.last_user_id_assigned = 0
 
     def initial_deal(self) -> None:
         for _ in range(self.NUM_OF_CARDS):
@@ -682,6 +683,10 @@ class Game:
         ):
             return False
         return True
+
+    def next_user_id(self):
+        self.last_user_id_assigned += 1
+        return self.last_user_id_assigned
 
 
 class History_action:

@@ -26,7 +26,7 @@ async def login(request: Request):
     if game.game_status != "Waiting":
         return templates.TemplateResponse("game_started.html", {"request": request})
 
-    user_id = len(game.players) + 1
+    user_id = game.next_user_id()
     return templates.TemplateResponse(
         "login.html", {"request": request, "user_id": user_id}
     )
@@ -35,20 +35,27 @@ async def login(request: Request):
 @app.get("/web/{user_id}/", response_class=HTMLResponse)
 async def read_item(request: Request, user_id: str, user_name: str):
     def refresh():
-        if (
-            already_logged_in(user_id)
-            and already_in_game(user_name)
-            and game.game_status != "Waiting"
-        ):
-            return True
-
-    def already_in_game(user_name):
-        for player in game.players:
-            if (game.players[player].name) == user_name:
+        if game.players.get(user_id):
+            if game.players[user_id].name == user_name:
+                #     already_logged_in(user_id, user_name)
+                #     and already_in_game(user_id, user_name)
+                #     and game.game_status != "Waiting"
+                # ):
                 return True
 
-    def already_logged_in(user_id):  # websocket (user_id) already in use
-        if manager.active_connections.get(user_id):
+    def already_in_game(
+        user_id, user_name
+    ):  # if user is logged in with a different ID return True
+        for player in game.players:
+            if (game.players[player].name) == user_name and game.players[
+                player
+            ].id != user_id:
+                return True
+
+    def already_logged_in(user_id, user_name):  # websocket (user_id) already in use
+        if manager.active_connections.get(user_id) and not already_in_game(
+            user_id, user_name
+        ):
             return True
 
     def game_started():
@@ -58,7 +65,7 @@ async def read_item(request: Request, user_id: str, user_name: str):
     if refresh():
         print("refresh")
 
-    elif already_logged_in(user_id):
+    elif already_logged_in(user_id, user_name):
         return templates.TemplateResponse(
             "id_already_in_game.html",
             {
@@ -66,7 +73,7 @@ async def read_item(request: Request, user_id: str, user_name: str):
             },
         )
 
-    elif already_in_game(user_name):
+    elif already_in_game(user_id, user_name):
         return templates.TemplateResponse(
             "player_already_in_game.html", {"request": request}
         )
@@ -111,11 +118,13 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
                 await process_message(websocket, user_id, message)  # type: ignore
 
     except Exception as e:
-        message = f"{user_id} has disconnected"
-        await manager.disconnect(user_id, websocket)
-        await manager.broadcast(message, game)
-        print(f"Exception = {e}")
-        print(traceback.format_exc())
+        if e.code == 1001:  # type: ignore
+            message = f"{user_id} has disconnected"
+            await manager.disconnect(user_id, websocket)
+            await manager.broadcast(message, game)
+        else:
+            print(f"Exception = {e}")
+            print(traceback.format_exc())
 
 
 async def process_message(websocket, user_id, message):
