@@ -37,10 +37,6 @@ async def read_item(request: Request, user_id: str, user_name: str):
     def refresh():
         if game.players.get(user_id):
             if game.players[user_id].name == user_name:
-                #     already_logged_in(user_id, user_name)
-                #     and already_in_game(user_id, user_name)
-                #     and game.game_status != "Waiting"
-                # ):
                 return True
 
     def already_in_game(
