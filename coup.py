@@ -381,7 +381,7 @@ class Game:
                 self.player_id_to_lose_influence = self.user_id
                 if self.action_history[-1].action.name == "Assassinate":
                     self.players[self.user_id].lose_all_influence()
-                    # self.next_turn()
+                    self.next_turn()
 
         if (
             action.name == "Start"
