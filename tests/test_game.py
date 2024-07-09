@@ -316,13 +316,13 @@ class TestGame:
         assert game_ready.player_id("Lee") == "1"
 
     def test_exchange(self, game_ready):
-        game_ready.current_action_player_id = "1"
-        user_id = game_ready.player_index_to_id(game_ready.current_player_index)
+        user_id = "1"
+        game_ready.current_action_player_id = user_id
         game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
         game_ready.exchange(user_id)
         assert len(game_ready.players[user_id].hand) == 4
         game_ready.cards_to_exchange = ["captain", "duke"]
-        game_ready.required_discard_qty = 2
+        game_ready.number_of_cards_to_exchange = 2
         game_ready.exchange(user_id)
         assert len(game_ready.players[user_id].hand) == 2
 

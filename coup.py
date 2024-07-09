@@ -147,7 +147,6 @@ class Game:
         self.exchange_in_progress: bool = False
         self.coup_assassinate_in_progress: bool = False
         self.current_player_index: int = 0
-        self.required_discard_qty: int = 0
         self.action_history: list[History_action] = []
         self.card_name_to_lose: str = ""
         self.player_id_to_lose_influence: str = ""
@@ -452,20 +451,23 @@ class Game:
 
     def exchange(self, user_id):
         self.user_id = user_id
-        self.required_discard_qty = self.player(self.user_id).influence() - 2
 
         if not self.cards_to_exchange and self.exchange_in_progress:
             self.player(self.user_id).set_player_alert("You didn't pick any cards")
             return
 
-        if self.required_discard_qty <= 2 and not self.cards_to_exchange:
+        if not self.cards_to_exchange:
             self.player(self.user_id).save_cards()
-            for _ in range(4 - self.player(self.user_id).influence()):
+            for _ in range(self.player(self.user_id).influence()):
                 self.player(self.user_id).draw(self.deck)
                 self.exchange_in_progress = True
 
         if self.cards_to_exchange:
-            if self.required_discard_qty != len(self.cards_to_exchange):
+            if self.player(self.user_id).influence() == 4:
+                number_of_cards_to_discard = 2
+            else:
+                number_of_cards_to_discard = 1
+            if number_of_cards_to_discard != len(self.cards_to_exchange):
                 self.player(self.user_id).set_player_alert(
                     "You didn't pick the correct amount of cards"
                 )

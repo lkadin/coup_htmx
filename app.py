@@ -134,6 +134,8 @@ async def process_message(websocket, user_id, message):
 
     if game.exchange_in_progress:
         game.cards_to_exchange = message.get("cardnames")
+        if isinstance(game.cards_to_exchange, str):
+            game.cards_to_exchange = [game.cards_to_exchange]
 
     if game.lose_influence_in_progress and not game.current_action.name == "Block":
         game.card_name_to_lose = message.get("cardnames")
