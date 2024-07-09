@@ -379,10 +379,10 @@ class Game:
                 self.lose_influence_in_progress = True
                 self.challenge_in_progress = False
                 self.block_in_progress = False
-                self.player_id_to_lose_influence = self.action_history[-1].player1.id
+                self.player_id_to_lose_influence = self.user_id
                 if self.action_history[-1].action.name == "Assassinate":
                     self.players[self.user_id].lose_all_influence()
-                    self.next_turn()
+                    # self.next_turn()
 
         if (
             action.name == "Start"
