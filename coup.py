@@ -189,11 +189,6 @@ class Game:
         self.clear_game_alerts()
         self.second_player_id = ""
         self.current_action = Action("No_action", 0, "disabled", False)
-        if self.game_over():
-            self.game_alert = f"Game Over - Winner - {self.players_remaining[0].name} "
-            self.set_game_status("Game Over")
-            self.add_all_actions()
-            self.actions.append(Action("Restart", 0, "enabled", False))
 
     def whose_turn(self) -> int:
         return self.current_player_index
@@ -431,6 +426,12 @@ class Game:
             if self.block_in_progress:
                 return  # must finish block
             self.coup_assassinate(self.user_id)
+
+        if self.game_over():
+            self.game_alert = f"Game Over - Winner - {self.players_remaining[0].name} "
+            self.set_game_status("Game Over")
+            self.add_all_actions()
+            self.actions.append(Action("Restart", 0, "enabled", False))
 
     def player(self, user_id) -> Player:
         try:
