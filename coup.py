@@ -229,6 +229,7 @@ class Game:
             ("Block", 0, "disabled", False, False, False, True),
             ("Challenge", 0, "disabled", False, False, False, False),
             ("Accept_Block", 0, "disabled", False, False, False, False),
+            ("Restart", 0, "disabled", False, False, False, False),
         ]:
             self.actions.append(
                 Action(
@@ -254,7 +255,13 @@ class Game:
 
     def enable_all_actions(self):
         for self.action in self.actions:
-            self.action.action_status = "enabled"
+            if self.action.name != "Restart":
+                self.action.action_status = "enabled"
+
+    def enable_one_action(self, action_name):
+        for self.action in self.actions:
+            if self.action.name == action_name:
+                self.action.action_status = "enabled"
 
     def start(self):
         self.game_status = "In progress"
@@ -431,7 +438,7 @@ class Game:
             self.game_alert = f"Game Over - Winner - {self.players_remaining[0].name} "
             self.set_game_status("Game Over")
             self.add_all_actions()
-            self.actions.append(Action("Restart", 0, "enabled", False))
+            self.enable_one_action("Restart")
 
     def player(self, user_id) -> Player:
         try:
