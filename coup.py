@@ -351,44 +351,7 @@ class Game:
             self.clear_game_alerts()
 
         if action.name == "Challenge":
-            if not self.action_history:
-                return
-            if (
-                self.user_id == self.action_history[-1].player1.id
-                and not self.lose_influence_in_progress
-            ):
-                return  # can't challenge yourself
-            if self.exchange_in_progress:
-                return  # can't challenge in the middle of exchange
-            if self.action_history[-1].action.can_be_challenged or (
-                self.action_history[-1].action.name == "Challenge"
-                and self.action_history[-2].action.can_be_challenged
-            ):
-                self.challenge_in_progress = True
-                self.game_alert = f"{self.player(self.user_id).name} is challenging"
-            else:
-                return
-            if self.challenge_successful():
-                self.game_alert = f"{self.player(self.user_id).name} challenge is successful"  #### attacker doesn't have the correct card
-                self.last_challenge_successful = True
-                self.reverse_last_action_challenge()
-                self.lose_influence_in_progress = True
-                self.player_id_to_lose_influence = self.action_history[-1].player1.id
-                self.challenge_in_progress = False
-                self.block_in_progress = False
-                self.coup_assassinate_in_progress = False
-            else:
-                self.last_challenge_successful = False
-                self.game_alert = f"{self.player(self.user_id).name} challenge is unsuccessful"  #### attacker has the correct card
-                # must show and swap correct card
-                # challenger loses influence
-                self.lose_influence_in_progress = True
-                self.challenge_in_progress = False
-                self.block_in_progress = False
-                self.player_id_to_lose_influence = self.user_id
-                if self.action_history[-1].action.name == "Assassinate":
-                    self.players[self.user_id].lose_all_influence()
-                    self.next_turn()
+            self.challenge(user_id)
 
         if (
             action.name == "Start"
@@ -483,6 +446,46 @@ class Game:
             self.cards_to_exchange = []
             self.exchange_in_progress = False
             self.next_turn()
+
+    def challenge(self, user_id):
+        if not self.action_history:
+            return
+        if (
+            self.user_id == self.action_history[-1].player1.id
+            and not self.lose_influence_in_progress
+        ):
+            return  # can't challenge yourself
+        if self.exchange_in_progress:
+            return  # can't challenge in the middle of exchange
+        if self.action_history[-1].action.can_be_challenged or (
+            self.action_history[-1].action.name == "Challenge"
+            and self.action_history[-2].action.can_be_challenged
+        ):
+            self.challenge_in_progress = True
+            self.game_alert = f"{self.player(self.user_id).name} is challenging"
+        else:
+            return
+        if self.challenge_successful():
+            self.game_alert = f"{self.player(self.user_id).name} challenge is successful"  #### attacker doesn't have the correct card
+            self.last_challenge_successful = True
+            self.reverse_last_action_challenge()
+            self.lose_influence_in_progress = True
+            self.player_id_to_lose_influence = self.action_history[-1].player1.id
+            self.challenge_in_progress = False
+            self.block_in_progress = False
+            self.coup_assassinate_in_progress = False
+        else:
+            self.last_challenge_successful = False
+            self.game_alert = f"{self.player(self.user_id).name} challenge is unsuccessful"  #### attacker has the correct card
+            # must show and swap correct card
+            # challenger loses influence
+            self.lose_influence_in_progress = True
+            self.challenge_in_progress = False
+            self.block_in_progress = False
+            self.player_id_to_lose_influence = self.user_id
+            if self.action_history[-1].action.name == "Assassinate":
+                self.players[self.user_id].lose_all_influence()
+                self.next_turn()
 
     def action_from_action_name(self, action_name: str) -> Action:
         default_action = Action("No_action", 0, "disabled", False)
