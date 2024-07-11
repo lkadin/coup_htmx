@@ -294,6 +294,11 @@ class Game:
 
     def process_action(self, action: Action, user_id: str):
         print(f"processing {action=} {user_id=}")
+        if self.game_over():
+            self.game_alert = f"Game Over - Winner - {self.players_remaining[0].name} "
+            self.set_game_status("Game Over")
+            self.add_all_actions()
+            self.enable_one_action("Restart")
         self.user_id = user_id
         if not isinstance(action, Action):
             action = self.action_from_action_name(action)
@@ -433,12 +438,6 @@ class Game:
             if self.block_in_progress:
                 return  # must finish block
             self.coup_assassinate(self.user_id)
-
-        if self.game_over():
-            self.game_alert = f"Game Over - Winner - {self.players_remaining[0].name} "
-            self.set_game_status("Game Over")
-            self.add_all_actions()
-            self.enable_one_action("Restart")
 
     def player(self, user_id) -> Player:
         try:
