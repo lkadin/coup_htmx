@@ -478,7 +478,6 @@ class Game:
             self.last_challenge_successful = False
             self.game_alert = f"{self.player(self.user_id).name} challenge is unsuccessful"  #### attacker has the correct card
             # must show and swap correct card
-            # challenger loses influence
             self.lose_influence_in_progress = True
             self.challenge_in_progress = False
             self.block_in_progress = False
@@ -486,6 +485,7 @@ class Game:
             if self.action_history[-1].action.name == "Assassinate":
                 self.players[self.user_id].lose_all_influence()
                 self.next_turn()
+        self.add_history()
 
     def action_from_action_name(self, action_name: str) -> Action:
         default_action = Action("No_action", 0, "disabled", False)
