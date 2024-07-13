@@ -478,8 +478,10 @@ class Game:
             self.last_challenge_successful = False
             self.game_alert = f"{self.player(self.user_id).name} challenge is unsuccessful"  #### attacker has the correct card
             # must show and swap correct card
-            self.player(self.user_id).discard([self.required_card], self.deck)
-            self.player(self.user_id).draw(self.deck)
+            self.player(self.action_history[-1].player1.id).discard(
+                self.required_card, self.deck
+            )
+            self.player(self.action_history[-1].player1.id).draw(self.deck)
             self.lose_influence_in_progress = True
             self.challenge_in_progress = False
             self.block_in_progress = False
