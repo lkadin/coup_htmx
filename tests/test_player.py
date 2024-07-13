@@ -19,11 +19,11 @@ def test_discard(player, deck):
     assert len(player.hand) == 2
 
 
-def test_play_card(player):
-    player.hand = [Card("contessa"), Card("duke")]
-    played_card = player.play_card()
-    assert played_card.value == "duke"
-    assert player.hand[0].value == "contessa"
+# def test_play_card(player):
+#     player.hand = [Card("contessa"), Card("duke")]
+#     played_card = player.play_card()
+#     assert played_card.value == "duke"
+#     assert player.hand[0].value == "contessa"
 
 
 def test_get_index(player):

@@ -65,8 +65,8 @@ class Player:
             self.hand.pop(index)
             deck.return_to_deck(cardname)
 
-    def play_card(self) -> Card:
-        return self.hand.pop()
+    # def play_card(self) -> Card:
+    #     return self.hand.pop()
 
     def add_remove_coins(self, num_of_coins: int) -> None:
         self.coins += num_of_coins
@@ -478,6 +478,8 @@ class Game:
             self.last_challenge_successful = False
             self.game_alert = f"{self.player(self.user_id).name} challenge is unsuccessful"  #### attacker has the correct card
             # must show and swap correct card
+            self.player(self.user_id).discard([self.required_card], self.deck)
+            self.player(self.user_id).draw(self.deck)
             self.lose_influence_in_progress = True
             self.challenge_in_progress = False
             self.block_in_progress = False
@@ -710,6 +712,7 @@ class Game:
             if prior_action_player1.check_card_in_hand(
                 required_card[blocked_action_name], check_prior=False
             ):
+                self.required_card = required_card[blocked_action_name]
                 return False
             else:
                 return True
@@ -720,6 +723,7 @@ class Game:
         if prior_action_player1.check_card_in_hand(
             required_card[prior_action.name], check_prior
         ):
+            self.required_card = required_card[prior_action.name]
             return False
         return True
 
