@@ -564,7 +564,6 @@ class Game:
             self.coup_assassinate_in_progress = False
             self.couping_assassinating_player = None
             self.must_coup_assassinate = False
-            # self.next_turn()
             self.lose_influence_in_progress = False
             self.card_name_to_lose = ""
         else:
@@ -718,7 +717,7 @@ class Game:
                 return False
             else:
                 return True
-        if prior_action.name in ("Exchange", "Block"):
+        if prior_action.name in ("Exchange", "Block", "Challenge"):
             check_prior = True
         else:
             check_prior = False
