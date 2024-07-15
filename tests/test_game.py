@@ -207,7 +207,7 @@ class TestGame:
 
         assert game_ready.players[user_id].coins == coins
 
-    def test_challenge_block_foreign_aid(self, game_ready):
+    def test_challenge_block_foreign_aid_true(self, game_ready):
         user_id = "1"
         game_ready.players[user_id].hand = [Card("captain"), Card("contessa")]
         game_ready.current_player_index = 0
@@ -230,6 +230,7 @@ class TestGame:
         game_ready.process_action(action, user_id)
         assert game_ready.last_challenge_successful is True
 
+    def test_challenge_block_foreign_aid_false(self, game_ready):
         user_id = "1"
         game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
         game_ready.current_player_index = 0
@@ -245,7 +246,7 @@ class TestGame:
         game_ready.process_action(action, user_id)
 
         action = "Challenge"
-        user_id = "1"
+        user_id = "2"
         game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
         game_ready.current_player_index = 0
         game_ready.set_current_action(action, user_id)

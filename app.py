@@ -128,7 +128,7 @@ async def process_message(websocket, user_id, message):
     if message.get("message_txt") and not game.exchange_in_progress:
         game.set_current_action(message.get("message_txt"), user_id)
     else:
-        message["message_txt"] = game.current_action
+        message["message_txt"] = ""
 
     game.set_second_player_id(game.player_id(message.get("player")))
 
@@ -139,7 +139,7 @@ async def process_message(websocket, user_id, message):
 
     if game.lose_influence_in_progress and not game.current_action.name == "Block":
         game.card_name_to_lose = message.get("cardnames")
-        message["meesage_text"] = (
+        message["message_text"] = (
             ""  # just getting cards to lose - no other action necessary
         )
 
