@@ -65,9 +65,6 @@ class Player:
             self.hand.pop(index)
             deck.return_to_deck(cardname)
 
-    # def play_card(self) -> Card:
-    #     return self.hand.pop()
-
     def add_remove_coins(self, num_of_coins: int) -> None:
         self.coins += num_of_coins
 
