@@ -169,6 +169,13 @@ async def process_message(websocket, user_id, message):
         game,
         message_type="all",
     )
+    if game.game_over():
+        game.process_action(None, user_id)
+        await manager.broadcast(
+            f" {game.players[user_id].name}: {message['message_txt']}",
+            game,
+            message_type="all",
+        )
 
 
 if __name__ == "__main__":
