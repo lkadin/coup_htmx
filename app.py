@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 import uvicorn
 from connection_manager import ConnectionManager
-from coup import Game
+from coup import Game, Action
 import traceback
 
 templates = Jinja2Templates(directory="templates")
@@ -131,6 +131,8 @@ async def process_message(websocket, user_id, message):
         message["message_txt"] = ""
 
     game.set_second_player_id(game.player_id(message.get("player")))
+    if game.current_action.name == "Steal":
+        message["message_txt"] = "Steal"
 
     if game.exchange_in_progress:
         game.cards_to_exchange = message.get("cardnames")
@@ -170,7 +172,7 @@ async def process_message(websocket, user_id, message):
         message_type="all",
     )
     if game.game_over():
-        game.process_action(None, user_id)
+        game.process_action(Action("No_action", 0, "disabled", False), user_id)
         await manager.broadcast(
             f" {game.players[user_id].name}: {message['message_txt']}",
             game,
