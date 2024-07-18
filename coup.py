@@ -172,20 +172,26 @@ class Game:
 
     def next_turn(self) -> None:
         self.add_history()
-        self.current_player_index += 1
-        if self.current_player_index >= len(self.players):
-            self.current_player_index = 0
-        self.current_player_id = str(
-            self.player_id_from_index(self.current_player_index)
-        )
-        if not self.player(self.current_player_id).influence():
-            self.current_player_index += 1
-        if self.current_player_index >= len(self.players):
-            self.current_player_index = 0
+        self.next_player()
+        ##Make sure new player has influence left
         self.clear_all_player_alerts()
         self.clear_game_alerts()
         self.second_player_id = ""
         self.current_action = Action("No_action", 0, "disabled", False)
+
+    def next_player(self):
+        self.current_player_index += 1
+        if self.current_player_index >= len(self.players):
+            self.current_player_index = 0
+
+        while not self.player_id_from_index(self.current_player_index):
+            self.current_player_index += 1
+            if self.current_player_index >= len(self.players):
+                self.current_player_index = 0
+
+        self.current_player_id = str(
+            self.player_id_from_index(self.current_player_index)
+        )
 
     def whose_turn(self) -> int:
         return self.current_player_index
