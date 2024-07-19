@@ -173,7 +173,6 @@ class Game:
     def next_turn(self) -> None:
         self.add_history()
         self.next_player()
-        ##Make sure new player has influence left
         self.clear_all_player_alerts()
         self.clear_game_alerts()
         self.second_player_id = ""
@@ -183,11 +182,17 @@ class Game:
         self.current_player_index += 1
         if self.current_player_index >= len(self.players):
             self.current_player_index = 0
+        self.current_player_id = str(
+            self.player_id_from_index(self.current_player_index)
+        )
 
-        while not self.player_id_from_index(self.current_player_index):
+        while not self.player(self.current_player_id).influence():
             self.current_player_index += 1
             if self.current_player_index >= len(self.players):
                 self.current_player_index = 0
+            self.current_player_id = str(
+                self.player_id_from_index(self.current_player_index)
+            )
 
         self.current_player_id = str(
             self.player_id_from_index(self.current_player_index)

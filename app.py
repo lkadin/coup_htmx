@@ -135,6 +135,8 @@ async def process_message(websocket, user_id, message):
         message["message_txt"] = "Steal"
     if game.current_action.name == "Assassinate":
         message["message_txt"] = "Assassinate"
+    if game.current_action.name == "Exchange":
+        message["message_txt"] = "Exchange"
 
     if game.exchange_in_progress:
         game.cards_to_exchange = message.get("cardnames")
