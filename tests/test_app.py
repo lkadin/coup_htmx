@@ -39,3 +39,8 @@ def test_websocket_connect(client):
         websocket.send_text(json.dumps(data))
         response = websocket.receive_text()
         assert "alert" in response
+
+        data = {"message_txt": "Take 3 coins"}
+        websocket.send_text(json.dumps(data))
+        response = websocket.receive_text()
+        assert "alert" in response
