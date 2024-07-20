@@ -374,7 +374,6 @@ class Game:
             and not self.coup_assassinate_in_progress
             and not self.block_in_progress
             and not self.challenge_in_progress
-            # and not self.lose_influence_in_progress
         ):
             return
 
@@ -556,11 +555,12 @@ class Game:
             self.lose_influence_in_progress = True
             self.player_id_to_lose_influence = self.second_player_id
             self.couping_assassinating_player = self.player(self.user_id)
-            self.add_history()
+            # self.add_history()
             self.second_player_id = ""
             self.couping_assassinating_player.add_remove_coins(  # type: ignore
                 (self.current_action.coins_required * -1)
             )
+            self.next_turn()
 
         self.process_lose_influence()
 
