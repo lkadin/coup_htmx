@@ -465,6 +465,8 @@ class Game:
             return  # can't challenge yourself
         if self.exchange_in_progress:
             return  # can't challenge in the middle of exchange
+        if not self.player(self.user_id).influence():
+            return  # can't challenge if no influence
         if self.action_history[-1].action.can_be_challenged or (
             self.action_history[-1].action.name == "Challenge"
             and self.action_history[-2].action.can_be_challenged
