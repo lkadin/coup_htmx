@@ -435,15 +435,12 @@ class Game:
 
         if not self.cards_to_exchange:
             self.player(self.user_id).save_cards()
-            for _ in range(self.player(self.user_id).influence()):
+            for _ in range(2):
                 self.player(self.user_id).draw(self.deck)
                 self.exchange_in_progress = True
 
         if self.cards_to_exchange:
-            if self.player(self.user_id).influence() == 4:
-                number_of_cards_to_discard = 2
-            else:
-                number_of_cards_to_discard = 1
+            number_of_cards_to_discard = 2
             if number_of_cards_to_discard != len(self.cards_to_exchange):
                 self.player(self.user_id).set_player_alert(
                     "You didn't pick the correct amount of cards"
