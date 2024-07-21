@@ -359,7 +359,7 @@ class Game:
             self.clear_game_alerts()
 
         if action.name == "Challenge":
-            self.challenge(user_id)
+            self.challenge()
 
         if (
             action.name == "Start"
@@ -454,7 +454,7 @@ class Game:
             self.exchange_in_progress = False
             self.next_turn()
 
-    def challenge(self, user_id):
+    def challenge(self):
         if not self.action_history:
             return
         if self.action_history[-1].action.name == "Challenge":
@@ -488,7 +488,6 @@ class Game:
         else:
             self.last_challenge_successful = False
             self.game_alert = f"{self.player(self.user_id).name} challenge is unsuccessful"  #### attacker has the correct card
-            # must show and swap correct card
             self.player(self.action_history[-1].player1.id).discard(
                 self.required_card, self.deck
             )
@@ -593,6 +592,8 @@ class Game:
         if not self.current_action:
             return
         self.player2 = self.player(self.second_player_id)
+        if self.current_action.name == "Challenge":
+            self.player2 = self.action_history[-1].player1
 
         if self.current_action.name in ("Coup", "Assassinate"):
             if self.card_name_to_lose:
