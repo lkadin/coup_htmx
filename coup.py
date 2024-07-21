@@ -335,7 +335,7 @@ class Game:
                 self.block_in_progress = True
                 self.blocking_player = self.player(self.user_id)
                 self.game_alert = f"{self.player(self.user_id).name} is blocking"
-                self.add_history()
+                self.add_history()  ################################################### Why
 
         if action.name == "Accept_Block":
             if not self.block_in_progress:
@@ -352,7 +352,7 @@ class Game:
             if self.coup_assassinate_in_progress:
                 self.next_turn()
             else:
-                self.add_history()
+                self.add_history()  ################################## Why
             self.block_in_progress = False
             self.coup_assassinate_in_progress = False
             self.blocking_player = None
@@ -478,7 +478,7 @@ class Game:
             self.last_challenge_successful = True
             self.reverse_last_action_challenge()
             self.lose_influence_in_progress = True
-            self.player_id_to_lose_influence = self.action_history[-1].player1.id
+            self.player_id_to_lose_influence = self.action_history[-1].player2.id
             self.challenge_in_progress = False
             self.block_in_progress = False
             self.coup_assassinate_in_progress = False
@@ -492,11 +492,12 @@ class Game:
             self.lose_influence_in_progress = True
             self.challenge_in_progress = False
             self.block_in_progress = False
-            self.player_id_to_lose_influence = self.user_id
+            self.player_id_to_lose_influence = self.action_history[-1].player1.id
+            # self.player_id_to_lose_influence = self.user_id
             if self.action_history[-1].action.name == "Assassinate":
                 self.players[self.user_id].lose_all_influence()
                 self.next_turn()
-        self.add_history()
+        # self.add_history() ############################# Why
 
     def action_from_action_name(self, action_name: str) -> Action:
         default_action = Action("No_action", 0, "disabled", False)
