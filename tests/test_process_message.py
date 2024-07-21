@@ -54,7 +54,7 @@ async def test_process_message(
     websocket_mock, user_id, message, game_mock, manager_mock
 ):
     with patch("app.game", game_mock), patch("app.manager", manager_mock):
-        await process_message(websocket_mock, user_id, message)
+        await process_message(user_id, message)
 
         # Add assertions to validate the behavior of process_message
         assert game_mock.set_current_action.called
