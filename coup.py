@@ -483,7 +483,10 @@ class Game:
             self.last_challenge_successful = True
             self.reverse_last_action_challenge()
             self.lose_influence_in_progress = True
-            self.player_id_to_lose_influence = self.action_history[-1].player2.id
+            try:
+                self.player_id_to_lose_influence = self.action_history[-1].player2.id
+            except AttributeError:
+                self.player_id_to_lose_influence = self.action_history[-1].player1.id
             self.challenge_in_progress = False
             self.block_in_progress = False
             self.coup_assassinate_in_progress = False
