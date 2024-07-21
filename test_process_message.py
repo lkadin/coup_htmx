@@ -1,5 +1,4 @@
 import pytest
-import asyncio
 from unittest.mock import AsyncMock, MagicMock, patch
 
 # Assuming the process_message function is in a module named your_module

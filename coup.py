@@ -457,6 +457,8 @@ class Game:
     def challenge(self, user_id):
         if not self.action_history:
             return
+        if self.action_history[-1].action.name == "Challenge":
+            return  # Can't challenge a challenge
         if (
             self.user_id == self.action_history[-1].player1.id
             and not self.lose_influence_in_progress

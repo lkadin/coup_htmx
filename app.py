@@ -32,6 +32,23 @@ async def login(request: Request):
     )
 
 
+@app.get("/restart", response_class=HTMLResponse)
+async def restart(request: Request):
+    game.restart()
+    return templates.TemplateResponse(
+        "htmx_user_generic.html",
+        {
+            "request": request,
+            "user_id": game.user_id,
+            "user_name": game.player(game.user_id).name,
+            "actions": game.actions,
+            "game_status": game.game_status,
+            "turn": game.whose_turn_name(),
+            "history": game.action_history,
+        },
+    )
+
+
 @app.get("/web/{user_id}/", response_class=HTMLResponse)
 async def read_item(request: Request, user_id: str, user_name: str):
     def refresh():
