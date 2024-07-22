@@ -502,11 +502,9 @@ class Game:
             self.block_in_progress = False
             self.coup_assassinate_in_progress = False
         else:
-            self.last_challenge_successful = False
             self.game_alert = f"{self.player(self.user_id).name} challenge is unsuccessful"  #### attacker has the correct card
-            self.player(self.action_history[-1].player1.id).discard(
-                self.required_card, self.deck
-            )
+            self.last_challenge_successful = False
+            self.swap_winning_card()
             self.player(self.action_history[-1].player1.id).draw(self.deck)
             self.lose_influence_in_progress = True
             self.challenge_in_progress = False
@@ -516,6 +514,11 @@ class Game:
             if self.action_history[-1].action.name == "Assassinate":
                 self.players[self.user_id].lose_all_influence()
                 self.next_turn()
+
+    def swap_winning_card(self):
+        self.player(self.action_history[-1].player1.id).discard(
+            self.required_card, self.deck
+        )
         # self.add_history() ############################# Why
 
     def action_from_action_name(self, action_name: str) -> Action:
