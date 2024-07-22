@@ -499,10 +499,7 @@ class Game:
             self.game_alert = f"{self.player(self.user_id).name} challenge is successful"  #### attacker doesn't have the correct card
             self.last_challenge_successful = True
             self.reverse_last_action_challenge()
-            try:
-                self.player_id_to_lose_influence = self.action_history[-1].player2.id  # type: ignore
-            except AttributeError:
-                self.player_id_to_lose_influence = self.action_history[-1].player1.id
+            self.player_id_to_lose_influence = self.action_history[-1].player1.id  # type: ignore
         else:
             self.game_alert = f"{self.player(self.user_id).name} challenge is unsuccessful"  #### attacker has the correct card
             self.last_challenge_successful = False
@@ -614,7 +611,7 @@ class Game:
         if not self.current_action:
             return
         self.player2 = self.player(self.second_player_id)
-        if self.current_action.name == "Challenge":
+        if self.current_action.name in ("Challenge", "Block"):
             self.player2 = self.action_history[-1].player1
 
         if self.current_action.name in ("Coup", "Assassinate"):
@@ -731,10 +728,10 @@ class Game:
             return True
         prior_action = self.action_history[-1].action
         prior_action_player1 = self.action_history[-1].player1
-        if prior_action.name == "Block":
+        if prior_action.name == "Block":  # Challenging a block
             blocked_action_name = "Block_" + self.action_history[-2].action.name
-            if blocked_action_name != "Block_Assassinate":
-                prior_action_player1 = self.action_history[-2].player1
+            # if blocked_action_name != "Block_Assassinate":
+            #     prior_action_player1 = self.action_history[-2].player1
             if prior_action_player1.check_card_in_hand(
                 REQUIRED_CARD[blocked_action_name], check_prior=False
             ):
@@ -742,7 +739,7 @@ class Game:
                 return False
             else:
                 return True
-        if prior_action.name in ("Exchange", "Block", "Challenge"):
+        if prior_action.name in ("Exchange", "Block"):
             check_prior = True
         else:
             check_prior = False

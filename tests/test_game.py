@@ -209,7 +209,6 @@ class TestGame:
 
     def test_challenge_block_foreign_aid_true(self, game_ready):
         user_id = "1"
-        game_ready.players[user_id].hand = [Card("captain"), Card("contessa")]
         game_ready.current_player_index = 0
         game_ready.current_action_player_id = user_id
         action = "Foreign_aid"
@@ -218,21 +217,21 @@ class TestGame:
 
         action = "Block"
         user_id = "2"
+        game_ready.players[user_id].hand = [Card("captain"), Card("contessa")]
         game_ready.current_player_index = 1
         game_ready.set_current_action(action, user_id)
         game_ready.process_action(action, user_id)
 
         action = "Challenge"
         user_id = "1"
-        game_ready.players[user_id].hand = [Card("captain"), Card("contessa")]
         game_ready.current_player_index = 0
         game_ready.set_current_action(action, user_id)
         game_ready.process_action(action, user_id)
         assert game_ready.last_challenge_successful is True
+        assert game_ready.player_id_to_lose_influence == "2"
 
     def test_challenge_block_foreign_aid_false(self, game_ready):
         user_id = "1"
-        game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
         game_ready.current_player_index = 0
         game_ready.current_action_player_id = user_id
         action = "Foreign_aid"
@@ -241,17 +240,18 @@ class TestGame:
 
         action = "Block"
         user_id = "2"
+        game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
         game_ready.current_player_index = 1
         game_ready.set_current_action(action, user_id)
         game_ready.process_action(action, user_id)
 
         action = "Challenge"
-        user_id = "2"
-        game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
+        user_id = "1"
         game_ready.current_player_index = 0
         game_ready.set_current_action(action, user_id)
         game_ready.process_action(action, user_id)
         assert game_ready.last_challenge_successful is False
+        assert game_ready.player_id_to_lose_influence == "1"
 
     def test_process_action_exchange(self, game_ready):
         user_id = game_ready.player_index_to_id(game_ready.current_player_index)
