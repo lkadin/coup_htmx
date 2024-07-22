@@ -493,6 +493,8 @@ class Game:
         self.challenge_in_progress = False
         self.block_in_progress = False
         self.lose_influence_in_progress = True
+        self.coup_assassinate_in_progress = False
+
         if self.challenge_successful():
             self.game_alert = f"{self.player(self.user_id).name} challenge is successful"  #### attacker doesn't have the correct card
             self.last_challenge_successful = True
@@ -501,7 +503,6 @@ class Game:
                 self.player_id_to_lose_influence = self.action_history[-1].player2.id
             except AttributeError:
                 self.player_id_to_lose_influence = self.action_history[-1].player1.id
-            self.coup_assassinate_in_progress = False
         else:
             self.game_alert = f"{self.player(self.user_id).name} challenge is unsuccessful"  #### attacker has the correct card
             self.last_challenge_successful = False
