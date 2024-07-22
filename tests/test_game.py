@@ -141,15 +141,15 @@ class TestGame:
         game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
         game_ready.process_action(action, user_id)
         assert game_ready.players[user_id].coins == coins + 3
-        game_ready.current_action = Action(
-            "Take_3_coins", 0, "enabled", False, True, False, True
-        )
-        game_ready.current_action_player_id = "1"
-        game_ready.add_history()
+        game_ready.set_current_action(action, user_id)
+        game_ready.current_action_player_id = user_id
+        # game_ready.add_history()
         user_id = "2"
         action = "Challenge"
+        game_ready.set_current_action(action, user_id)
         game_ready.process_action(action, user_id)
         assert game_ready.last_challenge_successful is False
+        assert game_ready.player_id_to_lose_influence == "2"
 
         action = "Take_3_coins"
         user_id = "1"
@@ -167,6 +167,7 @@ class TestGame:
         game_ready.process_action(action, user_id)
         assert game_ready.last_challenge_successful is True
         assert game_ready.players["1"].coins == coins
+        assert game_ready.player_id_to_lose_influence == "2"
 
     def test_process_action_income(self, game_ready):
         game_ready.current_action_player_id = "1"

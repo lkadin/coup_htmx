@@ -729,16 +729,19 @@ class Game:
         prior_action = self.action_history[-1].action
         prior_action_player1 = self.action_history[-1].player1
         if prior_action.name == "Block":  # Challenging a block
-            blocked_action_name = "Block_" + self.action_history[-2].action.name
+            action_name_to_check = "Block_" + self.action_history[-2].action.name
+        else:
+            action_name_to_check = prior_action.name
+
             # if blocked_action_name != "Block_Assassinate":
             #     prior_action_player1 = self.action_history[-2].player1
-            if prior_action_player1.check_card_in_hand(
-                REQUIRED_CARD[blocked_action_name], check_prior=False
-            ):
-                self.required_card = REQUIRED_CARD[blocked_action_name]
-                return False
-            else:
-                return True
+        if prior_action_player1.check_card_in_hand(
+            REQUIRED_CARD[action_name_to_check], check_prior=False
+        ):
+            self.required_card = REQUIRED_CARD[action_name_to_check]
+            return False
+        else:
+            return True
         if prior_action.name in ("Exchange", "Block"):
             check_prior = True
         else:
