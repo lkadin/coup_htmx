@@ -2,6 +2,16 @@ import random
 from datetime import datetime
 
 COUP_REQUIRED = 10  # of coins when you MUST Coup
+REQUIRED_CARD = {
+    "Assassinate": ["assassin"],
+    "Steal": ["captain"],
+    "Exchange": ["ambassador"],
+    "Take_3_coins": ["duke"],
+    # block the following:
+    "Block_Foreign_aid": ["duke"],
+    "Block_Steal": ["ambassador", "captain"],
+    "Block_Assassinate": ["contessa"],
+}
 
 
 class Card:
@@ -465,18 +475,19 @@ class Game:
             return  # can't challenge in the middle of exchange
         if not self.player(self.user_id).influence():
             return  # can't challenge if no influence
-        return True
-
-    def challenge(self):
-        if not self.challenge_can_continue():
-            return
         if self.action_history[-1].action.can_be_challenged or (
             self.action_history[-1].action.name == "Challenge"
             and self.action_history[-2].action.can_be_challenged
         ):
             self.challenge_in_progress = True
             self.game_alert = f"{self.player(self.user_id).name} is challenging"
+            return True
         else:
+            return
+        return True
+
+    def challenge(self):
+        if not self.challenge_can_continue():
             return
         if self.challenge_successful():
             self.game_alert = f"{self.player(self.user_id).name} challenge is successful"  #### attacker doesn't have the correct card
@@ -711,16 +722,6 @@ class Game:
             self.exchange_in_progress = False
 
     def challenge_successful(self) -> bool:
-        required_card = {
-            "Assassinate": ["assassin"],
-            "Steal": ["captain"],
-            "Exchange": ["ambassador"],
-            "Take_3_coins": ["duke"],
-            # block the following:
-            "Block_Foreign_aid": ["duke"],
-            "Block_Steal": ["ambassador", "captain"],
-            "Block_Assassinate": ["contessa"],
-        }
         if not self.action_history:
             return True
         prior_action = self.action_history[-1].action
@@ -730,9 +731,9 @@ class Game:
             if blocked_action_name != "Block_Assassinate":
                 prior_action_player1 = self.action_history[-2].player1
             if prior_action_player1.check_card_in_hand(
-                required_card[blocked_action_name], check_prior=False
+                REQUIRED_CARD[blocked_action_name], check_prior=False
             ):
-                self.required_card = required_card[blocked_action_name]
+                self.required_card = REQUIRED_CARD[blocked_action_name]
                 return False
             else:
                 return True
@@ -741,9 +742,9 @@ class Game:
         else:
             check_prior = False
         if prior_action_player1.check_card_in_hand(
-            required_card[prior_action.name], check_prior
+            REQUIRED_CARD[prior_action.name], check_prior
         ):
-            self.required_card = required_card[prior_action.name]
+            self.required_card = REQUIRED_CARD[prior_action.name]
             return False
         return True
 
