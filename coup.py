@@ -489,28 +489,24 @@ class Game:
     def challenge(self):
         if not self.challenge_can_continue():
             return
+
+        self.challenge_in_progress = False
+        self.block_in_progress = False
+        self.lose_influence_in_progress = True
         if self.challenge_successful():
             self.game_alert = f"{self.player(self.user_id).name} challenge is successful"  #### attacker doesn't have the correct card
             self.last_challenge_successful = True
             self.reverse_last_action_challenge()
-            self.lose_influence_in_progress = True
             try:
                 self.player_id_to_lose_influence = self.action_history[-1].player2.id
             except AttributeError:
                 self.player_id_to_lose_influence = self.action_history[-1].player1.id
-            self.challenge_in_progress = False
-            self.block_in_progress = False
             self.coup_assassinate_in_progress = False
         else:
             self.game_alert = f"{self.player(self.user_id).name} challenge is unsuccessful"  #### attacker has the correct card
             self.last_challenge_successful = False
             self.swap_winning_card()
-            self.player(self.action_history[-1].player1.id).draw(self.deck)
-            self.lose_influence_in_progress = True
-            self.challenge_in_progress = False
-            self.block_in_progress = False
             self.player_id_to_lose_influence = self.action_history[-1].player1.id
-            # self.player_id_to_lose_influence = self.user_id
             if self.action_history[-1].action.name == "Assassinate":
                 self.players[self.user_id].lose_all_influence()
                 self.next_turn()
@@ -519,7 +515,7 @@ class Game:
         self.player(self.action_history[-1].player1.id).discard(
             self.required_card, self.deck
         )
-        # self.add_history() ############################# Why
+        self.player(self.action_history[-1].player1.id).draw(self.deck)
 
     def action_from_action_name(self, action_name: str) -> Action:
         default_action = Action("No_action", 0, "disabled", False)
