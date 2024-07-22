@@ -500,17 +500,22 @@ class Game:
             self.last_challenge_successful = True
             self.reverse_last_action_challenge()
             try:
-                self.player_id_to_lose_influence = self.action_history[-1].player2.id
+                self.player_id_to_lose_influence = self.action_history[-1].player2.id  # type: ignore
             except AttributeError:
                 self.player_id_to_lose_influence = self.action_history[-1].player1.id
         else:
             self.game_alert = f"{self.player(self.user_id).name} challenge is unsuccessful"  #### attacker has the correct card
             self.last_challenge_successful = False
             self.swap_winning_card()
-            self.player_id_to_lose_influence = self.action_history[-1].player1.id
+            # self.player_id_to_lose_influence = self.action_history[-1].player1.id
+            try:
+                self.player_id_to_lose_influence = self.action_history[-1].player2.id  # type: ignore
+            except AttributeError:
+                self.player_id_to_lose_influence = self.action_history[-1].player1.id
             if self.action_history[-1].action.name == "Assassinate":
                 self.players[self.user_id].lose_all_influence()
                 self.next_turn()
+        self.add_history()
 
     def swap_winning_card(self):
         self.player(self.action_history[-1].player1.id).discard(
