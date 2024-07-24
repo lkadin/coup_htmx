@@ -505,10 +505,7 @@ class Game:
             self.last_challenge_successful = False
             self.swap_winning_card()
             # self.player_id_to_lose_influence = self.action_history[-1].player1.id
-            try:
-                self.player_id_to_lose_influence = self.action_history[-1].player2.id  # type: ignore
-            except AttributeError:
-                self.player_id_to_lose_influence = self.action_history[-1].player1.id
+            self.player_id_to_lose_influence = self.user_id
             if self.action_history[-1].action.name == "Assassinate":
                 self.players[self.user_id].lose_all_influence()
                 self.next_turn()

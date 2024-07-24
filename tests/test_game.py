@@ -131,43 +131,46 @@ class TestGame:
         coins = game_ready.players[user_id].coins
         game_ready.process_action(action, user_id)
         assert game_ready.players[user_id].coins == coins + 3
-        game_ready.add_history()
 
-    def test_process_action_challenge_take_3_coins(self, game_ready):
+    def test_process_action_challenge_take_3_coins_false(self, game_ready):
         action = "Take_3_coins"
         user_id = "1"
         game_ready.current_player_index = 0
+        game_ready.current_action_player_id = user_id
         coins = game_ready.players[user_id].coins = 2
         game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
+        game_ready.set_current_action(action, user_id)
         game_ready.process_action(action, user_id)
         assert game_ready.players[user_id].coins == coins + 3
-        game_ready.set_current_action(action, user_id)
-        game_ready.current_action_player_id = user_id
-        # game_ready.add_history()
-        user_id = "2"
+
         action = "Challenge"
+        user_id = "2"
+        game_ready.current_player_index = 1
         game_ready.set_current_action(action, user_id)
         game_ready.process_action(action, user_id)
+        assert game_ready.players[user_id].coins == coins
         assert game_ready.last_challenge_successful is False
         assert game_ready.player_id_to_lose_influence == "2"
 
+    def test_process_action_challenge_take_3_coins_true(self, game_ready):
         action = "Take_3_coins"
         user_id = "1"
         game_ready.current_player_index = 0
+        game_ready.current_action_player_id = user_id
+        game_ready.set_current_action(action, user_id)
         coins = game_ready.players[user_id].coins = 2
         game_ready.players[user_id].hand = [Card("captain"), Card("assassin")]
-        game_ready.process_action(action, user_id)
-        game_ready.current_action = Action(
-            "Take_3_coins", 0, "enabled", False, True, False, True
-        )
         game_ready.current_action_player_id = "1"
-        game_ready.add_history()
-        user_id = "2"
+        game_ready.process_action(action, user_id)
+
         action = "Challenge"
+        user_id = "2"
+        game_ready.current_player_index = 1
+        game_ready.current_action_player_id = user_id
         game_ready.process_action(action, user_id)
         assert game_ready.last_challenge_successful is True
         assert game_ready.players["1"].coins == coins
-        assert game_ready.player_id_to_lose_influence == "2"
+        assert game_ready.player_id_to_lose_influence == "1"
 
     def test_process_action_income(self, game_ready):
         game_ready.current_action_player_id = "1"
@@ -276,9 +279,7 @@ class TestGame:
         game_ready.process_action(action, user_id)
         game_ready.required_discard_qty = 2
         game_ready.process_action(action, user_id)
-        game_ready.current_action = Action(
-            "Exchange", 0, "enabled", False, True, False, True
-        )
+        game_ready.set_current_action(action, user_id)
         game_ready.add_history()
         action = "Challenge"
         game_ready.process_action(action, "2")
@@ -287,6 +288,7 @@ class TestGame:
             Card("captain"),
             Card("duke"),
         ]
+        assert game_ready.player_id_to_lose_influence == "1"
 
         user_id = "1"
         game_ready.current_action_player_id = user_id
@@ -297,13 +299,12 @@ class TestGame:
         game_ready.process_action(action, user_id)
         game_ready.required_discard_qty = 2
         game_ready.process_action(action, user_id)
-        game_ready.current_action = Action(
-            "Exchange", 0, "enabled", False, True, False, True
-        )
+        game_ready.set_current_action(action, user_id)
         game_ready.add_history()
         action = "Challenge"
         game_ready.process_action(action, "2")
         assert game_ready.last_challenge_successful is False
+        assert game_ready.player_id_to_lose_influence == "2"
 
     def test_steal(self, game_ready):
         game_ready.current_action_player_id = "1"
