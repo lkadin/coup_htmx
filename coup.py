@@ -187,6 +187,8 @@ class Game:
         self.clear_game_alerts()
         self.second_player_id = ""
         self.current_action = Action("No_action", 0, "disabled", False)
+        self.lose_influence_in_progress = False
+        self.coup_assassinate_in_progress = False
 
     def next_player(self):
         self.current_player_index += 1
@@ -490,16 +492,16 @@ class Game:
         if not self.challenge_can_continue():
             return
 
-        self.challenge_in_progress = False
         self.block_in_progress = False
         self.lose_influence_in_progress = True
-        self.coup_assassinate_in_progress = False
+        self.challenge_in_progress = True
 
         if self.challenge_successful():
             self.game_alert = f"{self.player(self.user_id).name} challenge is successful"  #### attacker doesn't have the correct card
             self.last_challenge_successful = True
             self.reverse_last_action_challenge()
             self.player_id_to_lose_influence = self.action_history[-1].player1.id  # type: ignore
+            self.add_history()
         else:
             self.game_alert = f"{self.player(self.user_id).name} challenge is unsuccessful"  #### attacker has the correct card
             self.last_challenge_successful = False
@@ -509,7 +511,6 @@ class Game:
             if self.action_history[-1].action.name == "Assassinate":
                 self.players[self.user_id].lose_all_influence()
                 self.next_turn()
-        self.add_history()
 
     def swap_winning_card(self):
         self.player(self.action_history[-1].player1.id).discard(
@@ -533,7 +534,7 @@ class Game:
             self.check_coins(self.user_id) == -1 and self.current_action.name != "Coup"
         ):  # must coup
             self.must_coup_assassinate = True
-            self.current_action = Action("No_action", 0, "disabled", False)
+            # self.current_action = Action("No_action", 0, "disabled", False)
             return
         if self.check_coins(self.user_id) == 1:
             return
@@ -600,6 +601,7 @@ class Game:
                 and self.player_id_to_lose_influence == self.user_id
             ):
                 self.player(self.user_id).set_player_alert("You must pick one card")
+        self.lose_influence_in_progress = False
 
     def clear_history(self):
         self.action_history = []
@@ -699,7 +701,7 @@ class Game:
             self.assassinate_in_progress = False
             player1 = self.action_history[-1].player1
             player1.add_remove_coins(3)
-            self.next_turn()
+            # self.next_turn()
 
         if prior_action == "Take_3_coins":
             player1 = self.action_history[-1].player1
