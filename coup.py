@@ -100,15 +100,15 @@ class Player:
     def clear_player_alert(self) -> None:
         self.player_alert = ""
 
-    def check_card_in_hand(self, cards_to_check: list[str], check_prior: bool) -> bool:
+    def check_card_in_hand(self, cards_to_check: list[str], check_prior: bool):
         if check_prior:
             hand = self.cards_prior_to_exchange.copy()
         else:
             hand = self.hand.copy()
         for card in hand:
             if card.value in cards_to_check and card.card_status == "down":
-                return True
-        return False
+                return card.value
+        return None
 
     def save_cards(self):
         self.cards_prior_to_exchange = self.hand.copy()
@@ -514,7 +514,7 @@ class Game:
 
     def swap_winning_card(self):
         self.player(self.action_history[-1].player1.id).discard(
-            self.required_card, self.deck
+            [self.required_card], self.deck
         )
         self.player(self.action_history[-1].player1.id).draw(self.deck)
 
@@ -738,12 +738,10 @@ class Game:
         else:
             action_name_to_check = prior_action.name
 
-            # if blocked_action_name != "Block_Assassinate":
-            #     prior_action_player1 = self.action_history[-2].player1
-        if prior_action_player1.check_card_in_hand(
+        self.required_card = prior_action_player1.check_card_in_hand(
             REQUIRED_CARD[action_name_to_check], check_prior=False
-        ):
-            self.required_card = REQUIRED_CARD[action_name_to_check]
+        )
+        if self.required_card:
             return False
         else:
             return True

@@ -506,3 +506,55 @@ class TestGame:
         game_ready.process_action(action, "1")
 
         assert game_ready.players[user_id].coins == coins
+
+    def test_challenge_block_steal_true(self, game_ready):
+        user_id = "1"
+        game_ready.current_player_index = 0
+        game_ready.current_action_player_id = user_id
+        game_ready.second_player_id = "2"
+        action = "Steal"
+        game_ready.set_current_action(action, user_id)
+        coins = game_ready.players[user_id].coins
+        game_ready.process_action(action, user_id)
+        assert game_ready.players[user_id].coins == coins + 2
+
+        action = "Block"
+        user_id = "2"
+        game_ready.current_player_index = 1
+        game_ready.players[user_id].hand = [Card("duke"), Card("duke")]
+        game_ready.set_current_action(action, user_id)
+        game_ready.process_action(action, user_id)
+
+        action = "Challenge"
+        user_id = "1"
+        game_ready.current_player_index = 0
+        game_ready.set_current_action(action, user_id)
+        game_ready.process_action(action, user_id)
+        assert game_ready.last_challenge_successful is True
+        assert game_ready.player_id_to_lose_influence == "2"
+
+    def test_challenge_block_steal_false(self, game_ready):
+        user_id = "1"
+        game_ready.current_player_index = 0
+        game_ready.current_action_player_id = user_id
+        game_ready.second_player_id = "2"
+        action = "Steal"
+        game_ready.set_current_action(action, user_id)
+        coins = game_ready.players[user_id].coins
+        game_ready.process_action(action, user_id)
+        assert game_ready.players[user_id].coins == coins + 2
+
+        action = "Block"
+        user_id = "2"
+        game_ready.current_player_index = 1
+        game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
+        game_ready.set_current_action(action, user_id)
+        game_ready.process_action(action, user_id)
+
+        action = "Challenge"
+        user_id = "1"
+        game_ready.current_player_index = 0
+        game_ready.set_current_action(action, user_id)
+        game_ready.process_action(action, user_id)
+        assert game_ready.last_challenge_successful is False
+        assert game_ready.player_id_to_lose_influence == "1"
