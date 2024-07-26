@@ -482,3 +482,27 @@ class TestGame:
         game_ready.set_current_action(action, user_id)
         game_ready.process_action(action, user_id)
         assert game_ready.last_challenge_successful is True
+
+    def test_block_steal(self, game_ready):
+        user_id = "1"
+        game_ready.current_player_index = 0
+        game_ready.current_action_player_id = user_id
+        game_ready.second_player_id = "2"
+        action = "Steal"
+
+        game_ready.set_current_action(action, user_id)
+        coins = game_ready.players[user_id].coins
+        game_ready.process_action(action, user_id)
+        assert game_ready.players[user_id].coins == coins + 2
+
+        action = "Block"
+        user_id = "2"
+        game_ready.set_current_action(action, user_id)
+        game_ready.process_action(action, "2")
+
+        action = "Accept_Block"
+        user_id = "1"
+        game_ready.set_current_action(action, user_id)
+        game_ready.process_action(action, "1")
+
+        assert game_ready.players[user_id].coins == coins
