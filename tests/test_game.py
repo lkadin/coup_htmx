@@ -99,6 +99,7 @@ class TestGame:
         game_ready.process_action(action, user_id)
         assert game_ready.players["1"].coins == coins1 + 2
         assert game_ready.players["2"].coins == coins2 - 2
+
         game_ready.process_action("Challenge", "2")
         assert game_ready.last_challenge_successful is True
         assert game_ready.players["1"].coins == coins1
@@ -114,6 +115,7 @@ class TestGame:
         game_ready.process_action("Steal", "1")
         assert game_ready.players["1"].coins == coins1 + 2
         assert game_ready.players["2"].coins == coins2 - 2
+
         game_ready.process_action("Challenge", "2")
         assert game_ready.last_challenge_successful is False
         assert game_ready.players["1"].coins == coins1 + 2
