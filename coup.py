@@ -14,6 +14,10 @@ REQUIRED_CARD = {
 }
 
 
+class No_Card(Exception):
+    pass
+
+
 class Card:
     def __init__(self, value) -> None:
         self.value = value
@@ -64,7 +68,7 @@ class Player:
         for index, card in enumerate(self.hand):
             if card.value == cardname and card.card_status == "down":
                 return index
-        raise Exception("Card to discard not found in hand")
+        raise No_Card("Card to discard not found in hand")
 
     def draw(self, deck: Deck) -> None:
         self.hand.append(Card(deck.draw()))
@@ -477,15 +481,6 @@ class Game:
             return  # can't challenge in the middle of exchange
         if not self.player(self.user_id).influence():
             return  # can't challenge if no influence
-        if self.action_history[-1].action.can_be_challenged or (
-            self.action_history[-1].action.name == "Challenge"
-            and self.action_history[-2].action.can_be_challenged
-        ):
-            self.challenge_in_progress = True
-            self.game_alert = f"{self.player(self.user_id).name} is challenging"
-            return True
-        else:
-            return
         return True
 
     def challenge(self):
@@ -506,17 +501,21 @@ class Game:
             self.game_alert = f"{self.player(self.user_id).name} challenge is unsuccessful"  #### attacker has the correct card
             self.last_challenge_successful = False
             self.swap_winning_card()
-            # self.player_id_to_lose_influence = self.action_history[-1].player1.id
             self.player_id_to_lose_influence = self.user_id
             if self.action_history[-1].action.name == "Assassinate":
                 self.players[self.user_id].lose_all_influence()
                 self.next_turn()
 
     def swap_winning_card(self):
-        self.player(self.action_history[-1].player1.id).discard(
-            [self.required_card], self.deck
-        )
-        self.player(self.action_history[-1].player1.id).draw(self.deck)
+        #####if exchange only swap card if it's still in the hand ##################
+        try:
+            self.player(self.action_history[-1].player1.id).discard(
+                [self.required_card], self.deck
+            )
+            self.player(self.action_history[-1].player1.id).draw(self.deck)
+        except No_Card:
+
+            pass
 
     def action_from_action_name(self, action_name: str) -> Action:
         default_action = Action("No_action", 0, "disabled", False)
@@ -707,7 +706,6 @@ class Game:
             self.assassinate_in_progress = False
             player1 = self.action_history[-1].player1
             player1.add_remove_coins(3)
-            # self.next_turn()
 
         if prior_action == "Take_3_coins":
             player1 = self.action_history[-1].player1
@@ -737,18 +735,18 @@ class Game:
             action_name_to_check = "Block_" + self.action_history[-2].action.name
         else:
             action_name_to_check = prior_action.name
+        if prior_action.name in ("Exchange"):
+            check_prior = True
+        else:
+            check_prior = False
 
         self.required_card = prior_action_player1.check_card_in_hand(
-            REQUIRED_CARD[action_name_to_check], check_prior=False
+            REQUIRED_CARD[action_name_to_check], check_prior
         )
         if self.required_card:
             return False
         else:
             return True
-        if prior_action.name in ("Exchange", "Block"):
-            check_prior = True
-        else:
-            check_prior = False
         if prior_action_player1.check_card_in_hand(
             REQUIRED_CARD[prior_action.name], check_prior
         ):
