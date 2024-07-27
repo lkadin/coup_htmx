@@ -79,7 +79,6 @@ class TestGame:
     def test_process_action_steal(self, game_ready):
         action = "Steal"
         game_ready.current_player_index = 0
-        # game_ready.current_action_player_id = "1"
         user_id = "1"
         coins1 = game_ready.players["1"].coins
         coins2 = game_ready.players["2"].coins

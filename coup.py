@@ -514,7 +514,6 @@ class Game:
             )
             self.player(self.action_history[-1].player1.id).draw(self.deck)
         except No_Card:
-
             pass
 
     def action_from_action_name(self, action_name: str) -> Action:
