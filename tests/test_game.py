@@ -89,28 +89,30 @@ class TestGame:
 
     def test_process_action_challenge_steal_true(self, game_ready):
         action = "Steal"
-        game_ready.current_player_index = 0
-        game_ready.current_action_player_id = "1"
         user_id = "1"
-        coins1 = game_ready.players["1"].coins
+        game_ready.current_player_index = 0
+        game_ready.current_action_player_id = user_id
+        coins1 = game_ready.players[user_id].coins
         game_ready.second_player_id = "2"
         coins2 = game_ready.players["2"].coins
         game_ready.players[game_ready.user_id].hand = [Card("duke"), Card("duke")]
         game_ready.process_action(action, user_id)
-        assert game_ready.players["1"].coins == coins1 + 2
+        assert game_ready.players[user_id].coins == coins1 + 2
         assert game_ready.players["2"].coins == coins2 - 2
 
         action = "Challenge"
         user_id = "2"
+        game_ready.current_player_index = 1
         game_ready.process_action(action, user_id)
         assert game_ready.last_challenge_successful is True
         assert game_ready.players["1"].coins == coins1
         assert game_ready.players["2"].coins == coins2
 
     def test_process_action_challenge_steal_false(self, game_ready):
-        user_id = "1"
         action = "Steal"
+        user_id = "1"
         game_ready.current_player_index = 0
+        game_ready.current_action_player_id = user_id
         coins1 = game_ready.players["1"].coins
         coins2 = game_ready.players["2"].coins
         game_ready.second_player_id = "2"
@@ -119,7 +121,10 @@ class TestGame:
         assert game_ready.players["1"].coins == coins1 + 2
         assert game_ready.players["2"].coins == coins2 - 2
 
-        game_ready.process_action("Challenge", "2")
+        action = "Challenge"
+        user_id = "2"
+        game_ready.current_player_index = 1
+        game_ready.process_action(action, user_id)
         assert game_ready.last_challenge_successful is False
         assert game_ready.players["1"].coins == coins1 + 2
         assert game_ready.players["2"].coins == coins2 - 2
