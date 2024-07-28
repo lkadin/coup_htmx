@@ -191,7 +191,7 @@ class Game:
         self.clear_game_alerts()
         self.second_player_id = ""
         self.current_action = Action("No_action", 0, "disabled", False)
-        self.lose_influence_in_progress = False
+        # self.lose_influence_in_progress = False
         self.coup_assassinate_in_progress = False
 
     def next_player(self):
@@ -581,16 +581,14 @@ class Game:
         self.process_lose_influence()
 
     def process_lose_influence(self):
-        if self.card_name_to_lose and isinstance(
-            self.card_name_to_lose, str
-        ):  # card was picked need to lose influence
+        if self.card_name_to_lose:  # card was picked need to lose influence
             self.player(self.player_id_to_lose_influence).lose_influence(
                 self.card_name_to_lose
             )
             self.coup_assassinate_in_progress = False
             self.couping_assassinating_player = None
             self.must_coup_assassinate = False
-            self.lose_influence_in_progress = False
+            self.lose_influence_in_progress = True
             self.card_name_to_lose = ""
         else:
             if (
@@ -599,7 +597,7 @@ class Game:
                 and self.player_id_to_lose_influence == self.user_id
             ):
                 self.player(self.user_id).set_player_alert("You must pick one card")
-        self.lose_influence_in_progress = False
+        # self.lose_influence_in_progress = False
 
     def clear_history(self):
         self.action_history = []
