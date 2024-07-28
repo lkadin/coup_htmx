@@ -106,7 +106,6 @@ class TestGame:
         assert game_ready.players["2"].coins == coins2
 
         game_ready.current_player_index = 0
-        game_ready.current_action_player_id = "1"
         game_ready.user_id = "1"
         coins1 = game_ready.players["1"].coins
         coins2 = game_ready.players["2"].coins
@@ -159,7 +158,6 @@ class TestGame:
         action = "Take_3_coins"
         user_id = "1"
         game_ready.current_player_index = 0
-        game_ready.current_action_player_id = user_id
         game_ready.set_current_action(action, user_id)
         coins = game_ready.players[user_id].coins = 2
         game_ready.players[user_id].hand = [Card("captain"), Card("assassin")]
@@ -315,7 +313,6 @@ class TestGame:
         assert game_ready.player_id_to_lose_influence == "2"
 
     def test_steal(self, game_ready):
-        game_ready.current_action_player_id = "1"
         coins1 = game_ready.players["1"].coins
         coins2 = game_ready.players["2"].coins
         game_ready.steal(
@@ -329,7 +326,6 @@ class TestGame:
 
     def test_exchange(self, game_ready):
         user_id = "1"
-        game_ready.current_action_player_id = user_id
         game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
         game_ready.exchange(user_id)
         assert len(game_ready.players[user_id].hand) == 4
@@ -451,7 +447,6 @@ class TestGame:
         action = "Assassinate"
         user_id = "1"
         game_ready.current_action = game_ready.action_from_action_name(action)
-        game_ready.current_action_player_id = user_id
         game_ready.current_player_index = 1
         game_ready.couping_assassinating_player = game_ready.player(user_id)
         game_ready.second_player_id = "2"
@@ -476,7 +471,6 @@ class TestGame:
         action = "Assassinate"
         user_id = "1"
         game_ready.current_action = game_ready.action_from_action_name(action)
-        game_ready.current_action_player_id = user_id
         game_ready.current_player_index = 1
         game_ready.couping_assassinating_player = game_ready.player(user_id)
         game_ready.second_player_id = "2"
@@ -500,7 +494,6 @@ class TestGame:
     def test_block_steal(self, game_ready):
         user_id = "1"
         game_ready.current_player_index = 0
-        game_ready.current_action_player_id = user_id
         game_ready.second_player_id = "2"
         action = "Steal"
 
@@ -524,7 +517,6 @@ class TestGame:
     def test_challenge_block_steal_true(self, game_ready):
         user_id = "1"
         game_ready.current_player_index = 0
-        game_ready.current_action_player_id = user_id
         game_ready.second_player_id = "2"
         action = "Steal"
         game_ready.set_current_action(action, user_id)
@@ -550,7 +542,6 @@ class TestGame:
     def test_challenge_block_steal_false(self, game_ready):
         user_id = "1"
         game_ready.current_player_index = 0
-        game_ready.current_action_player_id = user_id
         game_ready.second_player_id = "2"
         action = "Steal"
         game_ready.set_current_action(action, user_id)
