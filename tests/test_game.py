@@ -140,7 +140,6 @@ class TestGame:
         action = "Take_3_coins"
         user_id = "1"
         game_ready.current_player_index = 0
-        game_ready.current_action_player_id = user_id
         coins = game_ready.players[user_id].coins = 2
         game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
         game_ready.set_current_action(action, user_id)
@@ -164,13 +163,11 @@ class TestGame:
         game_ready.set_current_action(action, user_id)
         coins = game_ready.players[user_id].coins = 2
         game_ready.players[user_id].hand = [Card("captain"), Card("assassin")]
-        game_ready.current_action_player_id = "1"
         game_ready.process_action(action, user_id)
 
         action = "Challenge"
         user_id = "2"
         game_ready.current_player_index = 1
-        game_ready.current_action_player_id = user_id
         game_ready.process_action(action, user_id)
         assert game_ready.last_challenge_successful is True
         assert game_ready.players["1"].coins == coins
@@ -195,7 +192,6 @@ class TestGame:
     def test_block_foreign_aid(self, game_ready):
         user_id = "1"
         game_ready.current_player_index = 0
-        game_ready.current_action_player_id = user_id
         action = "Foreign_aid"
         game_ready.set_current_action(action, user_id)
         coins = game_ready.players[user_id].coins
@@ -217,7 +213,6 @@ class TestGame:
     def test_challenge_block_foreign_aid_true(self, game_ready):
         user_id = "1"
         game_ready.current_player_index = 0
-        game_ready.current_action_player_id = user_id
         action = "Foreign_aid"
         game_ready.set_current_action(action, user_id)
         game_ready.process_action(action, user_id)
@@ -240,7 +235,6 @@ class TestGame:
     def test_challenge_block_foreign_aid_false(self, game_ready):
         user_id = "1"
         game_ready.current_player_index = 0
-        game_ready.current_action_player_id = user_id
         action = "Foreign_aid"
         game_ready.set_current_action(action, user_id)
         game_ready.process_action(action, user_id)
@@ -303,7 +297,6 @@ class TestGame:
     def test_process_action_challenge_exchange_false(self, game_ready):
         user_id = "1"
         game_ready.current_player_index = 0
-        game_ready.current_action_player_id = user_id
         action = "Exchange"
         game_ready.players[user_id].hand = [Card("ambassador"), Card("duke")]
         game_ready.process_action(action, user_id)
