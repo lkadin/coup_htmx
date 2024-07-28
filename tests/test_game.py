@@ -176,7 +176,7 @@ class TestGame:
         assert game_ready.player_id_to_lose_influence == "1"
 
     def test_process_action_income(self, game_ready):
-        game_ready.current_action_player_id = "1"
+        game_ready.current_player_index = 0
         action = "Income"
         user_id = "1"
         coins = game_ready.players[user_id].coins
@@ -185,6 +185,7 @@ class TestGame:
 
     def test_process_action_foreign_aid(self, game_ready):
         user_id = "1"
+        game_ready.current_player_index = 0
         action = "Foreign_aid"
         coins = game_ready.players[user_id].coins
         game_ready.process_action(action, user_id)
