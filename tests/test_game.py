@@ -295,10 +295,10 @@ class TestGame:
         game_ready.set_current_action(action, user_id)
         game_ready.process_action(action, user_id)
         assert game_ready.last_challenge_successful is True
-        # assert game_ready.players[user_id].hand == [
-        #     Card("captain"),
-        #     Card("duke"),
-        # ]
+        assert game_ready.players["1"].hand == [
+            Card("captain"),
+            Card("duke"),
+        ]
         assert game_ready.player_id_to_lose_influence == "1"
 
     def test_process_action_challenge_exchange_false(self, game_ready):
