@@ -131,6 +131,7 @@ class TestGame:
     def test_process_action_take_3_coins(self, game_ready):
         action = "Take_3_coins"
         user_id = "1"
+        game_ready.current_player_index = 0
         coins = game_ready.players[user_id].coins
         game_ready.process_action(action, user_id)
         assert game_ready.players[user_id].coins == coins + 3
