@@ -130,7 +130,7 @@ class TestGame:
 
     def test_process_action_take_3_coins(self, game_ready):
         action = "Take_3_coins"
-        user_id = game_ready.player_index_to_id(game_ready.current_player_index)
+        user_id = "1"
         coins = game_ready.players[user_id].coins
         game_ready.process_action(action, user_id)
         assert game_ready.players[user_id].coins == coins + 3
@@ -178,15 +178,13 @@ class TestGame:
     def test_process_action_income(self, game_ready):
         game_ready.current_action_player_id = "1"
         action = "Income"
-        user_id = game_ready.player_index_to_id(game_ready.current_player_index)
+        user_id = "1"
         coins = game_ready.players[user_id].coins
         game_ready.process_action(action, user_id)
         assert game_ready.players[user_id].coins == coins + 1
 
     def test_process_action_foreign_aid(self, game_ready):
         user_id = "1"
-        game_ready.current_player_index = 0
-        game_ready.current_action_player_id = user_id
         action = "Foreign_aid"
         coins = game_ready.players[user_id].coins
         game_ready.process_action(action, user_id)
@@ -264,7 +262,6 @@ class TestGame:
         action = "Exchange"
         user_id = "1"
         game_ready.current_player_index = 0
-        game_ready.current_action_player_id = user_id
         game_ready.set_current_action(action, user_id)
         game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
         game_ready.process_action(action, user_id)
@@ -278,13 +275,11 @@ class TestGame:
         action = "Exchange"
         user_id = "1"
         game_ready.current_player_index = 0
-        game_ready.current_action_player_id = user_id
         game_ready.set_current_action(action, user_id)
         game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
         game_ready.process_action(action, user_id)
 
         game_ready.current_player_index = 0
-        game_ready.current_action_player_id = user_id
         game_ready.set_current_action(action, user_id)
         assert len(game_ready.players[user_id].hand) == 4
         game_ready.set_cards_to_exchange(["captain", "duke"])
@@ -294,7 +289,6 @@ class TestGame:
         action = "Challenge"
         user_id = "2"
         game_ready.current_player_index = 1
-        game_ready.current_action_player_id = user_id
         game_ready.set_current_action(action, user_id)
         game_ready.process_action(action, user_id)
         assert game_ready.last_challenge_successful is True
@@ -380,38 +374,45 @@ class TestGame:
         game_ready.players[self.user_id].coins = 10
         assert game_ready.check_coins(game_ready.players[self.user_id].id) == -1
 
-    def test_coup(self, game_ready):
-        self.user_id = "1"
-        game_ready.current_action = game_ready.action_from_action_name("Coup")
-        game_ready.couping_assassinating_player = game_ready.player(self.user_id)
-        game_ready.players["1"].coins = 8
-        game_ready.second_player_id = "1"
-        game_ready.coup_assassinate(self.user_id)
+    def test_process_action_coup(self, game_ready):
+        user_id = "1"
+        action = "Coup"
+        game_ready.current_player_index = 0
+        game_ready.couping_assassinating_player = user_id
+        game_ready.players[user_id].coins = 8
+        game_ready.second_player_id = "2"
+        game_ready.set_current_action(action, user_id)
+        game_ready.process_action(action, user_id)
+
         game_ready.card_name_to_lose = "captain"
         game_ready.coup_assassinate_in_progress = True
-        assert game_ready.player("1").coins == 1
+        assert game_ready.player(user_id).coins == 1
         game_ready.players["2"].hand = [Card("captain"), Card("duke")]
         game_ready.player_id_to_lose_influence = "2"
-        game_ready.coup_assassinate(self.user_id)
+        game_ready.process_action(action, user_id)
         assert game_ready.player("2").influence() == 1
 
-    def test_assassinate(self, game_ready):
-        self.user_id = "1"
-        game_ready.current_action = game_ready.action_from_action_name("Assassinate")
-        game_ready.couping_assassinating_player = game_ready.player(self.user_id)
-        game_ready.players["1"].coins = 6
+    def test_process_action_assassinate(self, game_ready):
+        user_id = "1"
+        action = "Assassinate"
+        game_ready.current_player_index = 0
+        game_ready.couping_assassinating_player = user_id
+        game_ready.players[user_id].coins = 6
         game_ready.second_player_id = "2"
-        game_ready.coup_assassinate(self.user_id)
+        game_ready.set_current_action(action, user_id)
+        game_ready.process_action(action, user_id)
+
         game_ready.card_name_to_lose = "captain"
         game_ready.coup_assassinate_in_progress = True
-        assert game_ready.player("1").coins == 3
+        assert game_ready.player(user_id).coins == 3
         game_ready.players["2"].hand = [Card("captain"), Card("duke")]
         game_ready.player_id_to_lose_influence = "2"
-        game_ready.coup_assassinate(self.user_id)
+        game_ready.process_action(action, user_id)
         assert game_ready.player("2").influence() == 1
 
     def test_challenge_assassinate_true(self, game_ready):  # challenge is successful
         user_id = "1"
+        action = "Assassinate"
         game_ready.current_player_index = 0
         game_ready.players[user_id].hand = [Card("captain"), Card("duke")]
         game_ready.current_action = game_ready.action_from_action_name("Assassinate")
