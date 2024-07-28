@@ -91,7 +91,7 @@ class TestGame:
         action = "Steal"
         user_id = "1"
         game_ready.current_player_index = 0
-        game_ready.current_action_player_id = user_id
+        game_ready.set_current_action(action, user_id)
         coins1 = game_ready.players[user_id].coins
         game_ready.second_player_id = "2"
         coins2 = game_ready.players["2"].coins
@@ -112,7 +112,7 @@ class TestGame:
         action = "Steal"
         user_id = "1"
         game_ready.current_player_index = 0
-        game_ready.current_action_player_id = user_id
+        game_ready.set_current_action(action, user_id)
         coins1 = game_ready.players["1"].coins
         coins2 = game_ready.players["2"].coins
         game_ready.second_player_id = "2"
