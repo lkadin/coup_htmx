@@ -191,7 +191,7 @@ class Game:
         self.clear_game_alerts()
         self.second_player_id = ""
         self.current_action = Action("No_action", 0, "disabled", False)
-        self.lose_influence_in_progress = False
+        # self.lose_influence_in_progress = False
         self.coup_assassinate_in_progress = False
 
     def next_player(self):
@@ -336,6 +336,7 @@ class Game:
 
         if self.lose_influence_in_progress and self.card_name_to_lose:
             self.process_lose_influence()
+            self.lose_influence_in_progress = False
 
         if action.name == "Block":
             if not self.action_history:
@@ -488,7 +489,7 @@ class Game:
             return
 
         self.block_in_progress = False
-        self.lose_influence_in_progress = True
+        self.lose_influence_in_progress = True  #####################why
         self.challenge_in_progress = True
 
         if self.challenge_successful():
@@ -571,7 +572,6 @@ class Game:
             self.lose_influence_in_progress = True
             self.player_id_to_lose_influence = self.second_player_id
             self.couping_assassinating_player = self.player(self.user_id)
-            # self.add_history()
             self.second_player_id = ""
             self.couping_assassinating_player.add_remove_coins(  # type: ignore
                 (self.current_action.coins_required * -1)
@@ -597,7 +597,7 @@ class Game:
                 and self.player_id_to_lose_influence == self.user_id
             ):
                 self.player(self.user_id).set_player_alert("You must pick one card")
-        self.lose_influence_in_progress = False
+        # self.lose_influence_in_progress = False
 
     def clear_history(self):
         self.action_history = []
