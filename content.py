@@ -34,7 +34,7 @@ class Content:
                 and card.card_status == "down"
             ):
                 self.display_hand += f"""
-                <input type="checkbox" name="cardnames" value="{card.value}" <td><img src="/static/jpg/{card.value}.jpg" height="200">
+                <input type="checkbox" name="cardnames" value="{card.value}"><img src="/static/jpg/{card.value}.jpg" style="width:{card_width}px;" >
                 """
             else:
                 if card.card_status == "down":
@@ -52,7 +52,7 @@ class Content:
                 and card.card_status == "down"
             ):
                 self.display_hand += f"""
-                <input type="checkbox" name="cardnames" value="{card.value}" <td><img src="/static/jpg/{card.value}.jpg" height="350">
+                <input type="checkbox" name="cardnames" value="{card.value}"><img src="/static/jpg/{card.value}.jpg" style="width:{card_width}px;" >
                 """
             else:
                 if card.card_status == "down":
