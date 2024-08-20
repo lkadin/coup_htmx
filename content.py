@@ -7,22 +7,24 @@ class Content:
         self.actions: str = ""
 
     def show_hand(self, player):
+        card_width = 200
+
         def non_exchange(card):
             if (
                 player.name == self.players[self.user_id].name
                 and card.card_status == "down"
             ):
                 self.display_hand += f"""
-                <img src='/static/jpg/{card.value}.jpg' {card.value} style=opacity:1.0;>
+                <img src='/static/jpg/{card.value}.jpg' {card.value} style="opacity:1.0; width:{card_width}px;">
                 """
             else:
                 if card.card_status == "down":
                     self.display_hand += f"""
-                    <img src='/static/jpg/down.png' {card.value} style=opacity:1.0;>
+                    <img src='/static/jpg/down.png' {card.value} style="opacity:1.0; width:{card_width}px;">
                     """
                 else:
                     self.display_hand += f"""
-                    <img src='/static/jpg/{card.value}.jpg' {card.value} style=opacity:.5;>
+                    <img src='/static/jpg/{card.value}.jpg' {card.value} style="opacity:.5; width: {card_width}px;">
                     """
 
         def lose_influence(card):
@@ -32,16 +34,16 @@ class Content:
                 and card.card_status == "down"
             ):
                 self.display_hand += f"""
-                <input type="checkbox" name="cardnames" value="{card.value}" <td><img src="/static/jpg/{card.value}.jpg" height="350">
+                <input type="checkbox" name="cardnames" value="{card.value}" <td><img src="/static/jpg/{card.value}.jpg" height="200">
                 """
             else:
                 if card.card_status == "down":
                     self.display_hand += f"""
-                    <img src='/static/jpg/down.png' {card.value} style=opacity:1.0;>
+                    <img src='/static/jpg/down.png' {card.value} style="opacity:1.0; width:{card_width}px;">
                     """
                 else:
                     self.display_hand += f"""
-                    <img src='/static/jpg/{card.value}.jpg' {card.value} style=opacity:.5;>
+                    <img src='/static/jpg/{card.value}.jpg' {card.value} style="opacity:0.5; width:{card_width}px;">
                     """
 
         def exchange(card):
@@ -55,11 +57,11 @@ class Content:
             else:
                 if card.card_status == "down":
                     self.display_hand += f"""
-                    <img src='/static/jpg/down.png' {card.value} style=opacity:1.0;>
+                    <img src='/static/jpg/down.png' {card.value} style="opacity:1.0; width:{card_width}px;">
                     """
                 else:
                     self.display_hand += f"""
-                    <img src='/static/jpg/{card.value}.jpg' {card.value} style=opacity:.5;>
+                    <img src='/static/jpg/{card.value}.jpg' {card.value} style="opacity:0.5; width:{card_width}px;">
                     """
 
         # exchange
@@ -111,6 +113,8 @@ class Content:
         return self.table
 
     def show_turn(self):
+        if not self.game.whose_turn_name():
+            return
         self.turn = f"""
             <div hx-swap-oob="innerHTML:#turn">
             <h4>{self.game.whose_turn_name()}'s Turn</h4>
