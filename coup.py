@@ -223,7 +223,7 @@ class Game:
                 if i == self.current_player_index:
                     return self.players[player].name
         else:
-            return None
+            return ""
 
     def player_index_to_id(self, index: int) -> str:
         for i, player in enumerate(self.players):
