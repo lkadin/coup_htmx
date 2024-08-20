@@ -66,6 +66,7 @@ async def read_item(request: Request, user_id: str, user_name: str):
                 return True
 
     def already_logged_in(user_id, user_name):  # websocket (user_id) already in use
+
         if manager.active_connections.get(user_id) and not already_in_game(
             user_id, user_name
         ):
@@ -117,12 +118,12 @@ async def read_item(request: Request, user_id: str, user_name: str):
 @app.websocket("/ws/{user_id}")
 async def websocket_chat(websocket: WebSocket, user_id: str):
     await manager.connect(user_id, websocket)
-    await manager.broadcast(
-        # f" {game.players[user_id].name} has joined ", game, "history"
-        f" {user_id} has joined ",
-        game,
-        "all",
-    )
+    # await manager.broadcast(
+    #     # f" {game.players[user_id].name} has joined ", game, "history"
+    #     f" {user_id} has joined ",
+    #     game,
+    #     "all",
+    # )
     try:
         while True:
             data = await websocket.receive_text()
@@ -198,4 +199,4 @@ async def process_message(user_id, message):
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
