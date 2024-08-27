@@ -114,7 +114,7 @@ class Content:
 
     def show_turn(self):
         if not self.game.whose_turn_name():
-            return
+            return ""
         self.turn = f"""
             <div hx-swap-oob="innerHTML:#turn">
             <h4>{self.game.whose_turn_name()}'s Turn</h4>
