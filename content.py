@@ -46,13 +46,16 @@ class Content:
                     <img src='/static/jpg/{card.value}.jpg' {card.value} style="opacity:0.5; width:{card_width}px;">
                     """
 
-        def exchange(card):
+        def exchange(card, card_number):
             if (
                 player.name == self.players[self.user_id].name
                 and card.card_status == "down"
             ):
                 self.display_hand += f"""
-                <input type="checkbox" name="cardnames" value="{card.value}"><img src="/static/jpg/{card.value}.jpg" style="width:{card_width}px;" >
+                <input type="checkbox" name="cardnames" value="{card.value}" id="{card_number}">
+                <label for = "{card_number}">
+                <img src="/static/jpg/{card.value}.jpg">
+                </label>
                 """
             else:
                 if card.card_status == "down":
@@ -67,10 +70,12 @@ class Content:
         # exchange
         if self.game.exchange_in_progress and self.game.your_turn():
             self.display_hand = '<form hx-ws="send" hx-target="cards">'
-            for card in player.hand:
-                exchange(card)
+            self.display_hand += '<div class="card-container">'
+            for card_number, card in enumerate(player.hand):
+                exchange(card, card_number)
             if player.name == self.players[self.user_id].name:
                 self.display_hand += """
+                </div>
                 <p> Which cards do you want to discard?</p>
                 <input type="submit" id="test" value="Submit">
                 </form>
@@ -95,7 +100,6 @@ class Content:
             for card in player.hand:
                 non_exchange(card)
 
-        self.display_hand += "</a>"
         return self.display_hand
 
     def show_table(self):
