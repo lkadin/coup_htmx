@@ -60,7 +60,7 @@ class Content:
             else:
                 if card.card_status == "down":
                     self.display_hand += f"""
-                    <img src='/static/jpg/down.png' {card.value} style="opacity:1.0; width:{card_width}px;">
+                    <img src='/static/jpg/down.png' {card.value} ;">
                     """
                 else:
                     self.display_hand += f"""
