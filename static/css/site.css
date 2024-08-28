@@ -57,3 +57,26 @@ li {
 .form-container {
     margin: 2em;
 }
+.card-container {
+    display: inline-block;
+    margin: 10px;
+    cursor: pointer;
+}
+
+/* Hide the actual checkbox */
+.card-container input[type="checkbox"] {
+    display: none;
+}
+
+.card-container img {
+    width: 150px;
+    /* Replace with your card_width variable */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 10px;
+}
+
+/* When the checkbox is checked, apply styles to the adjacent img */
+.card-container input[type="checkbox"]:checked+label img {
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
