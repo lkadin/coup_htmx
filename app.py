@@ -49,6 +49,11 @@ async def restart(request: Request):
     )
 
 
+@app.get("/hidden_checkbox", response_class=HTMLResponse)
+async def hidden_checkbox(request: Request):
+    return templates.TemplateResponse("hidden_checkbox.html", {"request": request})
+
+
 @app.get("/web/{user_id}/", response_class=HTMLResponse)
 async def read_item(request: Request, user_id: str, user_name: str):
     def refresh():
@@ -66,7 +71,6 @@ async def read_item(request: Request, user_id: str, user_name: str):
                 return True
 
     def already_logged_in(user_id, user_name):  # websocket (user_id) already in use
-
         if manager.active_connections.get(user_id) and not already_in_game(
             user_id, user_name
         ):
