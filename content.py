@@ -9,6 +9,14 @@ class Content:
     def show_hand(self, player):
         card_width = 200
 
+        def checkbox(card, card_number):
+            return f"""
+                <input type="checkbox" name="cardnames" value="{card.value}" id="{card_number}">
+                <label for = "{card_number}">
+                <img src="/static/jpg/{card.value}.jpg">
+                </label>
+                """
+
         def non_exchange(card):
             if (
                 player.name == self.players[self.user_id].name
@@ -33,12 +41,7 @@ class Content:
                 and player.name == self.players[self.user_id].name
                 and card.card_status == "down"
             ):
-                self.display_hand += f"""
-                <input type="checkbox" name="cardnames" value="{card.value}" id="{card_number}">
-                <label for = "{card_number}">
-                <img src="/static/jpg/{card.value}.jpg">
-                </label>
-                """
+                self.display_hand += checkbox(card, card_number)
             else:
                 if card.card_status == "down":
                     self.display_hand += f"""
@@ -54,12 +57,7 @@ class Content:
                 player.name == self.players[self.user_id].name
                 and card.card_status == "down"
             ):
-                self.display_hand += f"""
-                <input type="checkbox" name="cardnames" value="{card.value}" id="{card_number}">
-                <label for = "{card_number}">
-                <img src="/static/jpg/{card.value}.jpg">
-                </label>
-                """
+                self.display_hand += checkbox(card, card_number)
             else:
                 if card.card_status == "down":
                     self.display_hand += f"""
