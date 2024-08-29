@@ -27,14 +27,17 @@ class Content:
                     <img src='/static/jpg/{card.value}.jpg' {card.value} style="opacity:.5; width: {card_width}px;">
                     """
 
-        def lose_influence(card):
+        def lose_influence(card, card_number):
             if (
                 self.user_id == self.game.player_id_to_lose_influence
                 and player.name == self.players[self.user_id].name
                 and card.card_status == "down"
             ):
                 self.display_hand += f"""
-                <input type="checkbox" name="cardnames" value="{card.value}"><img src="/static/jpg/{card.value}.jpg" style="width:{card_width}px;" >
+                <input type="checkbox" name="cardnames" value="{card.value}" id="{card_number}">
+                <label for = "{card_number}">
+                <img src="/static/jpg/{card.value}.jpg">
+                </label>
                 """
             else:
                 if card.card_status == "down":
@@ -86,9 +89,10 @@ class Content:
             self.game.coup_assassinate_in_progress
             or self.game.lose_influence_in_progress
         ) and self.user_id == self.game.player_id_to_lose_influence:
-            self.display_hand = '<form hx-ws="send" hx-target="cards">'
-            for card in player.hand:
-                lose_influence(card)
+            self.display_hand = '<div class="card-container">'
+            self.display_hand += '<form hx-ws="send" hx-target="cards">'
+            for card_number, card in enumerate(player.hand):
+                lose_influence(card, card_number)
             if player.name == self.players[self.user_id].name:
                 self.display_hand += """
                 <p> Which card do you want to discard?</p>
