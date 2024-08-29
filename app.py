@@ -105,6 +105,9 @@ async def read_item(request: Request, user_id: str, user_name: str):
         )
 
     game.add_player(user_id, user_name)  # Try to add the player to the game
+    history = game.action_history
+    if not history:
+        history = ""
     return templates.TemplateResponse(
         "htmx_user_generic.html",
         {
@@ -114,7 +117,7 @@ async def read_item(request: Request, user_id: str, user_name: str):
             "actions": game.actions,
             "game_status": game.game_status,
             "turn": game.whose_turn_name(),
-            "history": game.action_history,
+            "history": history,
         },
     )
 
