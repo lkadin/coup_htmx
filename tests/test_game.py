@@ -433,6 +433,7 @@ class TestGame:
 
     def test_challenge_assassinate_false(self, game_ready):  # challenge is unsuccessful
         user_id = "1"
+        action = "Assassinate"
         game_ready.current_player_index = 0
         game_ready.players["1"].hand = [Card("captain"), Card("assassin")]
         game_ready.current_action = game_ready.action_from_action_name("Assassinate")

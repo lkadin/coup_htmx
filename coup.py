@@ -116,7 +116,6 @@ class Player:
 
     def save_cards(self):
         self.cards_prior_to_exchange = self.hand.copy()
-        pass
 
     def __repr__(self) -> str:
         return f"{self.id}-{self.hand} {self.coins=}"
@@ -471,6 +470,15 @@ class Game:
             self.exchange_in_progress = False
             self.next_turn()
 
+    def challenge_block_steal(self):
+        try:
+            prior_action = self.action_history[-1].action.name
+            previous_prior_action = self.action_history[-2].action.name
+        except IndexError:
+            return
+        if prior_action == "Challenge" and previous_prior_action == "Block":
+            return True
+
     def challenge_can_continue(self):
         if not self.action_history:
             return
@@ -504,7 +512,8 @@ class Game:
         else:
             self.game_alert = f"{self.player(self.user_id).name} challenge is unsuccessful"  #### attacker has the correct card
             self.last_challenge_successful = False
-            # self.reverse_last_action_challenge()  ######For challenge block steal
+            if self.challenge_block_steal():
+                self.reverse_last_action_challenge()  ######For challenge block steal
             self.swap_winning_card()
             self.player_id_to_lose_influence = self.user_id
             if self.action_history[-1].action.name == "Assassinate":
@@ -726,6 +735,14 @@ class Game:
                     player1.discard([card.value], self.deck)
             player1.hand = player1.cards_prior_to_exchange
             self.exchange_in_progress = False
+
+        if prior_action == "Block":
+            blocked_action = self.action_history[-2].action.name
+            if blocked_action == "Steal":
+                self.player1 = self.action_history[-1].player1
+                self.player2 = self.action_history[-1].player2
+                self.player1.add_remove_coins(2)
+                self.player2.add_remove_coins(-2)  # type: ignore
 
     def challenge_successful(self) -> bool:
         if not self.action_history:
