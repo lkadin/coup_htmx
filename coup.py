@@ -439,6 +439,9 @@ class Game:
         return ""
 
     def steal(self, give_to, steal_from):
+        if self.player(steal_from).coins < 2:
+            self.game_alert = "Not enough coins"
+            return
         self.player(give_to).add_remove_coins(2)
         self.player(steal_from).add_remove_coins(-2)
         self.next_turn()
@@ -501,6 +504,7 @@ class Game:
         else:
             self.game_alert = f"{self.player(self.user_id).name} challenge is unsuccessful"  #### attacker has the correct card
             self.last_challenge_successful = False
+            # self.reverse_last_action_challenge()  ######For challenge block steal
             self.swap_winning_card()
             self.player_id_to_lose_influence = self.user_id
             if self.action_history[-1].action.name == "Assassinate":
