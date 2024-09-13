@@ -1,4 +1,4 @@
-from fastapi import FastAPI, WebSocket, Request
+from fastapi import FastAPI, WebSocket, Request, WebSocketDisconnect
 import json
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -36,15 +36,9 @@ async def login(request: Request):
 async def restart(request: Request):
     game.restart()
     return templates.TemplateResponse(
-        "htmx_user_generic.html",
+        "restart.html",
         {
             "request": request,
-            "user_id": game.user_id,
-            "user_name": game.player(game.user_id).name,
-            "actions": game.actions,
-            "game_status": game.game_status,
-            "turn": game.whose_turn_name(),
-            "history": game.action_history,
         },
     )
 
@@ -138,9 +132,10 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
                 message = json.loads(data)
                 await process_message(user_id, message)  # type: ignore
 
-    except Exception as e:
+    except WebSocketDisconnect as e:
         if e.code == 1001:  # type: ignore
             message = f"{user_id} has disconnected"
+            print(f"{user_id} has disconnected")
             await manager.disconnect(user_id, websocket)
             await manager.broadcast(message, game)
         else:
