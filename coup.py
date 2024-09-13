@@ -1,4 +1,5 @@
 import random
+import actions
 from datetime import datetime
 
 COUP_REQUIRED = 10  # of coins when you MUST Coup
@@ -131,6 +132,7 @@ class Action:
         your_turn_only: bool = True,
         can_be_blocked: bool = False,
         can_be_challenged: bool = False,
+        text: str = "",
     ) -> None:
         self.name = name
         self.coins_required = coins_required
@@ -139,6 +141,7 @@ class Action:
         self.your_turn_only = your_turn_only
         self.can_be_blocked = can_be_blocked
         self.can_be_challenged = can_be_challenged
+        self.text = text
 
     def __repr__(self) -> str:
         return self.name
@@ -232,6 +235,7 @@ class Game:
             return ""
 
     def add_all_actions(self):
+
         self.actions = []
         for (
             name,
@@ -263,6 +267,7 @@ class Game:
                     your_turn_only,
                     can_be_blocked,
                     can_be_challenged,
+                    actions.actions_text.get(name, ""),
                 )
             )
 
