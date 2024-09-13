@@ -194,6 +194,7 @@ class Content:
                 <input type="hidden" name="user_name" value={self.user_id}>
                 <input type="hidden" name="message_txt" value={action}>
                 <input type="submit" value={action} {action.action_status} {visible}>
+                <label style="font-size: small" {visible} for="submit">{action.text}</label>
                 </form>
                 </div>
             """
