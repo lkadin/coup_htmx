@@ -144,6 +144,12 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
 
 
 async def process_message(user_id, message):
+    async def bc(message_type="all"):
+        await manager.broadcast(
+            f" {game.players[user_id].name}: {message['message_txt']}",
+            game,
+            message_type,
+        )
 
     if message.get("message_txt") and not game.exchange_in_progress:
         game.set_current_action(message.get("message_txt"), user_id)
@@ -171,33 +177,37 @@ async def process_message(user_id, message):
         and game.player_index_to_id(game.whose_turn()) == game.players[game.user_id].id
         and not game.block_in_progress
     ):
-        await manager.broadcast(
-            f" {game.players[user_id].name}: {message['message_txt']}",
-            game,
-            message_type="pick",
-        )
+        await bc("pick")
+        # await manager.broadcast(
+        #     f" {game.players[user_id].name}: {message['message_txt']}",
+        #     game,
+        #     message_type="pick",
+        # )
 
     if game.second_player_id or game.coup_assassinate_in_progress:
-        await manager.broadcast(
-            f" {game.players[user_id].name}: {message['message_txt']}",
-            game,
-            message_type="hide",
-        )
+        await bc("hide")
+        # await manager.broadcast(
+        #     f" {game.players[user_id].name}: {message['message_txt']}",
+        #     game,
+        #     message_type="hide",
+        # )
 
     game.check_coins(user_id)  # set player alert if necessary
     game.process_action(message["message_txt"], user_id)
-    await manager.broadcast(
-        f" {game.players[user_id].name}: {message['message_txt']}",
-        game,
-        message_type="all",
-    )
+    await bc()
+    # await manager.broadcast(
+    #     f" {game.players[user_id].name}: {message['message_txt']}",
+    #     game,
+    #     message_type="all",
+    # )
     if game.game_over():
         game.process_action(Action("No_action", 0, "disabled", False), user_id)
-        await manager.broadcast(
-            f" {game.players[user_id].name}: {message['message_txt']}",
-            game,
-            message_type="all",
-        )
+        await bc()
+        # await manager.broadcast(
+        #     f" {game.players[user_id].name}: {message['message_txt']}",
+        #     game,
+        #     message_type="all",
+        # )
 
 
 if __name__ == "__main__":
