@@ -147,7 +147,7 @@ class Content:
         except KeyError:
             return ""
 
-    def show_history(self, message: str) -> str:
+    def show_history(self) -> str:
         self.history = """
         <br>
         <div hx-swap-oob="innerHTML:#history">
