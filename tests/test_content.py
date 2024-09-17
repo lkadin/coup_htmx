@@ -14,7 +14,7 @@ def test_show_turn(content):
 
 
 def test_show_history(content):
-    assert """<div hx-swap-oob="innerHTML:#history">""" in content.show_history("Test")
+    assert """<div hx-swap-oob="innerHTML:#history">""" in content.show_history()
 
 
 def test_show_game_status(content):
