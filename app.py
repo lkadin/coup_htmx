@@ -119,12 +119,6 @@ async def read_item(request: Request, user_id: str, user_name: str):
 @app.websocket("/ws/{user_id}")
 async def websocket_chat(websocket: WebSocket, user_id: str):
     await manager.connect(user_id, websocket)
-    # await manager.broadcast(
-    #     # f" {game.players[user_id].name} has joined ", game, "history"
-    #     f" {user_id} has joined ",
-    #     game,
-    #     "all",
-    # )
     try:
         while True:
             data = await websocket.receive_text()
@@ -178,36 +172,16 @@ async def process_message(user_id, message):
         and not game.block_in_progress
     ):
         await bc("pick")
-        # await manager.broadcast(
-        #     f" {game.players[user_id].name}: {message['message_txt']}",
-        #     game,
-        #     message_type="pick",
-        # )
 
     if game.second_player_id or game.coup_assassinate_in_progress:
         await bc("hide")
-        # await manager.broadcast(
-        #     f" {game.players[user_id].name}: {message['message_txt']}",
-        #     game,
-        #     message_type="hide",
-        # )
 
     game.check_coins(user_id)  # set player alert if necessary
     game.process_action(message["message_txt"], user_id)
     await bc()
-    # await manager.broadcast(
-    #     f" {game.players[user_id].name}: {message['message_txt']}",
-    #     game,
-    #     message_type="all",
-    # )
     if game.game_over():
         game.process_action(Action("No_action", 0, "disabled", False), user_id)
         await bc()
-        # await manager.broadcast(
-        #     f" {game.players[user_id].name}: {message['message_txt']}",
-        #     game,
-        #     message_type="all",
-        # )
 
 
 if __name__ == "__main__":
