@@ -1,0 +1,15 @@
+<div id="actions" class="col-2">
+    {% for action in actions %}
+    {% if 'disabled' == action.action_status %}
+    {% set visible = "hidden" %}
+    {% endif %}
+    <div class="mb-2" id="{{action}}">
+        <form hx-ws="send" hx-target="#actions">
+            <input type="hidden" name="user_name" value={{user_id}}>
+            <input type="hidden" name="message_txt" value={{action}}>
+            <input type="submit" id="{{action}}"" value=" {{action}}" {{action.action_status}} {{visible}}>
+            <label for="{{action}}">{{action.text}}</label>
+        </form>
+    </div>
+</div>
+{% endfor %}

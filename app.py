@@ -116,6 +116,14 @@ async def read_item(request: Request, user_id: str, user_name: str):
     )
 
 
+async def bc(user_id, message, message_type="all"):
+    await manager.broadcast(
+        f" {game.players[user_id].name}: {message['message_txt']}",
+        game,
+        message_type,
+    )
+
+
 @app.websocket("/ws/{user_id}")
 async def websocket_chat(websocket: WebSocket, user_id: str):
     await manager.connect(user_id, websocket)
@@ -138,12 +146,6 @@ async def websocket_chat(websocket: WebSocket, user_id: str):
 
 
 async def process_message(user_id, message):
-    async def bc(message_type="all"):
-        await manager.broadcast(
-            f" {game.players[user_id].name}: {message['message_txt']}",
-            game,
-            message_type,
-        )
 
     if message.get("message_txt") and not game.exchange_in_progress:
         game.set_current_action(message.get("message_txt"), user_id)
@@ -171,17 +173,17 @@ async def process_message(user_id, message):
         and game.player_index_to_id(game.whose_turn()) == game.players[game.user_id].id
         and not game.block_in_progress
     ):
-        await bc("pick")
+        await bc(user_id, message, "pick")
 
     if game.second_player_id or game.coup_assassinate_in_progress:
-        await bc("hide")
+        await bc(user_id, message, "hide")
 
     game.check_coins(user_id)  # set player alert if necessary
     game.process_action(message["message_txt"], user_id)
-    await bc()
+    await bc(user_id, message)
     if game.game_over():
         game.process_action(Action("No_action", 0, "disabled", False), user_id)
-        await bc()
+        await bc(user_id, message)
 
 
 if __name__ == "__main__":
