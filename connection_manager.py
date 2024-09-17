@@ -30,7 +30,7 @@ class ConnectionManager:
                 await self.send_personal_message(table, websocket)
 
             if message_type in ("all", "history"):
-                history = content.show_history(message)
+                history = content.show_history()
                 await self.send_personal_message(history, websocket)
 
             if message_type in ("all", "table"):
