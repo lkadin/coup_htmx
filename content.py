@@ -1,4 +1,13 @@
+from jinja2 import Environment, FileSystemLoader
+
+file_loader = FileSystemLoader("templates")
+env = Environment(loader=file_loader)
+history_template = env.get_template("history.html")
+turn_template = env.get_template("turn.html")
+
+
 class Content:
+
     def __init__(self, game, user_id: str) -> None:
         self.game = game
         self.players = self.game.players
@@ -127,14 +136,11 @@ class Content:
         self.table += self.show_hand(player)
 
     def show_turn(self):
-        if not self.game.whose_turn_name():
-            return ""
-        self.turn = f"""
-            <div hx-swap-oob="innerHTML:#turn">
-            <h4>{self.game.whose_turn_name()}'s Turn</h4>
-            </div>
-            """
-        return self.turn
+        suffix = ""
+        if self.game.whose_turn_name() != "":
+            suffix = "'s turn"
+        output = turn_template.render(turn=self.game.whose_turn_name(), suffix=suffix)
+        return output
 
     def show_game_status(self):
         try:
@@ -148,24 +154,9 @@ class Content:
             return ""
 
     def show_history(self) -> str:
-        self.history = """
-        <br>
-        <div hx-swap-oob="innerHTML:#history">
-        """
-        for history_action in self.game.action_history[::-1]:
-            player1_name = history_action.player1.name
-            if not history_action.player2:
-                player2_name = ""
-            else:
-                player2_name = history_action.player2.name
-            self.history += f"""
-            {player1_name} {history_action.action} {player2_name}
-            <br>
-            """
-        self.history += """
-        </div>
-        """
-        return self.history
+        self.game.prep_history_list()
+        output = history_template.render(history_list=self.game.history_list)
+        return output
 
     def delete_start_action(self):
         self.actions += f"""
