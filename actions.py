@@ -9,6 +9,6 @@ actions_text = {
     "Block": "Block foreign aid, stealing, or assasination (Check card to see which you can do.)",
     "Challenge": "Challenge at any turn that allows challenges.",
     "Accept_Block": "Accept a block without a challange.",
-    "Restart": "RESTART: New game.",
-    "Start": "START: Start game.",
+    "Restart": "New game.",
+    "Start": "Start game",
 }
