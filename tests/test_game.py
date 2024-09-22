@@ -31,7 +31,7 @@ class TestGame:
     def test_add_all_actions(self, game_ready):
         game_ready.set_game_status(None)
         game_ready.add_all_actions()
-        assert len(game_ready.actions) == 11
+        assert len(game_ready.actions) == 12
 
         game_ready.set_game_status("Waiting")
         game_ready.add_all_actions()
@@ -39,11 +39,11 @@ class TestGame:
 
         game_ready.set_game_status("In Progress")
         game_ready.add_all_actions()
-        assert len(game_ready.actions) == 11
+        assert len(game_ready.actions) == 12
 
     def test_enable_all_actions(self, game_ready):
         for action in game_ready.actions:
-            if action.name != "Restart":
+            if action.name not in ("Start", "Restart"):
                 assert action.action_status == "enabled"
 
     def test_wait(self, game):

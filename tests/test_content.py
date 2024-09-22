@@ -10,11 +10,11 @@ def test_show_table(content):
 
 
 def test_show_turn(content):
-    assert """<div hx-swap-oob="innerHTML:#turn">""" in content.show_turn()
+    assert """<div id="turn""" in content.show_turn()
 
 
 def test_show_history(content):
-    assert """<div hx-swap-oob="innerHTML:#history">""" in content.show_history()
+    assert """<div id="history">""" in content.show_history()
 
 
 def test_show_game_status(content):
