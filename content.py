@@ -157,17 +157,17 @@ class Content:
         output = history_template.render(history_list=self.game.history_list)
         return output
 
-    def delete_start_action(self):
-        self.actions += f"""
-                <div id="Start">
-                <form hx-ws="send" hx-target="#actions">
-                <input type="hidden" name="user_name" value={self.user_id}>
-                <input type="hidden" name="message_txt" value=Start>
-                <input type="submit" value="Start" hidden>
-                </form>
-                </div>
-                """
-        return self.actions
+    # def delete_start_action(self):
+    #     self.actions += f"""
+    #             <div id="Start">
+    #             <form hx-ws="send" hx-target="#actions">
+    #             <input type="hidden" name="user_name" value={self.user_id}>
+    #             <input type="hidden" name="message_txt" value=Start>
+    #             <input type="submit" value="Start" hidden>
+    #             </form>
+    #             </div>
+    #             """
+    #     return self.actions
 
     def show_actions(self):
         output = actions_template.render(
