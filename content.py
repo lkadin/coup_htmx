@@ -4,6 +4,7 @@ file_loader = FileSystemLoader("templates")
 env = Environment(loader=file_loader)
 history_template = env.get_template("history.html")
 turn_template = env.get_template("turn.html")
+actions_template = env.get_template("actions.html")
 
 
 class Content:
@@ -169,28 +170,10 @@ class Content:
         return self.actions
 
     def show_actions(self):
-        start = False
-        self.actions = ""
-        for action in self.game.actions:
-            if action.name == "Start":
-                start = True
-            visible = ""
-            if action.action_status == "disabled":
-                visible = "hidden"
-            self.actions += f"""
-                <div id="{action}">
-                <form hx-ws="send" hx-target="#actions">
-                <input type="hidden" name="user_name" value={self.user_id}>
-                <input type="hidden" name="message_txt" value={action}>
-                <input type="submit" value={action} {action.action_status} {visible}>
-                <label style="font-size: small" {visible} for="submit">{action.text}</label>
-                </form>
-                </div>
-            """
-        self.actions += "<br>"
-        if not start:
-            self.actions += self.delete_start_action()
-        return self.actions
+        output = actions_template.render(
+            actions=self.game.actions, user_id=self.game.user_id
+        )
+        return output
 
     def pick_second_player(self):
         if self.game.check_coins(self.user_id) == 1:
