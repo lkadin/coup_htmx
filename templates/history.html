@@ -1,4 +1,7 @@
-<div id="history" class="overflow-auto ">
+<div id="history">
+    {% for history in history_list %}
     {{history}}
+    <br>
+    {% endfor %}
 </div>
 <br>

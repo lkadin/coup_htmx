@@ -48,6 +48,14 @@ async def hidden_checkbox(request: Request):
     return templates.TemplateResponse("hidden_checkbox.html", {"request": request})
 
 
+@app.get("/web/{user_id}/{action}", response_class=HTMLResponse)
+async def get_action(request: Request, user_id: str, action: str):
+    print(user_id, action)
+    message = {"message_txt": action}
+    await process_message(user_id, message)  # type: ignore
+    # await bc(user_id, message)
+
+
 @app.get("/web/{user_id}/", response_class=HTMLResponse)
 async def read_item(request: Request, user_id: str, user_name: str):
     def refresh():
@@ -76,6 +84,7 @@ async def read_item(request: Request, user_id: str, user_name: str):
 
     if refresh():
         print("refresh")
+        await bc(user_id, message={"message_txt": ""})
 
     elif already_logged_in(user_id, user_name):
         return templates.TemplateResponse(
@@ -102,6 +111,7 @@ async def read_item(request: Request, user_id: str, user_name: str):
     history = game.action_history
     if not history:
         history = ""
+    game.prep_history_list()
     return templates.TemplateResponse(
         "htmx_user_generic.html",
         {
@@ -111,7 +121,8 @@ async def read_item(request: Request, user_id: str, user_name: str):
             "actions": game.actions,
             "game_status": game.game_status,
             "turn": game.whose_turn_name(),
-            "history": history,
+            "suffix": game.get_suffix(),
+            "history_list": game.history_list,
         },
     )
 
