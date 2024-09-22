@@ -174,6 +174,7 @@ class Game:
         self.last_challenge_successful = False
         self.lose_influence_in_progress = False
         self.last_user_id_assigned = 0
+        self.history_list = []
 
     def initial_deal(self) -> None:
         for _ in range(self.NUM_OF_CARDS):
@@ -780,6 +781,24 @@ class Game:
     def next_user_id(self):
         self.last_user_id_assigned += 1
         return self.last_user_id_assigned
+
+    def prep_history_list(self):
+        self.history_list = []
+        for history_action in self.action_history[::-1]:
+            player1_name = history_action.player1.name
+            if not history_action.player2:
+                player2_name = ""
+            else:
+                player2_name = history_action.player2.name
+            self.history_list.append(
+                f"{player1_name} {history_action.action} {player2_name}"
+            )
+
+    def get_suffix(self):
+        suffix = ""
+        if self.whose_turn_name() != "":
+            suffix = "'s turn"
+        return suffix
 
 
 class History_action:
