@@ -7,6 +7,7 @@ turn_template = env.get_template("turn.html")
 actions_template = env.get_template("actions.html")
 player_alert_template = env.get_template("player_alerts.html")
 game_alert_template = env.get_template("game_alerts.html")
+second_player_template = env.get_template("second_player.html")
 
 
 class Content:
@@ -162,32 +163,22 @@ class Content:
         return output
 
     def pick_second_player(self):
+        available_players = []
         if self.game.check_coins(self.user_id) == 1:
-            return ""
+            return
         if (
             self.game.player_index_to_id(self.game.whose_turn())
             != self.players[self.user_id].id
         ):
-            return ""
-        self.show_other_players = """
-            <div id="second_player" >
-                <form hx-ws="send" hx-target="#second_player" >
-                <label for="player">Pick a player</label>
-                <select name="player" id="player">
-             """
+            return
         for player in self.players.values():
             if player.id == self.user_id:
                 continue
             if not player.influence():
                 continue
-            self.show_other_players += f"""
-                <option value="{player.name}">{player.name}</option>
-                """
-        self.show_other_players += """
-            </select>
-            <input type="submit" value="Submit">
-            """
-        return self.show_other_players
+            available_players.append(player.name)
+        output = second_player_template.render(player_names=available_players)
+        return output
 
     def hide_second_player(self):
         self.hide_other_players = """

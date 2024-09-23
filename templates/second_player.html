@@ -1,14 +1,11 @@
 <div id="second_player">
-    <br>
-    <form hx-ws="send" hx-target="#second_player" hidden>
+    <form hx-ws="send" hx-target="#second_player" {{second_player_visible}}>
         <label for="player">Pick a player</label>
         <select name="player" id="player">
-            <option value="Lee">Lee</option>
-            <option value="Adina">Adina</option>
+            {% for player_name in player_names %}
+            <option value="{{player_name}}">{{player_name}}</option>
+            {% endfor %}
         </select>
         <input type="submit" value="Submit">
     </form>
-    <br>
 </div>
-</div>
-<br>
