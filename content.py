@@ -5,6 +5,8 @@ env = Environment(loader=file_loader)
 history_template = env.get_template("history.html")
 turn_template = env.get_template("turn.html")
 actions_template = env.get_template("actions.html")
+player_alert_template = env.get_template("player_alerts.html")
+game_alert_template = env.get_template("game_alerts.html")
 
 
 class Content:
@@ -86,7 +88,6 @@ class Content:
                 exchange(card, card_number)
             if player.name == self.players[self.user_id].name:
                 self.display_hand += """
-                </div>
                 <p> Which cards do you want to discard?</p>
                 <input type="submit" id="test" value="Submit">
                 </form>
@@ -125,9 +126,6 @@ class Content:
             if player.id == self.user_id:
                 continue
             self.show_player(player)
-        self.table += """    
-            </div>
-            """
         return self.table
 
     def show_player(self, player):
@@ -173,7 +171,6 @@ class Content:
             return ""
         self.show_other_players = """
             <div id="second_player" >
-            <br>
                 <form hx-ws="send" hx-target="#second_player" >
                 <label for="player">Pick a player</label>
                 <select name="player" id="player">
@@ -189,8 +186,6 @@ class Content:
         self.show_other_players += """
             </select>
             <input type="submit" value="Submit">
-            <br>
-            </div>
             """
         return self.show_other_players
 
@@ -201,20 +196,11 @@ class Content:
         return self.hide_other_players
 
     def show_game_alert(self):
-        self.game_alert = f"""
-        <div hx-swap-oob="innerHTML:#game_alerts" visible>
-        <h1 style="color: red;">{self.game.game_alert}</h1>
-        </div>
-        """
-        return self.game_alert
+        output = game_alert_template.render(game_alert=self.game.game_alert)
+        return output
 
     def show_player_alert(self, user_id):
-        try:
-            self.player_alert = f"""
-            <div hx-swap-oob="innerHTML:#player_alerts" visible>
-            <h1 style="color: red;">{self.game.player(user_id).player_alert}</h1>
-            </div>
-            """
-            return self.player_alert
-        except AttributeError:
-            return ""
+        output = player_alert_template.render(
+            player_alert=self.game.player(user_id).player_alert
+        )
+        return output
