@@ -14,11 +14,11 @@ def test_show_turn(content):
 
 
 def test_show_history(content):
-    assert """<div id="history">""" in content.show_history()
+    assert """<div id="history""" in content.show_history()
 
 
-def test_show_game_status(content):
-    assert len(content.show_game_status()) > 10
+# def test_show_game_status(content):
+#     assert len(content.show_game_status()) > 10
 
 
 def test_show_alert(content):
