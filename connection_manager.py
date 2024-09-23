@@ -47,9 +47,9 @@ class ConnectionManager:
                     websocket,
                 )
 
-            if message_type in ("all", "game_status"):
-                table = content.show_game_status()
-                await self.send_personal_message(table, websocket)
+            # if message_type in ("all", "game_status"):
+            #     table = content.show_game_status()
+            #     await self.send_personal_message(table, websocket)
 
             if message_type in ("all", "action"):
                 table = content.show_actions()

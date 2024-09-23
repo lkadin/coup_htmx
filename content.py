@@ -139,16 +139,16 @@ class Content:
         output = turn_template.render(turn=self.game.whose_turn_name(), suffix=suffix)
         return output
 
-    def show_game_status(self):
-        try:
-            self.game_status = f"""
-                <div hx-swap-oob="innerHTML:#game_status">
-                <h4>{self.game.players[self.user_id].name} - {self.game.game_status}</h4>
-                </div>
-                """
-            return self.game_status
-        except KeyError:
-            return ""
+    # def show_game_status(self):
+    #     try:
+    #         self.game_status = f"""
+    #             <div hx-swap-oob="innerHTML:#game_status">
+    #             <h4>{self.game.players[self.user_id].name} - {self.game.game_status}</h4>
+    #             </div>
+    #             """
+    #         return self.game_status
+    #     except KeyError:
+    #         return ""
 
     def show_history(self) -> str:
         self.game.prep_history_list()
