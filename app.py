@@ -123,6 +123,8 @@ async def read_item(request: Request, user_id: str, user_name: str):
             "turn": game.whose_turn_name(),
             "suffix": game.get_suffix(),
             "history_list": game.history_list,
+            "player_names": [],
+            "second_player_visible": "hidden",
         },
     )
 

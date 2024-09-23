@@ -177,14 +177,16 @@ class Content:
             if not player.influence():
                 continue
             available_players.append(player.name)
-        output = second_player_template.render(player_names=available_players)
+        output = second_player_template.render(
+            player_names=available_players, second_player_visible="visible"
+        )
         return output
 
     def hide_second_player(self):
-        self.hide_other_players = """
-            <div id="second_player" hidden >
-            """
-        return self.hide_other_players
+        output = second_player_template.render(
+            player_names=[], second_player_visible="hidden"
+        )
+        return output
 
     def show_game_alert(self):
         output = game_alert_template.render(game_alert=self.game.game_alert)
