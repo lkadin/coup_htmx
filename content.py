@@ -8,6 +8,7 @@ actions_template = env.get_template("actions.html")
 player_alert_template = env.get_template("player_alerts.html")
 game_alert_template = env.get_template("game_alerts.html")
 second_player_template = env.get_template("second_player.html")
+card_template = env.get_template("cards.html")
 
 
 class Content:
@@ -38,15 +39,21 @@ class Content:
                 self.display_hand += f"""
                 <img src='/static/jpg/{card.value}.jpg' {card.value} style="opacity:1.0; width:{card_width}px;">
                 """
+                card.display = card.value
+                card.opacity = 1.0
             else:
                 if card.card_status == "down":
                     self.display_hand += f"""
                     <img src='/static/jpg/down.png' {card.value} style="opacity:1.0; width:{card_width}px;">
                     """
+                    card.display = "down"
+                    card.opacity = 1.0
                 else:
                     self.display_hand += f"""
                     <img src='/static/jpg/{card.value}.jpg' {card.value} style="opacity:.5; width: {card_width}px;">
                     """
+                    card.display = card.value
+                    card.opacity = 0.5
 
         def lose_influence(card, card_number):
             if (
@@ -109,11 +116,15 @@ class Content:
                 <input type="submit" id="test" value="Submit">
                 </form>
                 """
-        else:
+        else:  # non-exchange
             self.display_hand = ""
+            self.display_cards = []
             for card in player.hand:
                 non_exchange(card)
+                self.display_cards.append(card)
 
+        output = card_template.render(cards=self.display_cards)
+        return output
         return self.display_hand
 
     def show_table(self):
