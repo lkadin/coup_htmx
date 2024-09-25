@@ -78,22 +78,28 @@ class Content:
                 and card.card_status == "down"
             ):
                 self.display_hand += checkbox(card, card_number)
+                card.display = card.value
             else:
                 if card.card_status == "down":
                     self.display_hand += f"""
                     <img src='/static/jpg/down.png' {card.value} ;">
                     """
+                    card.display = "down"
                 else:
                     self.display_hand += f"""
                     <img src='/static/jpg/{card.value}.jpg' {card.value} style="opacity:0.5; width:{card_width}px;">
                     """
+                    card.display = card.value
 
         # exchange
         if self.game.exchange_in_progress and self.game.your_turn():
             self.display_hand = '<form hx-ws="send" hx-target="cards">'
             self.display_hand += '<div class="card-container">'
+            self.display_cards = []
             for card_number, card in enumerate(player.hand):
                 exchange(card, card_number)
+                card.card_number = card_number
+                self.display_cards.append(card)
             if player.name == self.players[self.user_id].name:
                 self.display_hand += """
                 <p> Which cards do you want to discard?</p>
