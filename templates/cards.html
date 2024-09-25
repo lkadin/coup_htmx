@@ -1,2 +1,7 @@
 <div class="col-5 image-fluid" id="cards">
+    <div class="card-container">
+        {% for card in cards %}
+        <img src="/static/jpg/{{card.display}}.jpg" {{card.value}} style="opacity:{{card.opacity}};>">
+        {% endfor %}
+    </div>
 </div>
