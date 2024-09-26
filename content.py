@@ -24,14 +24,6 @@ class Content:
         self.checkbox_required = False
         self.discard_prompt = False
 
-        def checkbox(card, card_number):
-            return f"""
-                <input type="checkbox" name="cardnames" value="{card.value}" id="{card_number}">
-                <label for = "{card_number}">
-                <img src="/static/jpg/{card.value}.jpg">
-                </label>
-                """
-
         def non_exchange(card):
             card.opacity = 1.0
             card.display = card.value
@@ -46,8 +38,9 @@ class Content:
             ):
                 card.opacity = 0.5
 
-        def lose_influence(card, card_number):
+        def lose_influence(card):
             self.checkbox_required = True
+            card.display = card.value
             if (
                 self.user_id == self.game.player_id_to_lose_influence
                 and player.name == self.players[self.user_id].name
@@ -57,11 +50,10 @@ class Content:
             else:
                 if card.card_status == "down":
                     card.display = "down"
-                else:
-                    card.display = card.value
 
-        def exchange(card, card_number):
+        def exchange(card):
             self.checkbox_required = True
+            card.display = card.value
             if (
                 player.name == self.players[self.user_id].name
                 and card.card_status == "down"
@@ -70,15 +62,13 @@ class Content:
             else:
                 if card.card_status == "down":
                     card.display = "down"
-                else:
-                    card.display = card.value
 
         # exchange
         if self.game.exchange_in_progress and self.game.your_turn():
             self.display_cards = []
             self.checkbox_required = True
             for card_number, card in enumerate(player.hand):
-                exchange(card, card_number)
+                exchange(card)
                 card.card_number = card_number
                 self.display_cards.append(card)
             if player.name == self.players[self.user_id].name:
@@ -91,7 +81,7 @@ class Content:
         ) and self.user_id == self.game.player_id_to_lose_influence:
             self.display_cards = []
             for card_number, card in enumerate(player.hand):
-                lose_influence(card, card_number)
+                lose_influence(card)
                 card.card_number = card_number
                 self.display_cards.append(card)
             if player.name == self.players[self.user_id].name:
