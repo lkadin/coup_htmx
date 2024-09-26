@@ -87,7 +87,6 @@ class Content:
             if player.name == self.players[self.user_id].name:
                 self.discard_prompt = True
         else:  # non-exchange
-            self.display_hand = ""
             self.display_cards = []
             for card in player.hand:
                 non_exchange(card)
