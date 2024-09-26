@@ -21,7 +21,6 @@ class Content:
         self.actions: str = ""
 
     def show_hand(self, player):
-        card_width = 200
         self.checkbox_required = False
         self.discard_prompt = False
 
@@ -59,9 +58,6 @@ class Content:
                 if card.card_status == "down":
                     card.display = "down"
                 else:
-                    self.display_hand += f"""
-                    <img src='/static/jpg/{card.value}.jpg' {card.value} style="opacity:0.5; width:{card_width}px;">
-                    """
                     card.display = card.value
 
         def exchange(card, card_number):
