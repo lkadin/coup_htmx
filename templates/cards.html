@@ -1,7 +1,23 @@
 <div class="col-5 image-fluid" id="cards">
+    {% if checkbox_required %}
+    <form hx-ws="send" hx-target="cards">'
+        <div class="card-container">
+            {% for card in cards %}
+            <input type="checkbox" name="cardnames" value="{{card.value}}" id="{{card.card_number}}">
+            <label for="{{card.card_number}}">
+                <img src="/static/jpg/{{card.display}}.jpg" {{card.value}}>
+            </label>
+            {% endfor %}
+    </form>
+    {% if discard_prompt %}
+    <p> Which card do you want to discard?</p>
+    <input type="submit" id="test" value="Submit">
+    {% endif %}
+    {% else %}
     <div class="card-container">
         {% for card in cards %}
         <img src="/static/jpg/{{card.display}}.jpg" {{card.value}} style="opacity:{{card.opacity}};>">
         {% endfor %}
+        {% endif %}
     </div>
 </div>
