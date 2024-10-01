@@ -32,14 +32,12 @@ class Content:
                 and card.card_status == "down"
             ):
                 card.display = "down"
-            elif (
-                player.name == self.players[self.user_id].name
-                and card.card_status == "up"
-            ):
+            elif card.card_status == "up":
                 card.opacity = 0.5
 
         def lose_influence(card):
-            self.checkbox_required = True
+            if card.card_status == "down":
+                self.checkbox_required = True
             card.display = card.value
             if (
                 self.user_id == self.game.player_id_to_lose_influence
@@ -52,7 +50,8 @@ class Content:
                     card.display = "down"
 
         def exchange(card):
-            self.checkbox_required = True
+            if card.card_status == "down":
+                self.checkbox_required = True
             card.display = card.value
             if (
                 player.name == self.players[self.user_id].name
@@ -66,8 +65,9 @@ class Content:
         # exchange
         if self.game.exchange_in_progress and self.game.your_turn():
             self.display_cards = []
-            self.checkbox_required = True
             for card_number, card in enumerate(player.hand):
+                if card.card_status == "down":
+                    self.checkbox_required = True
                 exchange(card)
                 card.card_number = card_number
                 self.display_cards.append(card)
