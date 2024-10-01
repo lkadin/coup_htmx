@@ -14,9 +14,16 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 MAXPLAYERS = 4
-game = Game()
-manager = ConnectionManager(game)
-game.wait()
+
+
+def setup_game():
+    game = Game()
+    manager = ConnectionManager(game)
+    game.wait()
+    return game, manager
+
+
+game, manager = setup_game()
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -26,6 +33,15 @@ async def login(request: Request):
     if game.game_status != "Waiting":
         return templates.TemplateResponse("game_started.html", {"request": request})
 
+    user_id = game.next_user_id()
+    return templates.TemplateResponse(
+        "login.html", {"request": request, "user_id": user_id}
+    )
+
+
+@app.get("/reset", response_class=HTMLResponse)
+async def reset(request: Request):
+    game, manager = setup_game()
     user_id = game.next_user_id()
     return templates.TemplateResponse(
         "login.html", {"request": request, "user_id": user_id}
