@@ -4,13 +4,15 @@
         <div class="card-container">
             {% for card in cards %}
             <input type="checkbox" name="cardnames" value="{{card.value}}" id="{{card.card_number}}">
+            {% if card.card_number != 'X' %}
             <label for="{{card.card_number}}">
+                {% endif %}
                 <img src="/static/jpg/{{card.display}}.jpg" {{card.value}} style="opacity:{{card.opacity}};>">
             </label>
             {% endfor %}
     </form>
     {% if discard_prompt %}
-    <p> Which card do you want to discard?</p>
+    <p> Which card(s) do you want to discard?</p>
     <input type="submit" id="test" value="Submit">
     {% endif %}
     {% else %}

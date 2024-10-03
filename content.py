@@ -34,10 +34,9 @@ class Content:
                 card.display = "down"
             elif card.card_status == "up":
                 card.opacity = 0.5
+                card.card_number = "X"
 
         def lose_influence(card):
-            if card.card_status == "down":
-                self.checkbox_required = True
             card.display = card.value
             if (
                 self.user_id == self.game.player_id_to_lose_influence
@@ -45,19 +44,19 @@ class Content:
                 and card.card_status == "down"
             ):
                 card.display = card.value
+                self.checkbox_required = True
             else:
                 if card.card_status == "down":
                     card.display = "down"
 
         def exchange(card):
-            if card.card_status == "down":
-                self.checkbox_required = True
             card.display = card.value
             if (
                 player.name == self.players[self.user_id].name
                 and card.card_status == "down"
             ):
                 card.display = card.value
+                self.checkbox_required = True
             else:
                 if card.card_status == "down":
                     card.display = "down"
@@ -67,12 +66,12 @@ class Content:
             self.display_cards = []
             for card_number, card in enumerate(player.hand):
                 if card.card_status == "down":
-                    self.checkbox_required = True
+                    card.card_number = card_number
                 exchange(card)
-                card.card_number = card_number
                 self.display_cards.append(card)
             if player.name == self.players[self.user_id].name:
                 self.discard_prompt = True
+                self.checkbox_required = True
 
         # lose influence - select card to lose
         elif (
