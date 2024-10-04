@@ -95,6 +95,7 @@ class Content:
             cards=self.display_cards,
             checkbox_required=self.checkbox_required,
             discard_prompt=self.discard_prompt,
+            player=player,
         )
         return output
 
@@ -112,9 +113,6 @@ class Content:
         return self.table
 
     def show_player(self, player):
-        self.table += f"""
-        <p style=text-align:top;><strong>{player.name}</strong> coins -  {player.coins}</p>
-        """
         self.table += self.show_hand(player)
 
     def show_turn(self):

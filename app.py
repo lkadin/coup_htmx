@@ -130,6 +130,7 @@ async def read_item(request: Request, user_id: str, user_name: str):
     if not history:
         history = ""
     game.prep_history_list()
+    player = {"name": "", "coins": 0}
     return templates.TemplateResponse(
         "htmx_user_generic.html",
         {
@@ -143,6 +144,7 @@ async def read_item(request: Request, user_id: str, user_name: str):
             "history_list": game.history_list,
             "player_names": [],
             "second_player_visible": "hidden",
+            "player": player,
         },
     )
 
