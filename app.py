@@ -41,10 +41,12 @@ async def login(request: Request):
 
 @app.get("/reset", response_class=HTMLResponse)
 async def reset(request: Request):
-    game, manager = setup_game()
     user_id = game.next_user_id()
+    game.reset()
+    manager.active_connections = {}
+    game.wait()
     return templates.TemplateResponse(
-        "login.html", {"request": request, "user_id": user_id}
+        "reset.html", {"request": request, "user_id": user_id}
     )
 
 

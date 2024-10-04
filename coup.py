@@ -806,6 +806,34 @@ class Game:
             suffix = "'s turn"
         return suffix
 
+    def reset(self):
+        self.players: dict[str, Player] = {}
+        self.NUM_OF_CARDS: int = 2
+        self.game_status: str = "Not started"
+        self.actions: list[Action] = []
+        self.current_action: Action = Action("No_action", 0, "disabled", False)
+        self.current_action_player_id: str = ""
+        self.second_player_id: str = ""
+        self.cards_to_exchange: list[str] = []
+        self.exchange_in_progress: bool = False
+        self.coup_assassinate_in_progress: bool = False
+        self.current_player_index: int = 0
+        self.action_history: list[History_action] = []
+        self.card_name_to_lose: str = ""
+        self.player_id_to_lose_influence: str = ""
+        self.game_alert: str = ""
+        self.couping_assassinating_player: Player | None = None
+        self.players_remaining = []
+        self.user_id: str = ""
+        self.must_coup_assassinate: bool = False
+        self.block_in_progress: bool = False
+        self.blocking_player: Player | None = None
+        self.challenge_in_progress: bool = False
+        self.last_challenge_successful = False
+        self.lose_influence_in_progress = False
+        self.last_user_id_assigned = 0
+        self.history_list = []
+
 
 class History_action:
     def __init__(self, player1, player2, action):
