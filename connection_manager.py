@@ -20,8 +20,8 @@ class ConnectionManager:
 
     async def broadcast(self, message: str, game: Game, message_type: str = "all"):
         for user_id, websocket in self.active_connections.items():
-            game.user_id = user_id
-            content = Content(game, user_id)
+            self.game.user_id = user_id
+            content = Content(self.game, user_id)
 
             if message_type in ("all", "alert"):
                 table = content.show_game_alert()
