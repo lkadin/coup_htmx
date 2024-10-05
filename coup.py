@@ -615,6 +615,8 @@ class Game:
             self.must_coup_assassinate = False
             self.lose_influence_in_progress = True
             self.card_name_to_lose = ""
+            if not self.player(self.player_id_to_lose_influence).influence():
+                self.next_player()
         else:
             if (
                 not self.card_name_to_lose
