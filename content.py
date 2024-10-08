@@ -101,7 +101,7 @@ class Content:
 
     def show_table(self):
         self.table = """
-            <div hx-swap-oob="innerHTML:#cards">
+            <div hx-swap-oob="innerHTML:#table">
             """
         # first show player = user_id
         player = self.game.player(self.user_id)
@@ -162,7 +162,10 @@ class Content:
         return output
 
     def show_player_alert(self, user_id):
-        output = player_alert_template.render(
-            player_alert=self.game.player(user_id).player_alert
-        )
+        if self.game.player(user_id).player_alert:
+            output = player_alert_template.render(
+                player_alert=self.game.player(user_id).player_alert
+            )
+        else:
+            output = player_alert_template.render(player_alert="")
         return output
