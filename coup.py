@@ -13,6 +13,7 @@ REQUIRED_CARD = {
     "Block_Steal": ["ambassador", "captain"],
     "Block_Assassinate": ["contessa"],
 }
+KEEP_CARDS = True  # selected cards are to be kept instead of discarded
 
 
 class No_Card(Exception):
@@ -75,6 +76,8 @@ class Player:
         self.hand.append(Card(deck.draw()))
 
     def discard(self, cardnames: list, deck: Deck) -> None:
+        if KEEP_CARDS:
+            cardnames = self.save_to_exchange(cardnames)
         for cardname in cardnames:
             index = self.get_index(cardname)
             self.hand.pop(index)
@@ -120,6 +123,25 @@ class Player:
 
     def save_cards(self):
         self.cards_prior_to_exchange = self.hand.copy()
+
+    def save_to_exchange(
+        self, cardnames: list
+    ) -> (
+        list
+    ):  # if FLAG is set, assume cards were to be saved and switch list to cards to be exchanged
+        cardnames_to_exchange = []
+        index_list = []
+        for cardname in cardnames:
+            for i, card in enumerate(self.hand):
+                if i in index_list:
+                    continue
+                if card.value == cardname:
+                    index_list.append(i)
+                    break
+        for i, card in enumerate(self.hand):
+            if i not in index_list:
+                cardnames_to_exchange.append(card.value)
+        return cardnames_to_exchange
 
     def __repr__(self) -> str:
         return f"{self.id}-{self.hand} {self.coins=}"
@@ -178,6 +200,7 @@ class Game:
         self.lose_influence_in_progress = False
         self.last_user_id_assigned = 0
         self.history_list = []
+        self.keep_cards = KEEP_CARDS
 
     def initial_deal(self) -> None:
         for _ in range(self.NUM_OF_CARDS):
