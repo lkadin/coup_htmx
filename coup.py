@@ -135,6 +135,9 @@ class Player:
             for i, card in enumerate(self.hand):
                 if i in index_list:
                     continue
+                if card.card_status == "up":
+                    index_list.append(i)
+                    continue
                 if card.value == cardname:
                     index_list.append(i)
                     break
@@ -498,6 +501,8 @@ class Game:
 
         if self.cards_to_exchange:
             number_of_cards_to_discard = 2
+            if KEEP_CARDS:
+                number_of_cards_to_discard = self.player(self.user_id).influence() - 2
             if number_of_cards_to_discard != len(self.cards_to_exchange):
                 self.player(self.user_id).set_player_alert(
                     "You didn't pick the correct amount of cards"
