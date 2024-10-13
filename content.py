@@ -91,7 +91,7 @@ class Content:
                 non_exchange(card)
                 self.display_cards.append(card)
 
-        keep_discard = "keep" if self.game.keep_cards else "discard"
+        keep_discard = "Keep" if self.game.keep_cards else "discard"
         output = card_template.render(
             cards=self.display_cards,
             checkbox_required=self.checkbox_required,
@@ -136,12 +136,12 @@ class Content:
     def pick_second_player(self):
         available_players = []
         if self.game.check_coins(self.user_id) == 1:
-            return ""
+            return
         if (
             self.game.player_index_to_id(self.game.whose_turn())
             != self.players[self.user_id].id
         ):
-            return ""
+            return
         for player in self.players.values():
             if player.id == self.user_id:
                 continue
