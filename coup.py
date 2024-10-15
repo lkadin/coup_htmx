@@ -373,6 +373,15 @@ class Game:
             "Challenge",
         ):
             return  # Can't do anything if block in progress
+        if (
+            action.name == "Start"
+            and self.game_status == "Waiting"
+            and len(self.players) > 1
+        ):
+            self.start()
+            return
+        if not self.player(user_id).influence():
+            return
 
         if self.lose_influence_in_progress and self.card_name_to_lose:
             self.process_lose_influence()
@@ -417,14 +426,6 @@ class Game:
 
         if action.name == "Challenge":
             self.challenge()
-
-        if (
-            action.name == "Start"
-            and self.game_status == "Waiting"
-            and len(self.players) > 1
-        ):
-            self.start()
-            return
 
         if (
             not self.your_turn()
