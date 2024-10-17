@@ -80,8 +80,9 @@ class Content:
         ) and self.user_id == self.game.player_id_to_lose_influence:
             self.display_cards = []
             for card_number, card in enumerate(player.hand):
+                if card.card_status == "down":
+                    card.card_number = card_number
                 lose_influence(card)
-                card.card_number = card_number
                 self.display_cards.append(card)
             if player.name == self.players[self.user_id].name:
                 self.discard_prompt = True
