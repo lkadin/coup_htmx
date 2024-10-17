@@ -638,6 +638,14 @@ class Game:
         self.process_lose_influence()
 
     def process_lose_influence(self):
+        if (
+            self.player(self.player_id_to_lose_influence).influence() == 1
+            and not self.action_history[-1].action.can_be_challenged
+            and not self.action_history[-1].action.can_be_blocked
+        ):
+            self.player(
+                self.player_id_to_lose_influence
+            ).lose_all_influence()  ###  Only if there is no block or challenge
         if self.card_name_to_lose:  # card was picked need to lose influence
             self.player(self.player_id_to_lose_influence).lose_influence(
                 self.card_name_to_lose
