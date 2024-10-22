@@ -561,8 +561,9 @@ class Game:
             self.swap_winning_card()
             self.player_id_to_lose_influence = self.user_id
             if self.action_history[-1].action.name == "Assassinate":
-                self.players[self.user_id].lose_all_influence()
+                # self.players[self.user_id].lose_all_influence()
                 self.next_turn()
+            self.add_history()
 
     def swap_winning_card(self):
         #####if exchange only swap card if it's still in the hand ##################
@@ -638,14 +639,17 @@ class Game:
         self.process_lose_influence()
 
     def process_lose_influence(self):
-        if (
-            self.player(self.player_id_to_lose_influence).influence() == 1
-            and not self.action_history[-1].action.can_be_challenged
-            and not self.action_history[-1].action.can_be_blocked
-        ):
-            self.player(
-                self.player_id_to_lose_influence
-            ).lose_all_influence()  ###  Only if there is no block or challenge
+        # if (
+        #     self.player(self.player_id_to_lose_influence).influence() == 1
+        #     and not self.action_history[-1].action.can_be_challenged
+        #     and not self.action_history[-1].action.can_be_blocked
+        # ):
+        #     self.player(
+        #         self.player_id_to_lose_influence
+        #     ).lose_all_influence()  ###  Only if there is no block or challenge
+        #     self.next_player()
+        #     return
+
         if self.card_name_to_lose:  # card was picked need to lose influence
             self.player(self.player_id_to_lose_influence).lose_influence(
                 self.card_name_to_lose
@@ -686,12 +690,14 @@ class Game:
                 self.player(self.blocking_player),
                 self.player2,
                 self.current_action,
+                self.last_challenge_successful,
             )
         else:
             h1 = History_action(
                 self.player(self.current_action_player_id),
                 self.player2,
                 self.current_action,
+                self.last_challenge_successful,
             )
 
         self.action_history.append(h1)
@@ -837,8 +843,15 @@ class Game:
                 player2_name = ""
             else:
                 player2_name = history_action.player2.name
+            challenge_sucessful = ""
+            if history_action.action.name == "Challenge":
+                if history_action.challenge_succesful:
+                    challenge_sucessful = " - Successful"
+                else:
+                    challenge_sucessful = " - Failed"
+
             self.history_list.append(
-                f"{player1_name} {history_action.action} {player2_name}"
+                f"{player1_name} {history_action.action} {player2_name} {challenge_sucessful}"
             )
 
     def get_suffix(self):
@@ -877,11 +890,12 @@ class Game:
 
 
 class History_action:
-    def __init__(self, player1, player2, action):
+    def __init__(self, player1, player2, action, challenge_successful):
         self.player1: Player = player1
         self.player2: Player | None = player2
         self.action = action
         self.time_added = datetime.now()
+        self.challenge_succesful = challenge_successful
         if not self.player2:
             self.player2 = None
 
