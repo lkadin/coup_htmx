@@ -165,10 +165,10 @@ class Content:
         return output
 
     def show_player_alert(self, user_id):
-        if self.game.player(user_id).player_alert:
+        try:
             output = player_alert_template.render(
                 player_alert=self.game.player(user_id).player_alert
             )
-        else:
+        except AttributeError:
             output = player_alert_template.render(player_alert="")
         return output
