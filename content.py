@@ -88,9 +88,12 @@ class Content:
                 self.discard_prompt = True
         else:  # non-exchange
             self.display_cards = []
-            for card in player.hand:
-                non_exchange(card)
-                self.display_cards.append(card)
+            try:
+                for card in player.hand:
+                    non_exchange(card)
+                    self.display_cards.append(card)
+            except AttributeError:
+                pass
 
         keep_discard = "Keep" if self.game.keep_cards else "discard"
         output = card_template.render(

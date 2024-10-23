@@ -561,8 +561,8 @@ class Game:
             self.swap_winning_card()
             self.player_id_to_lose_influence = self.user_id
             if self.action_history[-1].action.name == "Assassinate":
-                # self.players[self.user_id].lose_all_influence()
-                self.next_turn()
+                self.players[self.user_id].lose_all_influence()
+            # self.next_turn()
             self.add_history()
 
     def swap_winning_card(self):
@@ -659,8 +659,8 @@ class Game:
             self.must_coup_assassinate = False
             self.lose_influence_in_progress = True
             self.card_name_to_lose = ""
-            if not self.player(self.player_id_to_lose_influence).influence():
-                self.next_player()
+            # if not self.player(self.player_id_to_lose_influence).influence():
+            #     self.next_player()
         else:
             if (
                 not self.card_name_to_lose
