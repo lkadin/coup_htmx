@@ -1,0 +1,65 @@
+processing action='Start' user_id='2'
+INFO:     172.58.128.80:4456 - "GET /jpg/down.png HTTP/1.1" 200 OK
+INFO:     172.58.128.80:65514 - "GET /jpg/assassin.jpg HTTP/1.1" 200 OK
+INFO:     172.58.128.80:38748 - "GET /jpg/captain.jpg HTTP/1.1" 200 OK
+processing action=Assassinate user_id='2'
+processing action=Steal user_id='2'
+processing action=Steal user_id='2'
+processing action='Block' user_id='1'
+processing action='Challenge' user_id='2'
+processing action='' user_id='1'
+INFO:     172.58.128.80:41941 - "GET /jpg/contessa.jpg HTTP/1.1" 200 OK
+processing action='Take_3_coins' user_id='1'
+processing action=Assassinate user_id='2'
+processing action=Assassinate user_id='2'
+processing action='Challenge' user_id='1'
+processing action=No_action user_id='1'
+INFO:     172.58.128.80:1238 - "GET /jpg/duke.jpg HTTP/1.1" 200 OK
+processing action='Restart' user_id='1'
+processing action='Take_3_coins' user_id='1'
+processing action='Take_3_coins' user_id='2'
+processing action=Assassinate user_id='1'
+processing action=Assassinate user_id='1'
+processing action='Block' user_id='2'
+processing action='Challenge' user_id='1'
+INFO:     172.58.128.80:28753 - "GET /jpg/ambassador.jpg HTTP/1.1" 200 OK
+processing action='' user_id='1'
+processing action='Take_3_coins' user_id='2'
+processing action='Take_3_coins' user_id='1'
+processing action=Coup user_id='2'
+processing action=Coup user_id='2'
+processing action='' user_id='1'
+processing action=No_action user_id='1'
+processing action='Restart' user_id='2'
+processing action='Take_3_coins' user_id='1'
+processing action=Exchange user_id='2'
+processing action=Exchange user_id='2'
+processing action='Take_3_coins' user_id='1'
+processing action=Steal user_id='2'
+processing action=Steal user_id='2'
+processing action='Take_3_coins' user_id='1'
+processing action='Challenge' user_id='2'
+processing action='' user_id='2'
+processing action=Coup user_id='1'
+processing action=Coup user_id='1'
+processing action=Assassinate user_id='2'
+processing action=Assassinate user_id='2'
+processing action='Block' user_id='1'
+processing action='Challenge' user_id='2'
+processing action='' user_id='2'
+processing action=No_action user_id='2'
+Exception = 1006
+Traceback (most recent call last):
+  File "/home/lkadin/coup_htmx/app.py", line 128, in websocket_chat
+    data = await websocket.receive_text()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lkadin/coup_htmx/venv/lib/python3.12/site-packages/starlette/websockets.py", line 113, in receive_text
+    self._raise_on_disconnect(message)
+  File "/home/lkadin/coup_htmx/venv/lib/python3.12/site-packages/starlette/websockets.py", line 105, in _raise_on_disconnect
+    raise WebSocketDisconnect(message["code"])
+starlette.websockets.WebSocketDisconnect: 1006
+
+INFO:     connection closed
+;''
+
+'

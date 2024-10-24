@@ -1,4 +1,18 @@
+from jinja2 import Environment, FileSystemLoader
+
+file_loader = FileSystemLoader("templates")
+env = Environment(loader=file_loader)
+history_template = env.get_template("history.html")
+turn_template = env.get_template("turn.html")
+actions_template = env.get_template("actions.html")
+player_alert_template = env.get_template("player_alerts.html")
+game_alert_template = env.get_template("game_alerts.html")
+second_player_template = env.get_template("second_player.html")
+card_template = env.get_template("cards.html")
+
+
 class Content:
+
     def __init__(self, game, user_id: str) -> None:
         self.game = game
         self.players = self.game.players
@@ -7,242 +21,157 @@ class Content:
         self.actions: str = ""
 
     def show_hand(self, player):
+        self.checkbox_required = False
+        self.discard_prompt = False
+
         def non_exchange(card):
+            card.opacity = 1.0
+            card.display = card.value
+            if (
+                player.name != self.players[self.user_id].name
+                and card.card_status == "down"
+            ):
+                card.display = "down"
+            elif card.card_status == "up":
+                card.opacity = 0.5
+                card.card_number = "X"
+
+        def lose_influence(card):
+            card.display = card.value
+            if (
+                self.user_id == self.game.player_id_to_lose_influence
+                and player.name == self.players[self.user_id].name
+                and card.card_status == "down"
+            ):
+                card.display = card.value
+                self.checkbox_required = True
+            else:
+                if card.card_status == "down":
+                    card.display = "down"
+
+        def exchange(card):
+            card.display = card.value
             if (
                 player.name == self.players[self.user_id].name
                 and card.card_status == "down"
             ):
-                self.display_hand += f"""
-                <img src='/static/jpg/{card.value}.jpg' {card.value} style=opacity:1.0;>
-                """
+                card.display = card.value
+                self.checkbox_required = True
             else:
                 if card.card_status == "down":
-                    self.display_hand += f"""
-                    <img src='/static/jpg/down.png' {card.value} style=opacity:1.0;>
-                    """
-                else:
-                    self.display_hand += f"""
-                    <img src='/static/jpg/{card.value}.jpg' {card.value} style=opacity:.5;>
-                    """
-
-        def coup_assassinate(card):
-            if (
-                self.user_id == self.game.player_id_to_coup_assassinate
-                and player.name == self.players[self.user_id].name
-                and card.card_status == "down"
-            ):
-                self.display_hand += f"""
-                <input type="checkbox" name="cardnames" value="{card.value}" <td><img src="/static/jpg/{card.value}.jpg" height="350">
-                """
-            else:
-                if card.card_status == "down":
-                    self.display_hand += f"""
-                    <img src='/static/jpg/down.png' {card.value} style=opacity:1.0;>
-                    """
-                else:
-                    self.display_hand += f"""
-                    <img src='/static/jpg/{card.value}.jpg' {card.value} style=opacity:.5;>
-                    """
-
-        def exchange(card):
-            if player.name == self.players[self.user_id].name:
-                self.display_hand += f"""
-                <input type="checkbox" name="cardnames" value="{card.value}" <td><img src="/static/jpg/{card.value}.jpg" height="350">
-                """
-            else:
-                self.display_hand += f"""
-                <img src='/static/jpg/down.png' {card.value} style=opacity:1.0;>
-                """
+                    card.display = "down"
 
         # exchange
-        if self.game.exchange_in_progress and self.game.your_turn(self.user_id):
-            self.display_hand = '<form hx-ws="send" hx-target="cards">'
-            for card in player.hand:
+        if self.game.exchange_in_progress and self.game.your_turn():
+            self.display_cards = []
+            for card_number, card in enumerate(player.hand):
+                if card.card_status == "down":
+                    card.card_number = card_number
                 exchange(card)
+                self.display_cards.append(card)
             if player.name == self.players[self.user_id].name:
-                self.display_hand += """
-                <p> Which cards do you want to discard?</p>
-                <input type="submit" id="test" value="Submit">
-                </form>
-                """
+                self.discard_prompt = True
+                self.checkbox_required = True
 
-        # coup - select card to lose
+        # lose influence - select card to lose
         elif (
             self.game.coup_assassinate_in_progress
-            and self.user_id == self.game.player_id_to_coup_assassinate
-        ):
-            self.display_hand = '<form hx-ws="send" hx-target="cards">'
-            for card in player.hand:
-                coup_assassinate(card)
+            or self.game.lose_influence_in_progress
+        ) and self.user_id == self.game.player_id_to_lose_influence:
+            self.display_cards = []
+            for card_number, card in enumerate(player.hand):
+                if card.card_status == "down":
+                    card.card_number = card_number
+                lose_influence(card)
+                self.display_cards.append(card)
             if player.name == self.players[self.user_id].name:
-                self.display_hand += """
-                <p> Which card do you want to discard?</p>
-                <input type="submit" id="test" value="Submit">
-                </form>
-                """
-        # assassinate - select card to lose
-        elif (
-            self.game.coup_assassinate_in_progress
-            and self.user_id == self.game.player_id_to_coup_assassinate
-        ):
-            self.display_hand = '<form hx-ws="send" hx-target="cards">'
-            for card in player.hand:
-                coup_assassinate(card)
-            if player.name == self.players[self.user_id].name:
-                self.display_hand += """
-                <p> Which card do you want to discard?</p>
-                <input type="submit" id="test" value="Submit">
-                </form>
-                """
-        # display regular hand
-        else:
-            self.display_hand = ""
-            for card in player.hand:
-                non_exchange(card)
+                self.discard_prompt = True
+        else:  # non-exchange
+            self.display_cards = []
+            try:
+                for card in player.hand:
+                    non_exchange(card)
+                    self.display_cards.append(card)
+            except AttributeError:
+                pass
 
-        self.display_hand += "</a>"
-        return self.display_hand
+        keep_discard = "Keep" if self.game.keep_cards else "discard"
+        output = card_template.render(
+            cards=self.display_cards,
+            checkbox_required=self.checkbox_required,
+            discard_prompt=self.discard_prompt,
+            player=player,
+            keep_discard=keep_discard,
+        )
+        return output
 
     def show_table(self):
         self.table = """
-            <div hx-swap-oob="innerHTML:#cards">
+            <div hx-swap-oob="innerHTML:#table">
             """
+        # first show player = user_id
+        player = self.game.player(self.user_id)
+        self.show_player(player)
         for player in self.players.values():
-            self.table += f"""
-            <p style=text-align:top;><strong>{player.name}</strong> coins -  {player.coins}</p>
-            """
-            self.table += self.show_hand(player)
-        self.table += """    
-            </div>
-            """
+            if player.id == self.user_id:
+                continue
+            self.show_player(player)
         return self.table
 
+    def show_player(self, player):
+        self.table += self.show_hand(player)
+
     def show_turn(self):
-        self.turn = f"""
-            <div hx-swap-oob="innerHTML:#turn">
-            <h4>{self.game.whose_turn_name()}'s Turn</h4>
-            </div>
-            """
-        return self.turn
+        suffix = self.game.get_suffix()
+        output = turn_template.render(turn=self.game.whose_turn_name(), suffix=suffix)
+        return output
 
-    def show_game_status(self):
-        try:
-            self.game_status = f"""
-                <div hx-swap-oob="innerHTML:#game_status">
-                <h4>{self.game.players[self.user_id].name} - {self.game.game_status}</h4>
-                </div>
-                """
-            return self.game_status
-        except KeyError:
-            return ""
-
-    def show_history(self, message: str) -> str:
-        self.history = """
-        <br>
-        <div hx-swap-oob="innerHTML:#history">
-        """
-        for history_action in self.game.action_history[::-1]:
-            player1_name = history_action.player1.name
-            if not history_action.player2:
-                player2_name = ""
-            else:
-                player2_name = history_action.player2.name
-            self.history += f"""
-            {player1_name} {history_action.action} {player2_name}
-            <br>
-            """
-        self.history += """
-        </div>
-        """
-        return self.history
-
-    def delete_start_action(self):
-        self.actions += f"""
-                <div id="Start">
-                <form hx-ws="send" hx-target="#actions">
-                <input type="hidden" name="user_name" value={self.user_id}>
-                <input type="hidden" name="message_txt" value=Start>
-                <input type="submit" value="Start" hidden>
-                </form>
-                </div>
-                """
-        return self.actions
+    def show_history(self) -> str:
+        self.game.prep_history_list()
+        output = history_template.render(history_list=self.game.history_list)
+        return output
 
     def show_actions(self):
-        start = False
-        self.actions = ""
-        for action in self.game.actions:
-            if action.name == "Start":
-                start = True
-            visible = ""
-            if action.action_status == "disabled":
-                visible = "hidden"
-            self.actions += f"""
-                <div id="{action}">
-                <form hx-ws="send" hx-target="#actions">
-                <input type="hidden" name="user_name" value={self.user_id}>
-                <input type="hidden" name="message_txt" value={action}>
-                <input type="submit" value={action} {action.action_status} {visible}>
-                </form>
-                </div>
-            """
-        self.actions += "<br>"
-        if not start:
-            self.actions += self.delete_start_action()
-        return self.actions
+        output = actions_template.render(
+            actions=self.game.actions, user_id=self.game.user_id
+        )
+        return output
 
     def pick_second_player(self):
+        available_players = []
         if self.game.check_coins(self.user_id) == 1:
-            return ""
+            return
         if (
             self.game.player_index_to_id(self.game.whose_turn())
             != self.players[self.user_id].id
         ):
-            return ""
-        self.show_other_players = """
-            <div id="second_player" >
-            <br>
-                <form hx-ws="send" hx-target="#second_player" >
-                <label for="player">Pick a player</label>
-                <select name="player" id="player">
-             """
+            return
         for player in self.players.values():
             if player.id == self.user_id:
                 continue
             if not player.influence():
                 continue
-            self.show_other_players += f"""
-                <option value="{player.name}">{player.name}</option>
-                """
-        self.show_other_players += """
-            </select>
-            <input type="submit" value="Submit">
-            <br>
-            </div>
-            """
-        return self.show_other_players
+            available_players.append(player.name)
+        output = second_player_template.render(
+            player_names=available_players, second_player_visible="visible"
+        )
+        return output
 
     def hide_second_player(self):
-        self.hide_other_players = """
-            <div id="second_player" hidden >
-            """
-        return self.hide_other_players
+        output = second_player_template.render(
+            player_names=[], second_player_visible="hidden"
+        )
+        return output
 
     def show_game_alert(self):
-        self.game_alert = f"""
-        <div hx-swap-oob="innerHTML:#game_alerts" visible>
-        <h1 style="color: red;">{self.game.game_alert}</h1>
-        </div>
-        """
-        return self.game_alert
+        output = game_alert_template.render(game_alert=self.game.game_alert)
+        return output
 
     def show_player_alert(self, user_id):
         try:
-            self.player_alert = f"""
-            <div hx-swap-oob="innerHTML:#player_alerts" visible>
-            <h1 style="color: red;">{self.game.player(user_id).player_alert}</h1>
-            </div>
-            """
-            return self.player_alert
+            output = player_alert_template.render(
+                player_alert=self.game.player(user_id).player_alert
+            )
         except AttributeError:
-            return ""
+            output = player_alert_template.render(player_alert="")
+        return output
