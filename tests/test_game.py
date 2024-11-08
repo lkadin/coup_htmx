@@ -574,3 +574,91 @@ class TestGame:
         game_ready.process_action(action, user_id)
         assert game_ready.last_challenge_successful is False
         assert game_ready.player_id_to_lose_influence == "1"
+
+
+def test_challenge_assassinate_true_player_has_influence(self, game_ready):
+    user_id = "1"
+    action = "Assassinate"
+    game_ready.current_player_index = 0
+    game_ready.players[user_id].hand = [Card("captain"), Card("assassin")]
+    game_ready.current_action = game_ready.action_from_action_name("Assassinate")
+    game_ready.couping_assassinating_player = game_ready.player(user_id)
+    game_ready.players["1"].coins = 6
+    game_ready.second_player_id = "2"
+    game_ready.current_action_player_id = "1"
+    game_ready.coup_assassinate(user_id)
+    assert game_ready.player("1").coins == 3
+
+    action = "Challenge"
+    user_id = "2"
+    game_ready.set_current_action(action, user_id)
+    game_ready.player_id_to_lose_influence = "2"
+    game_ready.process_action(action, user_id)
+    assert game_ready.last_challenge_successful is True
+    assert game_ready.player("1").coins == 6
+    assert game_ready.player("2").influence() == 1
+
+
+def test_challenge_assassinate_false_player_has_influence(self, game_ready):
+    user_id = "1"
+    action = "Assassinate"
+    game_ready.current_player_index = 0
+    game_ready.players["1"].hand = [Card("captain"), Card("assassin")]
+    game_ready.current_action = game_ready.action_from_action_name("Assassinate")
+    game_ready.couping_assassinating_player = game_ready.player(user_id)
+    game_ready.players["1"].coins = 6
+    game_ready.second_player_id = "1"
+    game_ready.current_action_player_id = "1"
+    game_ready.coup_assassinate(user_id)
+    assert game_ready.player("1").coins == 3
+
+    action = "Challenge"
+    user_id = "2"
+    game_ready.set_current_action(action, user_id)
+    game_ready.player_id_to_lose_influence = "2"
+    game_ready.process_action(action, user_id)
+    assert game_ready.last_challenge_successful is False
+    assert game_ready.player("2").influence() == 0
+    assert game_ready.player("1").coins == 3
+
+
+def test_challenge_block_assassinate_true(self, game_ready):
+    action = "Assassinate"
+    game_ready.current_player_index = 0
+    game_ready.players["1"].hand = [Card("captain"), Card("assassin")]
+    game_ready.current_action = game_ready.action_from_action_name("Assassinate")
+    game_ready.couping_assassinating_player = game_ready.player("1")
+    game_ready.players["1"].coins = 6
+    game_ready.second_player_id = "1"
+    game_ready.current_action_player_id = "1"
+    game_ready.coup_assassinate("1")
+    assert game_ready.player("1").coins == 3
+
+    action = "Block"
+    user_id = "2"
+    game_ready.set_current_action(action, user_id)
+    game_ready.player_id_to_lose_influence = "2"
+    game_ready.process_action(action, user_id)
+    assert game_ready.last_challenge_successful is True
+    assert game_ready.player("2").influence() == 1
+
+
+def test_challenge_block_assassinate_false(self, game_ready):
+    action = "Assassinate"
+    game_ready.current_player_index = 0
+    game_ready.players["1"].hand = [Card("captain"), Card("assassin")]
+    game_ready.current_action = game_ready.action_from_action_name("Assassinate")
+    game_ready.couping_assassinating_player = game_ready.player("1")
+    game_ready.players["1"].coins = 6
+    game_ready.second_player_id = "1"
+    game_ready.current_action_player_id = "1"
+    game_ready.coup_assassinate("1")
+    assert game_ready.player("1").coins == 3
+
+    action = "Block"
+    user_id = "2"
+    game_ready.set_current_action(action, user_id)
+    game_ready.player_id_to_lose_influence = "2"
+    game_ready.process_action(action, user_id)
+    assert game_ready.last_challenge_successful is False
+    assert game_ready.player("2").influence() == 0
